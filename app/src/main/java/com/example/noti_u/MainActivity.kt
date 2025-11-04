@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = Color(0xFFF9F6EE)
                 ) {
                     LoginScreen(onLoginClick = {
-                        startActivity(Intent(this, RecordatoriosActivity::class.java))
+                        startActivity(Intent(this, PrincipalActivity::class.java))
                     })
                 }
             }
