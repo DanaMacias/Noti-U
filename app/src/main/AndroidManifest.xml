@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotiU">
         <activity
+            android:name=".RecordatoriosActivity"
+            android:exported="false"
+            android:label="@string/title_activity_recordatorios"
+            android:theme="@style/Theme.NotiU" />
+        <activity
+            android:name=".PrincipalActivity"
+            android:exported="false"
+            android:label="@string/title_activity_principal"
+            android:theme="@style/Theme.NotiU" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
