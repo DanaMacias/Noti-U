@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.ui.theme.NotiUTheme
+import com.example.noti_u.ui.theme.buttonAnimation
 
 class PrincipalActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,42 +49,156 @@ fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
             modifier = Modifier.fillMaxSize()
         )
 
+        // Contenido principal
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(16.dp)
         ) {
-            // ---------- Logo centrado ----------
+            // Header con perfil - MÁS BAJO
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                buttonAnimation(
+                    drawableId = R.drawable.perfil,
+                    modifier = Modifier.size(50.dp)
+                ) {
+                    // TODO: acción al presionar el perfil
+                }
+            }
+
+            // Logo
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(400.dp) // ✅ Tamaño aumentado del logo
-                    .padding(top = 60.dp, bottom = 30.dp)
+                    .size(120.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 16.dp)
             )
 
-            // ---------- Recordatorio de ejemplo ----------
-            Box(
+            // Recordatorios
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp))
-                    .padding(20.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column {
-                    Text("Recordatorio de ejemplo", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text("Tipo: Proyecto final", fontSize = 13.sp)
-                    Text("Fecha: 22/01/2025", fontSize = 12.sp)
+                // Recordatorio 1
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text(
+                            "Proyecto final",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Proyecto • Materia",
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                "22/01/2025",
+                                fontSize = 14.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
+                // Recordatorio 2
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text(
+                            "Parcial segundo corte",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Examen • Materia",
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                "22/01/2025",
+                                fontSize = 14.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
+                // Recordatorio 3
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text(
+                            "Exposición",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Presentación • Materia",
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
+                            Text(
+                                "22/01/2025",
+                                fontSize = 14.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // ---------- Páginas recomendadas ----------
+            // Páginas recomendadas
             Text(
                 "Páginas Recomendadas",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -95,20 +210,27 @@ fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
                     .fillMaxWidth(0.9f)
                     .height(60.dp)
                     .background(Color(0xFF5B8D8D), RoundedCornerShape(20.dp))
+                    .align(Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // ---------- Botón Ir a Recordatorios ----------
+            // Botón Ir a Recordatorios
             Button(
                 onClick = onGoToRecordatorios,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
+                    .fillMaxWidth(0.8f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 32.dp)
+                    .padding(bottom = 16.dp)
             ) {
-                Text("Ir a Recordatorios", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(
+                    "Ir a Recordatorios",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             }
         }
     }

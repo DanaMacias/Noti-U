@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noti_u.ui.theme.NotiUTheme
+import com.example.noti_u.ui.theme.buttonAnimation
 import java.util.*
 
 class RecordatoriosActivity : ComponentActivity() {
@@ -67,49 +67,72 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(24.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(140.dp)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Box(
+            // HEADER CON PERFIL - AÑADIDO
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp))
-                    .clickable { onAgregarNuevo() },
-                contentAlignment = Alignment.Center
+                    .height(60.dp)
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Agregar nuevo recordatorio", fontWeight = FontWeight.Bold)
-                    Image(
-                        painter = painterResource(id = R.drawable.agregar),
-                        contentDescription = "Agregar",
-                        modifier = Modifier.size(40.dp)
-                    )
+                buttonAnimation(
+                    drawableId = R.drawable.perfil,
+                    modifier = Modifier.size(50.dp)
+                ) {
+                    // TODO: acción al presionar el perfil
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Ejemplo de recordatorio
-            Box(
+            // Contenido centrado
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp))
-                    .padding(16.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column {
-                    Text("Recordatorio de ejemplo", fontWeight = FontWeight.Bold)
-                    Text("Tipo: Estudio", fontSize = 13.sp)
-                    Text("10/12/2025 - 15:00", fontSize = 12.sp)
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(140.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Agregar nuevo recordatorio", fontWeight = FontWeight.Bold)
+
+                        buttonAnimation(
+                            drawableId = R.drawable.agregar,
+                            modifier = Modifier.size(50.dp)
+                        ) {
+                            onAgregarNuevo()
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp))
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text("Recordatorio de ejemplo", fontWeight = FontWeight.Bold)
+                        Text("Tipo: Estudio", fontSize = 13.sp)
+                        Text("10/12/2025 - 15:00", fontSize = 12.sp)
+                    }
                 }
             }
         }
@@ -141,18 +164,25 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Botón volver
+            //Fila superior con "volver" a la izquierda y "perfil" a la derecha
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.atras),
-                    contentDescription = "Volver",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable { onVolver() }
-                )
+                buttonAnimation(
+                    drawableId = R.drawable.atras,
+                    modifier = Modifier.size(50.dp)
+                ) {
+                    onVolver()
+                }
+
+                buttonAnimation(
+                    drawableId = R.drawable.perfil,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    // TODO: acción al presionar perfil
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -165,7 +195,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Bloque combinado de fecha y hora
+            //Bloque combinado de fecha y hora
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -193,41 +223,35 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                         }
 
                         Row {
-                            Image(
-                                painter = painterResource(id = R.drawable.calendario),
-                                contentDescription = "Seleccionar fecha",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clickable {
-                                        val datePicker = DatePickerDialog(
-                                            context,
-                                            { _, y, m, d -> fecha = "$d/${m + 1}/$y" },
-                                            calendar.get(Calendar.YEAR),
-                                            calendar.get(Calendar.MONTH),
-                                            calendar.get(Calendar.DAY_OF_MONTH)
-                                        )
-                                        datePicker.show()
-                                    }
-                            )
+                            buttonAnimation(
+                                drawableId = R.drawable.calendario,
+                                modifier = Modifier.size(45.dp)
+                            ) {
+                                val datePicker = DatePickerDialog(
+                                    context,
+                                    { _, y, m, d -> fecha = "$d/${m + 1}/$y" },
+                                    calendar.get(Calendar.YEAR),
+                                    calendar.get(Calendar.MONTH),
+                                    calendar.get(Calendar.DAY_OF_MONTH)
+                                )
+                                datePicker.show()
+                            }
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Image(
-                                painter = painterResource(id = R.drawable.calendario), //cambiar icono por un reloj
-                                contentDescription = "Seleccionar hora",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clickable {
-                                        val timePicker = TimePickerDialog(
-                                            context,
-                                            { _, h, m -> hora = String.format("%02d:%02d", h, m) },
-                                            calendar.get(Calendar.HOUR_OF_DAY),
-                                            calendar.get(Calendar.MINUTE),
-                                            true
-                                        )
-                                        timePicker.show()
-                                    }
-                            )
+                            buttonAnimation(
+                                drawableId = R.drawable.reloj,
+                                modifier = Modifier.size(45.dp)
+                            ) {
+                                val timePicker = TimePickerDialog(
+                                    context,
+                                    { _, h, m -> hora = String.format("%02d:%02d", h, m) },
+                                    calendar.get(Calendar.HOUR_OF_DAY),
+                                    calendar.get(Calendar.MINUTE),
+                                    true
+                                )
+                                timePicker.show()
+                            }
                         }
                     }
                 }
