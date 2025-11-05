@@ -42,6 +42,8 @@ fun LoginScreen(onLoginClick: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val textColor = Color(0xFF212121)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,6 +51,7 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.iniciousuario),
             contentDescription = "Icono del usuario",
@@ -57,25 +60,57 @@ fun LoginScreen(onLoginClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
+
+        Text(
+            text = "Usuario",
+            color = textColor,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp)
+        )
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Usuario") },
+            label = { Text("Ingresa tu usuario", color = textColor.copy(alpha = 0.7f)) },
+            textStyle = LocalTextStyle.current.copy(color = textColor),
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = textColor,
+                unfocusedBorderColor = textColor.copy(alpha = 0.5f),
+                cursorColor = textColor
+            )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
+
+        Text(
+            text = "Contraseña",
+            color = textColor,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp)
+        )
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña") },
+            label = { Text("Ingresa tu contraseña", color = textColor.copy(alpha = 0.7f)) },
+            textStyle = LocalTextStyle.current.copy(color = textColor),
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = textColor,
+                unfocusedBorderColor = textColor.copy(alpha = 0.5f),
+                cursorColor = textColor
+            )
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
             onClick = onLoginClick,
@@ -85,13 +120,19 @@ fun LoginScreen(onLoginClick: () -> Unit) {
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text("Iniciar", color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "Iniciar",
+                color = textColor,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             "Registrarse",
-            color = Color.Gray,
+            color = textColor.copy(alpha = 0.7f),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center

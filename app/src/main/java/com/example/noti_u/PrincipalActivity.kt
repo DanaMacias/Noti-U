@@ -9,17 +9,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
+import com.example.noti_u.ui.theme.BarraLateralDesplegable
 
 class PrincipalActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,35 +29,45 @@ class PrincipalActivity : ComponentActivity() {
         setContent {
             NotiUTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    PrincipalScreen(
-                        onGoToRecordatorios = {
-                            startActivity(Intent(this, RecordatoriosActivity::class.java))
-                        }
-                    )
+                    PrincipalScreen()
                 }
             }
         }
     }
 }
 
+
 @Composable
-fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Fondo
-        Image(
-            painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Fondo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+fun PrincipalScreen() {
+    var selectedTab by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFAF3E0))
+    ) {
+
+        BarraLateralDesplegable(
+            selectedTab = selectedTab,
+            onSelect = { selectedTab = it },
+            onNavigate = { destino ->
+                when (destino) {
+                    "Horarios" -> context.startActivity(Intent(context, HorariosActivity::class.java))
+                    "Pendientes" -> context.startActivity(Intent(context, PendientesActivity::class.java))
+                    "Recordatorios" -> context.startActivity(Intent(context, RecordatoriosActivity::class.java))
+                    "Notas" -> context.startActivity(Intent(context, NotasActivity::class.java))
+                }
+            }
         )
 
-        // Contenido principal
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Header con perfil - MÁS BAJO
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,12 +79,9 @@ fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
                 buttonAnimation(
                     drawableId = R.drawable.perfil,
                     modifier = Modifier.size(50.dp)
-                ) {
-                    // TODO: acción al presionar el perfil
-                }
+                ) { /* Acción perfil */ }
             }
 
-            // Logo
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
@@ -82,119 +91,20 @@ fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
                     .padding(vertical = 16.dp)
             )
 
-            // Recordatorios
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Recordatorio 1
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
-                        .padding(16.dp)
-                ) {
-                    Column {
-                        Text(
-                            "Proyecto final",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                "Proyecto • Materia",
-                                fontSize = 14.sp,
-                                color = Color.Black
-                            )
-                            Text(
-                                "22/01/2025",
-                                fontSize = 14.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
-
-                // Recordatorio 2
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
-                        .padding(16.dp)
-                ) {
-                    Column {
-                        Text(
-                            "Parcial segundo corte",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                "Examen • Materia",
-                                fontSize = 14.sp,
-                                color = Color.Black
-                            )
-                            Text(
-                                "22/01/2025",
-                                fontSize = 14.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
-
-                // Recordatorio 3
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
-                        .padding(16.dp)
-                ) {
-                    Column {
-                        Text(
-                            "Exposición",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                "Presentación • Materia",
-                                fontSize = 14.sp,
-                                color = Color.Black
-                            )
-                            Text(
-                                "22/01/2025",
-                                fontSize = 14.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
+                RecordatorioBox("Proyecto final", "Proyecto • Materia", "22/01/2025")
+                RecordatorioBox("Parcial segundo corte", "Examen • Materia", "22/01/2025")
+                RecordatorioBox("Exposición", "Presentación • Materia", "22/01/2025")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Páginas recomendadas
             Text(
                 "Páginas Recomendadas",
                 fontWeight = FontWeight.Bold,
@@ -213,24 +123,29 @@ fun PrincipalScreen(onGoToRecordatorios: () -> Unit) {
                     .align(Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
 
-            // Botón Ir a Recordatorios
-            Button(
-                onClick = onGoToRecordatorios,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 16.dp)
+
+@Composable
+fun RecordatorioBox(titulo: String, subtitulo: String, fecha: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF8DD8E1), RoundedCornerShape(16.dp))
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(titulo, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    "Ir a Recordatorios",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
+                Text(subtitulo, fontSize = 14.sp, color = Color.Black)
+                Text(fecha, fontSize = 14.sp, color = Color.Black, fontWeight = FontWeight.Medium)
             }
         }
     }

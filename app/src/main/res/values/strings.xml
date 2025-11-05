@@ -2,4 +2,9 @@
     <string name="app_name">Noti-U</string>
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="title_activity_recordatorios">RecordatoriosActivity</string>
+    <string name="title_activity_agregar_nota_screen">AgregarNotaScreen</string>
+    <string name="title_activity_nota_repository">NotaRepository</string>
+    <string name="title_activity_horarios">HorariosActivity</string>
+    <string name="title_activity_pendientes">PendientesActivity</string>
+    <string name="title_activity_notas">NotasActivity</string>
 </resources>

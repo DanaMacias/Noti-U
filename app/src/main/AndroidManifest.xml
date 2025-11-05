@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotiU">
         <activity
+            android:name=".NotasActivity"
+            android:exported="false"
+            android:label="@string/title_activity_notas"
+            android:theme="@style/Theme.NotiU" />
+        <activity
+            android:name=".PendientesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_pendientes"
+            android:theme="@style/Theme.NotiU" />
+        <activity
+            android:name=".HorariosActivity"
+            android:exported="false"
+            android:label="@string/title_activity_horarios"
+            android:theme="@style/Theme.NotiU" />
+        <activity
             android:name=".RecordatoriosActivity"
             android:exported="false"
             android:label="@string/title_activity_recordatorios"
