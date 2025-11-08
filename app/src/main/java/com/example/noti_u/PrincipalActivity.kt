@@ -53,6 +53,7 @@ fun PrincipalScreen() {
             onSelect = { selectedTab = it },
             onNavigate = { destino ->
                 when (destino) {
+
                     "Horarios" -> context.startActivity(Intent(context, HorariosActivity::class.java))
                     "Pendientes" -> context.startActivity(Intent(context, PendientesActivity::class.java))
                     "Recordatorios" -> context.startActivity(Intent(context, RecordatoriosActivity::class.java))
