@@ -1,5 +1,6 @@
 package com.example.noti_u
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,7 +34,7 @@ class HorariosActivity : BaseMenuActivity() {
                 // startActivity(Intent(this, NuevaMateriaActivity::class.java))
             },
             onCalendarioClick = {
-                // startActivity(Intent(this, CalendarioActivity::class.java))
+                startActivity(Intent(this, CalendarioActivity::class.java))
             }
         )
     }

@@ -32,6 +32,12 @@
             android:label="@string/title_activity_recordatorios"
             android:theme="@style/Theme.NotiU" />
         <activity
+            android:name=".CalendarioActivity"
+            android:exported="false"
+            android:label="Calendario"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
             android:name=".PrincipalActivity"
             android:exported="false"
             android:label="@string/title_activity_principal"

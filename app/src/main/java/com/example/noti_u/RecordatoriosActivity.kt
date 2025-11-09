@@ -97,7 +97,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
 
             Box(
                 modifier = Modifier
-                    .size(150.dp)
+
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp)),
@@ -126,6 +126,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
 
             Box(
                 modifier = Modifier
+                    .size(150.dp)
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp))

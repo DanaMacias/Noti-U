@@ -306,7 +306,13 @@ fun AgregarNotaScreen(navController: NavHostController) {
                     )
                 }
             }
-
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp, bottom = 10.dp),
+                color = Color.Black,
+                thickness = 1.dp
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             BasicTextField(
