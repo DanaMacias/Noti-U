@@ -97,6 +97,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
 
             Box(
                 modifier = Modifier
+                    .size(150.dp)
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp)),
@@ -107,12 +108,16 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                         "Agregar nuevo recordatorio",
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
-                        color = DarkTextPrimary
+                        color = DarkTextPrimary,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
 
                     buttonAnimation(
-                        drawableId = R.drawable.agregar,
-                        modifier = Modifier.size(50.dp)
+
+                        drawableId = R.drawable.mas,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .padding(top = 5.dp)
                     ) { onAgregarNuevo() }
                 }
             }
