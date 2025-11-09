@@ -73,22 +73,7 @@ fun PerfilAnimado(modifier: Modifier = Modifier, onClick: () -> Unit) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (pressed) 0.8f else 1f)
 
-    Image(
-        painter = painterResource(id = R.drawable.perfil),
-        contentDescription = "Perfil",
-        modifier = modifier
-            .scale(scale)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        pressed = true
-                        tryAwaitRelease()
-                        pressed = false
-                        onClick()
-                    }
-                )
-            }
-    )
+
 }
 
 @Composable
@@ -114,14 +99,7 @@ fun NotasScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .size(180.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 60.dp)
-            )
+
 
             Row(
                 modifier = Modifier
@@ -257,13 +235,7 @@ fun AgregarNotaScreen(navController: NavHostController) {
                 .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo Noti Ü",
-                modifier = Modifier
-                    .size(150.dp)
-                    .padding(top = 16.dp)
-            )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 

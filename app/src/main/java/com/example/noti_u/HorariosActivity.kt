@@ -31,7 +31,7 @@ class HorariosActivity : BaseMenuActivity() {
     override fun PantallaContenido(innerPadding: PaddingValues) {
         HorarioScreen(
             onNuevaMateriaClick = {
-                // startActivity(Intent(this, NuevaMateriaActivity::class.java))
+                startActivity(Intent(this, NuevaMateriaActivity::class.java))
             },
             onCalendarioClick = {
                 startActivity(Intent(this, CalendarioActivity::class.java))
@@ -57,29 +57,34 @@ class HorariosActivity : BaseMenuActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Logo
-                    Image(
-                        painter = painterResource(id = R.drawable.logo),
-                        contentDescription = "Logo",
-                        modifier = Modifier.size(70.dp)
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        text = "Materias",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        color = DarkTextColor
                     )
 
 
-                    buttonAnimation(
-                        drawableId = R.drawable.perfil,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        // startActivity(Intent(context, PerfilActivity::class.java))
-                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
+
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp, bottom = 10.dp),
+                    color = Color.Black,
+                    thickness = 1.dp
+                )
 
                 Spacer(modifier = Modifier.height(40.dp))
 

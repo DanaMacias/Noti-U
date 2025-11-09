@@ -51,7 +51,7 @@ class CalendarioActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // 🔹 Encabezado superior
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -109,11 +109,11 @@ class CalendarioActivity : ComponentActivity() {
                     thickness = 1.dp
                 )
 
-                // 🔹 Datos temporales
+
                 val dias = listOf("MON", "TUE", "WED", "THU", "FRI", "SAT")
                 val horas = listOf("8-10", "10-12", "12-14", "14-16", "16-18")
 
-                // 🔹 Tabla scrollable
+
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState())
                 ) {

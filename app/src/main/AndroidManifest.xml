@@ -36,6 +36,11 @@
             android:exported="false"
             android:label="Calendario"
             android:theme="@style/Theme.NotiU" />
+        <activity
+            android:name=".NuevaMateriaActivity"
+            android:exported="false"
+            android:label="NuevaMateria"
+            android:theme="@style/Theme.NotiU" />
 
         <activity
             android:name=".PrincipalActivity"

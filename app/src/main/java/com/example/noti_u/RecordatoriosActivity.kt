@@ -16,7 +16,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -59,7 +61,7 @@ class RecordatoriosActivity : BaseMenuActivity() {
 @Composable
 fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        // Fondo
+
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -81,18 +83,43 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                buttonAnimation(
-                    drawableId = R.drawable.perfil,
-                    modifier = Modifier.size(50.dp)
-                ) { /* TODO: acción perfil */ }
+
             }
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(140.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
 
+                Text(
+                    text = "Recordatorios",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = DarkTextColor
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.buscar),
+                    contentDescription = "Buscar",
+                    modifier = Modifier.size(32.dp)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp, bottom = 10.dp),
+                color = Color.Black,
+                thickness = 1.dp
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             Box(
@@ -121,6 +148,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                     ) { onAgregarNuevo() }
                 }
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -192,19 +220,25 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                     modifier = Modifier.size(50.dp)
                 ) { onVolver() }
 
-                buttonAnimation(
-                    drawableId = R.drawable.perfil,
-                    modifier = Modifier.size(40.dp)
-                ) { /* TODO: acción perfil */ }
+                Text(
+                    text = "Agregar Recordatorio",
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 17.sp,
+                    color = Color.Black
+                )
+
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(200.dp)
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp, bottom = 10.dp),
+                color = Color.Black,
+                thickness = 1.dp
             )
+
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
