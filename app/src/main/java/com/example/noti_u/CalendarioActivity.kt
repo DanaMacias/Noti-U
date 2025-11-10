@@ -1,5 +1,6 @@
 package com.example.noti_u
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +45,8 @@ class CalendarioActivity : ComponentActivity() {
 
     @Composable
     fun PantallaContenido() {
+        var expanded by remember { mutableStateOf(false) }
+        val context = LocalContext.current
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -62,13 +69,56 @@ class CalendarioActivity : ComponentActivity() {
                     Image(
                         painter = painterResource(id = R.drawable.logo),
                         contentDescription = "Logo",
-                        modifier = Modifier.size(70.dp)
+                        modifier = Modifier.size(80.dp)
                     )
 
-                    buttonAnimation(
-                        drawableId = R.drawable.perfil,
-                        modifier = Modifier.size(40.dp)
-                    ) { }
+                    Box {
+                        buttonAnimation(
+                            drawableId = R.drawable.perfil,
+                            modifier = Modifier.size(40.dp)
+                        ) { expanded = !expanded }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Ver perfil") },
+                                onClick = {
+                                    expanded = false
+                                    val intent = Intent(context, PerfilActivity::class.java)
+                                    context.startActivity(intent)
+                                    (context as? ComponentActivity)?.overridePendingTransition(
+                                        android.R.anim.fade_in,
+                                        android.R.anim.fade_out
+                                    )
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = { Text("Editar perfil") },
+                                onClick = {
+                                    expanded = false
+                                    val intent = Intent(context, EditarPerfilActivity::class.java)
+                                    context.startActivity(intent)
+                                    (context as? ComponentActivity)?.overridePendingTransition(
+                                        android.R.anim.fade_in,
+                                        android.R.anim.fade_out
+                                    )
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = { Text("Cerrar sesión") },
+                                onClick = {
+                                    expanded = false
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent)
+                                    (context as? ComponentActivity)?.finish()
+                                }
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

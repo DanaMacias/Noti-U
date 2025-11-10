@@ -86,32 +86,22 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
 
             }
 
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                contentAlignment = Alignment.Center
             ) {
-                Spacer(modifier = Modifier.weight(1f))
-
                 Text(
                     text = "Recordatorios",
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = DarkTextColor
+                    color = DarkTextPrimary
                 )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Image(
-                    painter = painterResource(id = R.drawable.buscar),
-                    contentDescription = "Buscar",
-                    modifier = Modifier.size(32.dp)
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
             }
+
+
 
             Divider(
                 modifier = Modifier

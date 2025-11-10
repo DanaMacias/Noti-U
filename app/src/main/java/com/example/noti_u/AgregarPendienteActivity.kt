@@ -1,5 +1,6 @@
 package com.example.noti_u
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,6 +38,7 @@ class AgregarPendienteActivity : ComponentActivity() {
 
     @Composable
     fun AgregarPendienteScreen() {
+        var expanded by remember { mutableStateOf(false) }
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
@@ -81,12 +83,56 @@ class AgregarPendienteActivity : ComponentActivity() {
                         Image(
                             painter = painterResource(id = R.drawable.logo),
                             contentDescription = "Logo",
-                            modifier = Modifier.size(70.dp)
+                            modifier = Modifier.size(80.dp)
                         )
-                        buttonAnimation(
-                            drawableId = R.drawable.perfil,
-                            modifier = Modifier.size(40.dp)
-                        ) { }
+
+                        Box {
+                            buttonAnimation(
+                                drawableId = R.drawable.perfil,
+                                modifier = Modifier.size(40.dp)
+                            ) { expanded = !expanded }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Ver perfil") },
+                                    onClick = {
+                                        expanded = false
+                                        val intent = Intent(context, PerfilActivity::class.java)
+                                        context.startActivity(intent)
+                                        (context as? ComponentActivity)?.overridePendingTransition(
+                                            android.R.anim.fade_in,
+                                            android.R.anim.fade_out
+                                        )
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = { Text("Editar perfil") },
+                                    onClick = {
+                                        expanded = false
+                                        val intent = Intent(context, EditarPerfilActivity::class.java)
+                                        context.startActivity(intent)
+                                        (context as? ComponentActivity)?.overridePendingTransition(
+                                            android.R.anim.fade_in,
+                                            android.R.anim.fade_out
+                                        )
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = { Text("Cerrar sesión") },
+                                    onClick = {
+                                        expanded = false
+                                        val intent = Intent(context, MainActivity::class.java)
+                                        context.startActivity(intent)
+                                        (context as? ComponentActivity)?.finish()
+                                    }
+                                )
+                            }
+                        }
                     }
 
                     Divider(

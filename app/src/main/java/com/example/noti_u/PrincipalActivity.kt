@@ -83,77 +83,87 @@ fun PrincipalScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .background(Color(0xFFFAF3E0))
         ) {
 
-            Box(
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd
+                    .fillMaxWidth()
+                    .background(Color(0xFFFAF3E0))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val context = LocalContext.current
 
-                buttonAnimation(
-                    drawableId = R.drawable.perfil,
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    expanded = !expanded
-                }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .background(Color.White)
-                        .align(Alignment.TopEnd)
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            expanded = false
-                            val intent = Intent(context, PerfilActivity::class.java)
-                            context.startActivity(intent)
-                            (context as? ComponentActivity)?.overridePendingTransition(
-                                android.R.anim.fade_in,
-                                android.R.anim.fade_out
-                            )
-                        }
-                    )
 
-                    DropdownMenuItem(
-                        text = { Text("Editar perfil") },
-                        onClick = {
-                            expanded = false
-                            val intent = Intent(context, EditarPerfilActivity::class.java)
-                            context.startActivity(intent)
-                            (context as? ComponentActivity)?.overridePendingTransition(
-                                android.R.anim.fade_in,
-                                android.R.anim.fade_out
-                            )
-                        }
-                    )
 
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            expanded = false
-                            //limpiar datos
-                            val intent = Intent(context, MainActivity::class.java)
-                            context.startActivity(intent)
-                            (context as? ComponentActivity)?.finish()
-                        }
-                    )
+
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(100.dp)
+                )
+
+
+                var expanded by remember { mutableStateOf(false) }
+
+                Box {
+                    buttonAnimation(
+                        drawableId = R.drawable.perfil,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        expanded = !expanded
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Ver perfil") },
+                            onClick = {
+                                expanded = false
+                                val intent = Intent(context, PerfilActivity::class.java)
+                                context.startActivity(intent)
+                                (context as? ComponentActivity)?.overridePendingTransition(
+                                    android.R.anim.fade_in,
+                                    android.R.anim.fade_out
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text("Editar perfil") },
+                            onClick = {
+                                expanded = false
+                                val intent = Intent(context, EditarPerfilActivity::class.java)
+                                context.startActivity(intent)
+                                (context as? ComponentActivity)?.overridePendingTransition(
+                                    android.R.anim.fade_in,
+                                    android.R.anim.fade_out
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text("Cerrar sesión") },
+                            onClick = {
+                                expanded = false
+
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                                (context as? ComponentActivity)?.finish()
+                            }
+                        )
+                    }
                 }
             }
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp)
-            )
+
+
+
 
 
             Column(
