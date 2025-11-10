@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +45,7 @@ fun LoginScreen(onLoginClick: () -> Unit) {
     var password by remember { mutableStateOf("") }
 
     val textColor = Color(0xFF212121)
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -59,7 +62,6 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(32.dp))
-
 
         Text(
             text = "Usuario",
@@ -85,7 +87,6 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
 
         Text(
             text = "Contraseña",
@@ -130,12 +131,18 @@ fun LoginScreen(onLoginClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         Text(
-            "Registrarse",
+            text = "Registrarse",
             color = textColor.copy(alpha = 0.7f),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .clickable {
+                    val intent = Intent(context, RegistroActivity::class.java)
+                    context.startActivity(intent)
+                }
         )
     }
 }
