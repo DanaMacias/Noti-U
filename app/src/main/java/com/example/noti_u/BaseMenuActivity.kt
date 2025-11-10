@@ -43,16 +43,40 @@ abstract class BaseMenuActivity : ComponentActivity() {
                             onSelect = { selectedTab = it },
                             onNavigate = { destino ->
                                 when (destino) {
-                                    "Horarios" -> if (currentActivity !is HorariosActivity)
-                                        context.startActivity(Intent(context, HorariosActivity::class.java))
-                                    "Pendientes" -> if (currentActivity !is PendientesActivity)
-                                        context.startActivity(Intent(context, PendientesActivity::class.java))
-                                    "Recordatorios" -> if (currentActivity !is RecordatoriosActivity)
-                                        context.startActivity(Intent(context, RecordatoriosActivity::class.java))
-                                    "Notas" -> if (currentActivity !is NotasActivity)
-                                        context.startActivity(Intent(context, NotasActivity::class.java))
+                                    "Horarios" -> if (currentActivity !is HorariosActivity) {
+                                        val intent = Intent(context, HorariosActivity::class.java)
+                                        (context as? android.app.Activity)?.apply {
+                                            startActivity(intent)
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                        }
+                                    }
+
+                                    "Pendientes" -> if (currentActivity !is PendientesActivity) {
+                                        val intent = Intent(context, PendientesActivity::class.java)
+                                        (context as? android.app.Activity)?.apply {
+                                            startActivity(intent)
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                        }
+                                    }
+
+                                    "Recordatorios" -> if (currentActivity !is RecordatoriosActivity) {
+                                        val intent = Intent(context, RecordatoriosActivity::class.java)
+                                        (context as? android.app.Activity)?.apply {
+                                            startActivity(intent)
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                        }
+                                    }
+
+                                    "Notas" -> if (currentActivity !is NotasActivity) {
+                                        val intent = Intent(context, NotasActivity::class.java)
+                                        (context as? android.app.Activity)?.apply {
+                                            startActivity(intent)
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                        }
+                                    }
                                 }
                             }
+
                         )
 
 
@@ -77,10 +101,17 @@ abstract class BaseMenuActivity : ComponentActivity() {
                                     drawableId = R.drawable.home,
                                     modifier = Modifier.size(40.dp)
                                 ) {
+                                    val currentActivity = context as? ComponentActivity
                                     if (currentActivity !is PrincipalActivity) {
-                                        context.startActivity(Intent(context, PrincipalActivity::class.java))
+                                        val intent = Intent(context, PrincipalActivity::class.java)
+                                        context.startActivity(intent)
+                                        currentActivity?.overridePendingTransition(
+                                            android.R.anim.fade_in,
+                                            android.R.anim.fade_out
+                                        )
                                     }
                                 }
+
 
 
                                 Image(
@@ -90,13 +121,57 @@ abstract class BaseMenuActivity : ComponentActivity() {
                                 )
 
 
-                                buttonAnimation(
-                                    drawableId = R.drawable.perfil,
-                                    modifier = Modifier.size(40.dp)
-                                ) {
-                                    // if (currentActivity !is PerfilActivity) {
-                                    //     context.startActivity(Intent(context, PerfilActivity::class.java))
-                                    // }
+                                var expanded by remember { mutableStateOf(false) }
+
+                                Box {
+                                    buttonAnimation(
+                                        drawableId = R.drawable.perfil,
+                                        modifier = Modifier.size(40.dp)
+                                    ) {
+                                        expanded = !expanded
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = expanded,
+                                        onDismissRequest = { expanded = false },
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text("Ver perfil") },
+                                            onClick = {
+                                                expanded = false
+                                                val intent = Intent(context, PerfilActivity::class.java)
+                                                context.startActivity(intent)
+                                                (context as? ComponentActivity)?.overridePendingTransition(
+                                                    android.R.anim.fade_in,
+                                                    android.R.anim.fade_out
+                                                )
+                                            }
+                                        )
+
+                                        DropdownMenuItem(
+                                            text = { Text("Editar perfil") },
+                                            onClick = {
+                                                expanded = false
+                                                val intent = Intent(context, EditarPerfilActivity::class.java)
+                                                context.startActivity(intent)
+                                                (context as? ComponentActivity)?.overridePendingTransition(
+                                                    android.R.anim.fade_in,
+                                                    android.R.anim.fade_out
+                                                )
+                                            }
+                                        )
+
+                                        DropdownMenuItem(
+                                            text = { Text("Cerrar sesión") },
+                                            onClick = {
+                                                expanded = false
+                                                //limpiar datos
+                                                val intent = Intent(context, MainActivity::class.java)
+                                                context.startActivity(intent)
+                                                (context as? ComponentActivity)?.finish()
+                                            }
+                                        )
+                                    }
                                 }
                             }
 

@@ -41,6 +41,7 @@ class PrincipalActivity : ComponentActivity() {
 fun PrincipalScreen() {
     var selectedTab by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -52,12 +53,28 @@ fun PrincipalScreen() {
             selectedTab = selectedTab,
             onSelect = { selectedTab = it },
             onNavigate = { destino ->
+                val activity = context as? ComponentActivity
                 when (destino) {
-
-                    "Horarios" -> context.startActivity(Intent(context, HorariosActivity::class.java))
-                    "Pendientes" -> context.startActivity(Intent(context, PendientesActivity::class.java))
-                    "Recordatorios" -> context.startActivity(Intent(context, RecordatoriosActivity::class.java))
-                    "Notas" -> context.startActivity(Intent(context, NotasActivity::class.java))
+                    "Horarios" -> {
+                        val intent = Intent(context, HorariosActivity::class.java)
+                        activity?.startActivity(intent)
+                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    }
+                    "Pendientes" -> {
+                        val intent = Intent(context, PendientesActivity::class.java)
+                        activity?.startActivity(intent)
+                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    }
+                    "Recordatorios" -> {
+                        val intent = Intent(context, RecordatoriosActivity::class.java)
+                        activity?.startActivity(intent)
+                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    }
+                    "Notas" -> {
+                        val intent = Intent(context, NotasActivity::class.java)
+                        activity?.startActivity(intent)
+                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    }
                 }
             }
         )
@@ -69,18 +86,64 @@ fun PrincipalScreen() {
                 .padding(16.dp)
         ) {
 
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopEnd
             ) {
+                val context = LocalContext.current
+
                 buttonAnimation(
                     drawableId = R.drawable.perfil,
-                    modifier = Modifier.size(50.dp)
-                ) { /* Acción perfil */ }
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    expanded = !expanded
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .background(Color.White)
+                        .align(Alignment.TopEnd)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Ver perfil") },
+                        onClick = {
+                            expanded = false
+                            val intent = Intent(context, PerfilActivity::class.java)
+                            context.startActivity(intent)
+                            (context as? ComponentActivity)?.overridePendingTransition(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                            )
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text("Editar perfil") },
+                        onClick = {
+                            expanded = false
+                            val intent = Intent(context, EditarPerfilActivity::class.java)
+                            context.startActivity(intent)
+                            (context as? ComponentActivity)?.overridePendingTransition(
+                                android.R.anim.fade_in,
+                                android.R.anim.fade_out
+                            )
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text("Cerrar sesión") },
+                        onClick = {
+                            expanded = false
+                            //limpiar datos
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                            (context as? ComponentActivity)?.finish()
+                        }
+                    )
+                }
             }
 
             Image(

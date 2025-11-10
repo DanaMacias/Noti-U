@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotiU">
         <activity
+            android:name=".EditarPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AgregarPendienteActivity"
+            android:exported="false" />
+        <activity
             android:name=".NotasActivity"
             android:exported="false"
             android:label="@string/title_activity_notas"
@@ -46,7 +55,6 @@
             android:exported="false"
             android:label="NuevaMateria"
             android:theme="@style/Theme.NotiU" />
-
         <activity
             android:name=".PrincipalActivity"
             android:exported="false"
