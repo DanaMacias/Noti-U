@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "56212633774",
+    "project_id": "noti-u-3532c",
+    "storage_bucket": "noti-u-3532c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56212633774:android:e022102c5fa39a3590553f",
+        "android_client_info": {
+          "package_name": "com.example.noti_u"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCL5kNy_g649TJPkxPgpAUtwpknpv7KMJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
