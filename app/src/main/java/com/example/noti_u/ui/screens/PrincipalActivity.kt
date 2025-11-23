@@ -1,5 +1,6 @@
-package com.example.noti_u
+package com.example.noti_u.ui.screens
 
+import android.R
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,12 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.noti_u.MainActivity
+import com.example.noti_u.ui.screens.EditarPerfilActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import com.example.noti_u.ui.theme.BarraLateralDesplegable
@@ -58,22 +60,22 @@ fun PrincipalScreen() {
                     "Horarios" -> {
                         val intent = Intent(context, HorariosActivity::class.java)
                         activity?.startActivity(intent)
-                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                        activity?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     }
                     "Pendientes" -> {
                         val intent = Intent(context, PendientesActivity::class.java)
                         activity?.startActivity(intent)
-                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                        activity?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     }
                     "Recordatorios" -> {
                         val intent = Intent(context, RecordatoriosActivity::class.java)
                         activity?.startActivity(intent)
-                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                        activity?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     }
                     "Notas" -> {
                         val intent = Intent(context, NotasActivity::class.java)
                         activity?.startActivity(intent)
-                        activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                        activity?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                     }
                 }
             }
@@ -101,7 +103,7 @@ fun PrincipalScreen() {
 
 
                 Image(
-                    painter = painterResource(id = R.drawable.logo),
+                    painter = painterResource(id = com.example.noti_u.R.drawable.logo),
                     contentDescription = "Logo",
                     modifier = Modifier.size(100.dp)
                 )
@@ -111,7 +113,7 @@ fun PrincipalScreen() {
 
                 Box {
                     buttonAnimation(
-                        drawableId = R.drawable.perfil,
+                        drawableId = com.example.noti_u.R.drawable.perfil,
                         modifier = Modifier.size(40.dp)
                     ) {
                         expanded = !expanded
@@ -128,8 +130,8 @@ fun PrincipalScreen() {
                                 val intent = Intent(context, PerfilActivity::class.java)
                                 context.startActivity(intent)
                                 (context as? ComponentActivity)?.overridePendingTransition(
-                                    android.R.anim.fade_in,
-                                    android.R.anim.fade_out
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
                                 )
                             }
                         )
@@ -141,8 +143,8 @@ fun PrincipalScreen() {
                                 val intent = Intent(context, EditarPerfilActivity::class.java)
                                 context.startActivity(intent)
                                 (context as? ComponentActivity)?.overridePendingTransition(
-                                    android.R.anim.fade_in,
-                                    android.R.anim.fade_out
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
                                 )
                             }
                         )

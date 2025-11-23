@@ -1,4 +1,4 @@
-package com.example.noti_u
+package com.example.noti_u.ui.screens
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -21,10 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.noti_u.R
 import com.example.noti_u.ui.theme.buttonAnimation
 import java.util.*
 
@@ -126,7 +126,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
 
                     buttonAnimation(

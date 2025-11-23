@@ -1,4 +1,4 @@
-package com.example.noti_u
+package com.example.noti_u.ui.screens
 
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -21,9 +21,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.noti_u.MainActivity
+import com.example.noti_u.ui.screens.EditarPerfilActivity
+import com.example.noti_u.R
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import java.util.*

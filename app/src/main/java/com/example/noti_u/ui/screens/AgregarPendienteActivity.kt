@@ -1,4 +1,4 @@
-package com.example.noti_u
+package com.example.noti_u.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,36 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,9 +46,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.noti_u.MainActivity
+import com.example.noti_u.R
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class AgregarPendienteActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,36 +88,36 @@ class AgregarPendienteActivity : ComponentActivity() {
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             Box(
-                modifier = Modifier
+                modifier = Modifier.Companion
                     .fillMaxSize()
                     .background(Color(0xFFFAF3E0))
                     .padding(paddingValues)
                     .padding(16.dp)
             ) {
                 Column(
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState()), // 🔹 Permite desplazarse
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.Companion.CenterHorizontally
                 ) {
 
                     Row(
-                        modifier = Modifier
+                        modifier = Modifier.Companion
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.Companion.CenterVertically
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.logo),
                             contentDescription = "Logo",
-                            modifier = Modifier.size(80.dp)
+                            modifier = Modifier.Companion.size(80.dp)
                         )
 
                         Box {
                             buttonAnimation(
                                 drawableId = R.drawable.perfil,
-                                modifier = Modifier.size(40.dp)
+                                modifier = Modifier.Companion.size(40.dp)
                             ) { expanded = !expanded }
 
                             DropdownMenu(
@@ -113,7 +141,8 @@ class AgregarPendienteActivity : ComponentActivity() {
                                     text = { Text("Editar perfil") },
                                     onClick = {
                                         expanded = false
-                                        val intent = Intent(context, EditarPerfilActivity::class.java)
+                                        val intent =
+                                            Intent(context, EditarPerfilActivity::class.java)
                                         context.startActivity(intent)
                                         (context as? ComponentActivity)?.overridePendingTransition(
                                             android.R.anim.fade_in,
@@ -136,111 +165,125 @@ class AgregarPendienteActivity : ComponentActivity() {
                     }
 
                     Divider(
-                        modifier = Modifier
+                        modifier = Modifier.Companion
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        color = Color.Black,
+                        color = Color.Companion.Black,
                         thickness = 1.dp
                     )
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.Companion.fillMaxWidth(),
+                        verticalAlignment = Alignment.Companion.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
                         buttonAnimation(
                             drawableId = R.drawable.atras,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.Companion.size(32.dp)
                         ) {
                             (context as? ComponentActivity)?.finish()
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.Companion.width(8.dp))
                         Text(
                             text = "Agregar/Editar",
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Companion.Bold,
                             fontSize = 22.sp,
-                            color = Color.Black
+                            color = Color.Companion.Black
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.Companion.height(18.dp))
 
-                    Column(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.Companion.fillMaxWidth()) {
                         Text(
                             text = "Pendiente:",
-                            fontWeight = FontWeight.Medium,
+                            fontWeight = FontWeight.Companion.Medium,
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = Color.Companion.Black
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.Companion.height(6.dp))
                         OutlinedTextField(
                             value = titulo,
                             onValueChange = { titulo = it },
-                            placeholder = { Text("Título", color = Color.Gray) },
-                            modifier = Modifier
+                            placeholder = { Text("Título", color = Color.Companion.Gray) },
+                            modifier = Modifier.Companion
                                 .fillMaxWidth()
-                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                                .border(1.dp, Color.Companion.Black, RoundedCornerShape(8.dp)),
+                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Companion.Black)
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.Companion.height(16.dp))
 
                     Text(
                         text = "Seleccione la materia:",
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Companion.Medium,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = Color.Companion.Black
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.Companion.height(8.dp))
 
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.Companion.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         materias.forEach { (nombre, color) ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                                 RadioButton(
                                     selected = materiaSeleccionada == nombre,
                                     onClick = { materiaSeleccionada = nombre },
                                     colors = RadioButtonDefaults.colors(
                                         selectedColor = color,
-                                        unselectedColor = Color.Gray
+                                        unselectedColor = Color.Companion.Gray
                                     )
                                 )
-                                Text(nombre, color = Color.Black)
-                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(nombre, color = Color.Companion.Black)
+                                Spacer(modifier = Modifier.Companion.width(6.dp))
                                 Box(
-                                    modifier = Modifier
+                                    modifier = Modifier.Companion
                                         .size(14.dp)
-                                        .background(color, shape = RoundedCornerShape(2.dp))
+                                        .background(
+                                            color,
+                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(
+                                                2.dp
+                                            )
+                                        )
                                 )
                             }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.Companion.height(16.dp))
 
-                    Column(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.Companion.fillMaxWidth()) {
                         Text(
                             text = "Descripción:",
-                            fontWeight = FontWeight.Medium,
+                            fontWeight = FontWeight.Companion.Medium,
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = Color.Companion.Black
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.Companion.height(6.dp))
                         OutlinedTextField(
                             value = descripcion,
                             onValueChange = { descripcion = it },
-                            placeholder = { Text("Agrega una descripción", color = Color.Gray) },
-                            modifier = Modifier
+                            placeholder = {
+                                Text(
+                                    "Agrega una descripción",
+                                    color = Color.Companion.Gray
+                                )
+                            },
+                            modifier = Modifier.Companion
                                 .fillMaxWidth()
                                 .height(80.dp)
-                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                                .border(
+                                    1.dp,
+                                    Color.Companion.Black,
+                                    androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                                ),
+                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Companion.Black)
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.Companion.height(24.dp))
 
                     Button(
                         onClick = {
@@ -257,15 +300,19 @@ class AgregarPendienteActivity : ComponentActivity() {
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF5B800)),
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(50),
+                        modifier = Modifier.Companion
                             .width(150.dp)
                             .height(45.dp)
                     ) {
-                        Text("Guardar", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Guardar",
+                            color = Color.Companion.Black,
+                            fontWeight = FontWeight.Companion.Bold
+                        )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.Companion.height(16.dp))
                 }
             }
         }

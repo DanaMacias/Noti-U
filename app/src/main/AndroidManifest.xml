@@ -11,55 +11,63 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NotiU">
+
         <activity
-            android:name=".EditarPerfilActivity"
+            android:name=".ui.screens.EditarPerfilActivity"
             android:exported="false" />
+
         <activity
-            android:name=".PerfilActivity"
+            android:name=".ui.screens.PerfilActivity"
             android:exported="false" />
+
         <activity
-            android:name=".AgregarPendienteActivity"
+            android:name=".ui.screens.NuevaMateriaActivity"
             android:exported="false" />
+
         <activity
-            android:name=".NotasActivity"
+            android:name=".ui.screens.HorariosActivity"
             android:exported="false"
             android:label="@string/title_activity_notas"
             android:theme="@style/Theme.NotiU" />
+
         <activity
-            android:name=".PendientesActivity"
+            android:name=".ui.screens.PendientesActivity"
             android:exported="false"
             android:label="@string/title_activity_pendientes"
             android:theme="@style/Theme.NotiU" />
+
         <activity
-            android:name=".HorariosActivity"
+            android:name=".ui.screens.CalendarioActivity"
             android:exported="false"
             android:label="@string/title_activity_horarios"
             android:theme="@style/Theme.NotiU" />
+
         <activity
-            android:name=".RecordatoriosActivity"
+            android:name=".ui.screens.RegistroActivity"
             android:exported="false"
             android:label="@string/title_activity_recordatorios"
             android:theme="@style/Theme.NotiU" />
+
         <activity
-            android:name=".CalendarioActivity"
+            android:name=".ui.screens.RecordatoriosActivity"
             android:exported="false"
             android:label="Calendario"
             android:theme="@style/Theme.NotiU" />
+
         <activity
-            android:name=".RegistroActivity"
+            android:name=".ui.screens.BaseMenuActivity"
             android:exported="false"
             android:label="registro"
             android:theme="@style/Theme.NotiU" />
+
+
+
         <activity
-            android:name=".NuevaMateriaActivity"
-            android:exported="false"
-            android:label="NuevaMateria"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".PrincipalActivity"
+            android:name=".ui.screens.PrincipalActivity"
             android:exported="false"
             android:label="@string/title_activity_principal"
             android:theme="@style/Theme.NotiU" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -67,10 +75,10 @@
             android:theme="@style/Theme.NotiU">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

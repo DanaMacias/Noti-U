@@ -1,17 +1,31 @@
-package com.example.noti_u
+package com.example.noti_u.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +34,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.noti_u.ui.theme.buttonAnimation
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.example.noti_u.ui.screens.AgregarPendienteActivity
+import com.example.noti_u.R
 
 class PendientesActivity : BaseMenuActivity() {
 
@@ -45,15 +62,15 @@ class PendientesActivity : BaseMenuActivity() {
             )
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.Companion.fillMaxSize()) {
             Column(
-                modifier = Modifier
+                modifier = Modifier.Companion
                     .fillMaxSize()
                     .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Companion.CenterHorizontally
             ) {
                 LazyColumn(
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .fillMaxWidth()
                         .weight(1f),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -63,7 +80,8 @@ class PendientesActivity : BaseMenuActivity() {
                             pendiente = pendiente,
                             onEstadoCambiado = { nuevoEstado ->
                                 val index = pendientes.indexOf(pendiente)
-                                if (index != -1) pendientes[index] = pendiente.copy(estado = nuevoEstado)
+                                if (index != -1) pendientes[index] =
+                                    pendiente.copy(estado = nuevoEstado)
                             }
                         )
                     }
@@ -72,18 +90,19 @@ class PendientesActivity : BaseMenuActivity() {
 
             FloatingActionButton(
                 onClick = {
-                    val intent = Intent(this@PendientesActivity, AgregarPendienteActivity::class.java)
+                    val intent =
+                        Intent(this@PendientesActivity, AgregarPendienteActivity::class.java)
                     startActivity(intent)
                 },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                modifier = Modifier.Companion
+                    .align(Alignment.Companion.BottomEnd)
                     .padding(24.dp),
-                containerColor = Color.White
+                containerColor = Color.Companion.White
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.agregar),
                     contentDescription = "Agregar pendiente",
-                    modifier = Modifier.size(45.dp)
+                    modifier = Modifier.Companion.size(45.dp)
                 )
             }
         }
@@ -97,26 +116,26 @@ class PendientesActivity : BaseMenuActivity() {
         var isPendiente by remember { mutableStateOf(pendiente.estado) }
 
         Box(
-            modifier = Modifier
+            modifier = Modifier.Companion
                 .fillMaxWidth()
                 .background(pendiente.color, RoundedCornerShape(20.dp))
                 .padding(16.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.Companion.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.Companion.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Companion.CenterVertically
                 ) {
                     Text(
                         pendiente.titulo,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Companion.Bold,
                         fontSize = 18.sp,
-                        color = Color.Black,
-                        modifier = Modifier.weight(1f)
+                        color = Color.Companion.Black,
+                        modifier = Modifier.Companion.weight(1f)
                     )
 
                     RadioButton(
@@ -127,32 +146,32 @@ class PendientesActivity : BaseMenuActivity() {
                         },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color(0xFF673AB7),
-                            unselectedColor = Color.DarkGray
+                            unselectedColor = Color.Companion.DarkGray
                         )
                     )
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.Companion.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Companion.CenterVertically
                 ) {
                     Text(
                         text = pendiente.descripcion,
                         fontSize = 14.sp,
-                        color = Color.Black,
-                        modifier = Modifier.weight(1f),
+                        color = Color.Companion.Black,
+                        modifier = Modifier.Companion.weight(1f),
                         maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Companion.Ellipsis
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.Companion.width(8.dp))
 
                     Text(
                         text = pendiente.fecha,
                         fontSize = 13.sp,
-                        color = Color.Black.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.Medium
+                        color = Color.Companion.Black.copy(alpha = 0.8f),
+                        fontWeight = FontWeight.Companion.Medium
                     )
                 }
             }

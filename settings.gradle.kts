@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Noti-U"
 include(":app")
- 
