@@ -55,12 +55,17 @@
             android:theme="@style/Theme.NotiU" />
 
         <activity
-            android:name=".ui.screens.BaseMenuActivity"
+            android:name=".ui.base.BaseMenuActivity"
             android:exported="false"
             android:label="registro"
             android:theme="@style/Theme.NotiU" />
 
 
+        <activity
+            android:name=".ui.screens.NotasActivity"
+            android:exported="false"
+            android:label="registro"
+            android:theme="@style/Theme.NotiU" />
 
         <activity
             android:name=".ui.screens.PrincipalActivity"

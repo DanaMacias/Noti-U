@@ -35,8 +35,9 @@ import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.noti_u.ui.base.BaseLanguageActivity
 
-abstract class BaseMenuActivity : ComponentActivity() {
+abstract class BaseMenuActivity : BaseLanguageActivity() {
 
     @Composable
     abstract fun PantallaContenido(innerPadding: PaddingValues)

@@ -1,5 +1,7 @@
 package com.example.noti_u.ui.screens
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,21 +14,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.noti_u.ui.screens.EditarPerfilActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.noti_u.MainActivity
 import com.example.noti_u.R
+import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
+import com.example.noti_u.ui.viewmodel.PerfilViewModel
 
-class PerfilActivity : ComponentActivity() {
+// CAMBIO 1: Heredar de BaseLanguageActivity para soportar el contexto de idioma
+class PerfilActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,8 +46,26 @@ class PerfilActivity : ComponentActivity() {
 }
 
 @Composable
-fun PerfilScreen() {
+fun PerfilScreen(
+    viewModel: PerfilViewModel = viewModel()
+) {
     val context = LocalContext.current
+    val user = viewModel.userData.collectAsState().value
+
+    // CAMBIO 2: Función para guardar el idioma y reiniciar la app desde cero
+    fun cambiarIdioma(idioma: String) {
+        // 1. Guardar el idioma en SharedPreferences
+        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        prefs.edit().putString("language", idioma).apply()
+
+        // 2. Reiniciar la aplicación limpiando la pila de actividades
+        val intent = Intent(context, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        context.startActivity(intent)
+
+        // 3. Finalizar la actividad actual
+        (context as? Activity)?.finish()
+    }
 
     Column(
         modifier = Modifier
@@ -48,16 +74,14 @@ fun PerfilScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
+                contentDescription = stringResource(R.string.logo),
                 modifier = Modifier.size(120.dp)
             )
         }
@@ -80,7 +104,7 @@ fun PerfilScreen() {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Mi Perfil",
+                    text = stringResource(R.string.mi_perfil),
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                     fontSize = 30.sp,
@@ -110,40 +134,96 @@ fun PerfilScreen() {
         )
 
         Text(
-            text = "Datos de Usuario",
+            text = stringResource(R.string.datos_usuario),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = Color.Black,
             modifier = Modifier.align(Alignment.Start)
         )
 
+
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .background(Color(0xFFFFB74D), RoundedCornerShape(12.dp))
                 .padding(12.dp)
-                .padding(top = 8.dp)
         ) {
             Column {
+
                 Text(
-                    text = "Nombre del Usuario:\nMarcelo",
+                    text = stringResource(R.string.nombre),
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
                     fontSize = 14.sp
                 )
-                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Correo Electrónico:\nmarcelo@usuario.com",
+                    text = user?.nombre ?: stringResource(R.string.cargando),
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.correo),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = user?.correo ?: "",
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.telefono),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = user?.telefono ?: "",
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.area),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = user?.area ?: "",
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.institucion),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = user?.institucion ?: "",
                     color = Color.Black,
                     fontSize = 14.sp
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
         Text(
-            text = "Periodo Académico",
+            text = stringResource(R.string.periodo_academico),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = Color.Black,
@@ -158,20 +238,20 @@ fun PerfilScreen() {
         ) {
             Column {
                 Text(
-                    text = "Duración:\n2025-II",
+                    text = stringResource(R.string.duracion_2025),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Fecha de inicio:\n01/08/2025",
+                    text = stringResource(R.string.fecha_inicio),
                     color = Color.Black,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Fecha de fin:\n15/12/2025",
+                    text = stringResource(R.string.fecha_fin),
                     color = Color.Black,
                     fontSize = 14.sp
                 )
@@ -181,15 +261,14 @@ fun PerfilScreen() {
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "Configuración de idioma",
+            text = stringResource(R.string.configuracion_idioma),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = Color.Black,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(bottom = 8.dp)
+            modifier = Modifier.align(Alignment.Start)
         )
 
+        // CAMBIO 3: Agregar interactividad a los botones de idioma
         Row(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -199,26 +278,26 @@ fun PerfilScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Español",
-                fontWeight = FontWeight.Medium,
-                color = Color.Black,
+                text = stringResource(R.string.espanol),
                 fontSize = 14.sp,
-                modifier = Modifier.clickable {  }
+                color = Color.Black,
+                modifier = Modifier
+                    .clickable { cambiarIdioma("es") } // Cambiar a Español
+                    .padding(8.dp)
             )
-
             Divider(
                 color = Color.Gray,
                 modifier = Modifier
                     .height(20.dp)
                     .width(1.dp)
             )
-
             Text(
-                text = "English",
-                fontWeight = FontWeight.Medium,
-                color = Color.Black,
+                text = stringResource(R.string.english),
                 fontSize = 14.sp,
-                modifier = Modifier.clickable { }
+                color = Color.Black,
+                modifier = Modifier
+                    .clickable { cambiarIdioma("en") } // Cambiar a Inglés
+                    .padding(8.dp)
             )
         }
     }

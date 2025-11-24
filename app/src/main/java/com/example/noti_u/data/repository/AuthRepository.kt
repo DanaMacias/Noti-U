@@ -50,6 +50,17 @@ class AuthRepository(
             Result.failure(e)
         }
     }
+    // Obtener datos completos del usuario en Realtime Database
+    suspend fun getUserData(uid: String): User? {
+        return try {
+            val snapshot = db.getReference("users").child(uid).get().await()
+            snapshot.getValue(User::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+
 
     fun logout() {
         auth.signOut()

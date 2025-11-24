@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -28,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noti_u.R
+
 
 val DarkTextColor = Color(0xFF1C1C1C)
 
@@ -69,8 +71,6 @@ object NotaRepository {
 fun PerfilAnimado(modifier: Modifier = Modifier, onClick: () -> Unit) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (pressed) 0.8f else 1f)
-
-
 }
 
 @Composable
@@ -96,8 +96,6 @@ fun NotasScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -107,7 +105,7 @@ fun NotasScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = "Todas las Notas",
+                    text = stringResource(id = R.string.todas_las_notas),
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -118,7 +116,7 @@ fun NotasScreen(navController: NavHostController) {
 
                 Image(
                     painter = painterResource(id = R.drawable.buscar),
-                    contentDescription = "Buscar",
+                    contentDescription = stringResource(id = R.string.buscar),
                     modifier = Modifier.size(32.dp)
                 )
 
@@ -127,7 +125,10 @@ fun NotasScreen(navController: NavHostController) {
 
             val cantidadNotas = NotaRepository.notas.size
             Text(
-                text = if (cantidadNotas == 0) "No hay notas todavía" else "$cantidadNotas notas",
+                text = if (cantidadNotas == 0)
+                    stringResource(id = R.string.no_hay_notas)
+                else
+                    stringResource(id = R.string.cantidad_notas, cantidadNotas),
                 fontSize = 16.sp,
                 color = DarkTextColor,
                 textAlign = TextAlign.Center
@@ -176,7 +177,7 @@ fun NotasScreen(navController: NavHostController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.agregar),
-                contentDescription = "Agregar nota",
+                contentDescription = stringResource(id = R.string.agregar_nota),
                 modifier = Modifier.size(45.dp)
             )
         }
@@ -204,10 +205,10 @@ fun AgregarNotaScreen(navController: NavHostController) {
     var descripcion by remember { mutableStateOf(TextFieldValue("")) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Fondo
+
         Image(
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Fondo",
+            contentDescription = stringResource(id = R.string.fondo),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
@@ -233,7 +234,6 @@ fun AgregarNotaScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
@@ -244,7 +244,7 @@ fun AgregarNotaScreen(navController: NavHostController) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.atras),
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(id = R.string.volver),
                         tint = DarkTextColor
                     )
                 }
@@ -270,7 +270,7 @@ fun AgregarNotaScreen(navController: NavHostController) {
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.listo),
-                        contentDescription = "Guardar",
+                        contentDescription = stringResource(id = R.string.guardar),
                         tint = DarkTextColor
                     )
                 }
@@ -294,7 +294,7 @@ fun AgregarNotaScreen(navController: NavHostController) {
             ) {
                 if (descripcion.text.isEmpty()) {
                     Text(
-                        text = "Descripción",
+                        text = stringResource(id = R.string.descripcion),
                         style = TextStyle(
                             color = DarkTextColor.copy(alpha = 0.6f),
                             fontSize = 18.sp,
@@ -323,7 +323,7 @@ fun AgregarNotaScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(50)
             ) {
                 Text(
-                    text = "Guardar",
+                    text = stringResource(id = R.string.guardar),
                     color = DarkTextColor,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp

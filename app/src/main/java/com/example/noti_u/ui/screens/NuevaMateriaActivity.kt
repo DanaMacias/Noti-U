@@ -19,18 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.MainActivity
-import com.example.noti_u.ui.screens.EditarPerfilActivity
 import com.example.noti_u.R
+import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import java.util.*
 
-class NuevaMateriaActivity : ComponentActivity() {
+class NuevaMateriaActivity :  BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,7 +48,16 @@ fun NuevaMateriaScreen() {
     var expanded by remember { mutableStateOf(false) }
     var nombre by remember { mutableStateOf("") }
 
-    val dias = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+    val dias = listOf(
+        stringResource(R.string.lunes),
+        stringResource(R.string.martes),
+        stringResource(R.string.miercoles),
+        stringResource(R.string.jueves),
+        stringResource(R.string.viernes),
+        stringResource(R.string.sabado),
+        stringResource(R.string.domingo)
+    )
+
     val colores = listOf(
         Color(0xFFFFF176),
         Color(0xFFFF8A65),
@@ -70,23 +80,18 @@ fun NuevaMateriaScreen() {
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
-
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "Logo",
+                    contentDescription = stringResource(R.string.logo),
                     modifier = Modifier.size(80.dp)
                 )
 
@@ -98,40 +103,29 @@ fun NuevaMateriaScreen() {
 
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = { expanded = false },
+                        onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Ver perfil") },
+                            text = { Text(stringResource(R.string.ver_perfil)) },
                             onClick = {
                                 expanded = false
-                                val intent = Intent(context, PerfilActivity::class.java)
-                                context.startActivity(intent)
-                                (context as? ComponentActivity)?.overridePendingTransition(
-                                    android.R.anim.fade_in,
-                                    android.R.anim.fade_out
-                                )
+                                context.startActivity(Intent(context, PerfilActivity::class.java))
                             }
                         )
 
                         DropdownMenuItem(
-                            text = { Text("Editar perfil") },
+                            text = { Text(stringResource(R.string.editar_perfil)) },
                             onClick = {
                                 expanded = false
-                                val intent = Intent(context, EditarPerfilActivity::class.java)
-                                context.startActivity(intent)
-                                (context as? ComponentActivity)?.overridePendingTransition(
-                                    android.R.anim.fade_in,
-                                    android.R.anim.fade_out
-                                )
+                                context.startActivity(Intent(context, EditarPerfilActivity::class.java))
                             }
                         )
 
                         DropdownMenuItem(
-                            text = { Text("Cerrar sesión") },
+                            text = { Text(stringResource(R.string.cerrar_sesion)) },
                             onClick = {
                                 expanded = false
-                                val intent = Intent(context, MainActivity::class.java)
-                                context.startActivity(intent)
+                                context.startActivity(Intent(context, MainActivity::class.java))
                                 (context as? ComponentActivity)?.finish()
                             }
                         )
@@ -140,29 +134,21 @@ fun NuevaMateriaScreen() {
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-            Divider(
-                modifier = Modifier.fillMaxWidth(),
-                color = Color.Black,
-                thickness = 1.dp
-            )
-
+            Divider(color = Color.Black, thickness = 1.dp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 buttonAnimation(
                     drawableId = R.drawable.atras,
                     modifier = Modifier.size(32.dp)
-                ) {
-                    (context as? ComponentActivity)?.finish()
-                }
+                ) { (context as? ComponentActivity)?.finish() }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "Agregar / Editar Materia",
+                    text = stringResource(R.string.agregar_editar_materia),
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     color = Color.Black
@@ -171,35 +157,24 @@ fun NuevaMateriaScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 🔹 Campo de nombre
             Text(
-                text = "Nombre:",
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                text = stringResource(R.string.nombre_materia),
+                fontWeight = FontWeight.Bold
             )
 
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                placeholder = { Text("Ingrese nombre de la materia", color = Color.Gray) },
-                textStyle = LocalTextStyle.current.copy(color = Color.Black),
+                placeholder = { Text(stringResource(R.string.placeholder_nombre_materia)) },
                 shape = RoundedCornerShape(50.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color(0xFFBBDEFB)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 🔹 Horario
             Text(
-                text = "Seleccione el horario:",
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                text = stringResource(R.string.seleccione_horario),
+                fontWeight = FontWeight.Bold
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -208,9 +183,7 @@ fun NuevaMateriaScreen() {
                 var checked by remember { mutableStateOf(false) }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 2.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
@@ -218,18 +191,10 @@ fun NuevaMateriaScreen() {
                         onCheckedChange = {
                             checked = it
                             diasSeleccionados[dia] = it
-                        },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = Color(0xFFBBDEFB),
-                            uncheckedColor = Color.DarkGray
-                        )
+                        }
                     )
 
-                    Text(
-                        text = dia,
-                        modifier = Modifier.weight(1f),
-                        fontSize = 16.sp
-                    )
+                    Text(text = dia, modifier = Modifier.weight(1f))
 
                     if (checked) {
                         Button(
@@ -237,24 +202,15 @@ fun NuevaMateriaScreen() {
                                 val cal = Calendar.getInstance()
                                 TimePickerDialog(
                                     context,
-                                    { _, hour, minute ->
-                                        horaInicio[dia] = String.format("%02d:%02d", hour, minute)
+                                    { _, hora, minuto ->
+                                        horaInicio[dia] = "%02d:%02d".format(hora, minuto)
                                     },
                                     cal.get(Calendar.HOUR_OF_DAY),
                                     cal.get(Calendar.MINUTE),
                                     true
                                 ).show()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBBDEFB)),
-                            shape = RoundedCornerShape(50.dp),
-                            modifier = Modifier.height(40.dp)
-                        ) {
-                            Text(
-                                text = horaInicio[dia] ?: "Inicio",
-                                color = Color.Black,
-                                fontSize = 13.sp
-                            )
-                        }
+                            }
+                        ) { Text(horaInicio[dia] ?: stringResource(R.string.hora_inicio)) }
 
                         Spacer(modifier = Modifier.width(4.dp))
 
@@ -263,44 +219,29 @@ fun NuevaMateriaScreen() {
                                 val cal = Calendar.getInstance()
                                 TimePickerDialog(
                                     context,
-                                    { _, hour, minute ->
-                                        horaFin[dia] = String.format("%02d:%02d", hour, minute)
+                                    { _, hora, minuto ->
+                                        horaFin[dia] = "%02d:%02d".format(hora, minuto)
                                     },
                                     cal.get(Calendar.HOUR_OF_DAY),
                                     cal.get(Calendar.MINUTE),
                                     true
                                 ).show()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBBDEFB)),
-                            shape = RoundedCornerShape(50.dp),
-                            modifier = Modifier.height(40.dp)
-                        ) {
-                            Text(
-                                text = horaFin[dia] ?: "Fin",
-                                color = Color.Black,
-                                fontSize = 13.sp
-                            )
-                        }
+                            }
+                        ) { Text(horaFin[dia] ?: stringResource(R.string.hora_fin)) }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 🔹 Colores
             Text(
-                text = "Color (Opcional):",
-                fontStyle = FontStyle.Italic,
-                fontSize = 16.sp,
-                color = Color.Black
+                text = stringResource(R.string.color_opcional),
+                fontStyle = FontStyle.Italic
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row {
                 colores.forEach { color ->
                     Box(
                         modifier = Modifier
@@ -319,21 +260,11 @@ fun NuevaMateriaScreen() {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // 🔹 Botón Guardar
             Button(
                 onClick = { (context as? ComponentActivity)?.finish() },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
-                shape = RoundedCornerShape(50.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .height(50.dp)
+                modifier = Modifier.fillMaxWidth(0.6f)
             ) {
-                Text(
-                    "Guardar",
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 16.sp
-                )
+                Text(stringResource(R.string.guardar))
             }
         }
     }

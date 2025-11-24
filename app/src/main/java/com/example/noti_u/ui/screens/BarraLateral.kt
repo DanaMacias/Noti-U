@@ -32,7 +32,7 @@ fun BarraLateralDesplegable(
             .width(90.dp)
             .background(Color(0xFFFAF3E0)),
         verticalArrangement = Arrangement.spacedBy(1.dp),
-                horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start
     ) {
         tabs.forEachIndexed { index, name ->
             val isSelected = selectedTab == name

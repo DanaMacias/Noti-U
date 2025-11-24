@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Noti-U</string>
+
+    <!-- Profile Menu -->
+    <string name="editar_perfil">Edit profile</string>
+    <string name="cerrar_sesion">Log out</string>
+
+    <!-- Add pending -->
+    <string name="agregar_editar">Add/Edit</string>
+    <string name="pendiente_label">Pending:</string>
+    <string name="titulo_placeholder">Title</string>
+    <string name="seleccione_materia">Select subject:</string>
+    <string name="descripcion_label">Description:</string>
+    <string name="descripcion_placeholder">Add a description</string>
+
+    <!-- Snackbars -->
+    <string name="error_titulo_materia">Please complete the title and select a subject.</string>
+    <string name="pendiente_guardado">Pending task saved successfully.</string>
+
+    <!-- Button -->
+    <string name="guardar">Save</string>
+
+    <!-- Subjects -->
+    <string name="materia1">Subject 1</string>
+    <string name="materia2">Subject 2</string>
+    <string name="materia3">Subject 3</string>
+    <string name="materia4">Subject 4</string>
+    <string name="materia5">Subject 5</string>
+    <string name="materia6">Subject 6</string>
+
+    <!-- Other -->
+    <string name="logo">Logo</string>
+
+    <!-- Side Menu -->
+    <string name="menu_horarios">Schedules</string>
+    <string name="menu_pendientes">Pending</string>
+    <string name="menu_recordatorios">Reminders</string>
+    <string name="menu_notas">Notes</string>
+    <string name="menu_fondo">Menu Background</string>
+
+    <!-- Top bar -->
+    <string name="menu_ver_perfil">View profile</string>
+    <string name="menu_editar_perfil">Edit profile</string>
+    <string name="menu_cerrar_sesion">Log out</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_logo">App logo</string>
+
+    <!-- Calendar -->
+    <string name="calendario_titulo">Calendar</string>
+
+    <!-- Days -->
+    <string name="dia_lun">MON</string>
+    <string name="dia_mar">TUE</string>
+    <string name="dia_mie">WED</string>
+    <string name="dia_jue">THU</string>
+    <string name="dia_vie">FRI</string>
+    <string name="dia_sab">SAT</string>
+
+    <!-- Hours -->
+    <string name="hora_8_10">8-10</string>
+    <string name="hora_10_12">10-12</string>
+    <string name="hora_12_14">12-14</string>
+    <string name="hora_14_16">14-16</string>
+    <string name="hora_16_18">16-18</string>
+
+    <string name="datos_usuario">User information</string>
+    <string name="nombre">Name:</string>
+    <string name="correo_electronico">Email:</string>
+    <string name="periodo_academico">Academic period</string>
+    <string name="anio_o_periodo">Year or period:</string>
+    <string name="seleccionar_fecha">Select a date:</string>
+    <string name="fecha_seleccionada">Selected date:</string>
+    <string name="materias_titulo">Subjects</string>
+    <string name="nueva_materia">New Subject</string>
+    <string name="cd_agregar_materia">Add subject</string>
+
+    <!-- Login -->
+    <string name="login_exito">Login successful</string>
+    <string name="login_error">Incorrect email or password</string>
+
+    <string name="correo_label">Email</string>
+    <string name="correo_placeholder">Enter your email</string>
+
+    <string name="contrasena_label">Password</string>
+    <string name="contrasena_placeholder">Enter your password</string>
+
+    <string name="boton_iniciar">Login</string>
+    <string name="boton_registrar">Register</string>
+
+    <!-- Errors -->
+    <string name="error_todos_vacios">All fields must be filled</string>
+    <string name="error_correo_vacio">Email cannot be empty</string>
+    <string name="error_contrasena_vacia">Password cannot be empty</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_fondo">Background</string>
+    <string name="cd_icono_usuario">User icon</string>
+    <string name="todas_las_notas">All Notes</string>
+    <string name="buscar">Search</string>
+    <string name="no_hay_notas">There are no notes yet</string>
+    <string name="cantidad_notas">%1$d notes</string>
+    <string name="agregar_nota">Add note</string>
+
+    <!-- Add note -->
+    <string name="volver">Back</string>
+    <string name="descripcion">Description</string>
+
+    <!-- Other -->
+    <string name="fondo">Background</string>
+
+    <!-- New Subject -->
+    <string name="agregar_editar_materia">Add / Edit Subject</string>
+    <string name="nombre_materia">Name:</string>
+    <string name="placeholder_nombre_materia">Enter subject name</string>
+    <string name="seleccione_horario">Select schedule:</string>
+
+    <!-- Days -->
+    <string name="lunes">Monday</string>
+    <string name="martes">Tuesday</string>
+    <string name="miercoles">Wednesday</string>
+    <string name="jueves">Thursday</string>
+    <string name="viernes">Friday</string>
+    <string name="sabado">Saturday</string>
+    <string name="domingo">Sunday</string>
+
+    <!-- Hours -->
+    <string name="hora_inicio">Start</string>
+    <string name="hora_fin">End</string>
+
+    <!-- Color -->
+    <string name="color_opcional">Color (Optional):</string>
+
+    <!-- Menu Items -->
+    <string name="proyecto_final">Final Project</string>
+    <string name="materia">Subject</string>
+    <string name="descripcion_generica">Description</string>
+    <string name="estudiar">Study</string>
+    <string name="exposicion">Presentation</string>
+    <string name="proyecto_integrador">Integrative project</string>
+    <string name="agregar_pendiente">Add pending</string>
+
+    <string name="mi_perfil">My Profile</string>
+
+    <string name="correo">Email:</string>
+    <string name="telefono">Phone:</string>
+    <string name="area">Area:</string>
+    <string name="institucion">Institution:</string>
+
+    <string name="cargando">Loading...</string>
+
+    <string name="duracion_2025">Duration:\n2025-II</string>
+    <string name="fecha_inicio">Start date:\n01/08/2025</string>
+    <string name="fecha_fin">End date:\n15/12/2025</string>
+
+    <string name="configuracion_idioma">Language settings</string>
+    <string name="espanol">Spanish</string>
+    <string name="english">English</string>
+
+    <!-- Dropdown -->
+    <string name="ver_perfil">View profile</string>
+
+    <!-- Recommended pages section -->
+    <string name="paginas_recomendadas">Recommended Pages</string>
+
+    <!-- Reminders -->
+    <string name="recordatorio_1_titulo">Final Project</string>
+    <string name="recordatorio_1_sub">Project • Subject</string>
+    <string name="recordatorio_1_fecha">01/22/2025</string>
+
+    <string name="recordatorio_2_titulo">Second term exam</string>
+    <string name="recordatorio_2_sub">Exam • Subject</string>
+    <string name="recordatorio_2_fecha">01/22/2025</string>
+
+    <string name="recordatorio_3_titulo">Presentation</string>
+    <string name="recordatorio_3_sub">Presentation • Subject</string>
+    <string name="recordatorio_3_fecha">01/22/2025</string>
+
+    <string name="recordatorios_titulo">Reminders</string>
+    <string name="agregar_nuevo_recordatorio">Add new reminder</string>
+    <string name="recordatorio_ejemplo">Example reminder</string>
+    <string name="tipo_estudio">Type: Study</string>
+    <string name="agregar_recordatorio_titulo">Add Reminder</string>
+    <string name="fecha_y_hora">Date and time</string>
+    <string name="nombre_label">Name</string>
+    <string name="descripcion_label_2">Description</string>
+    <string name="notificar">Notify</string>
+    <string name="fecha_placeholder">Select date</string>
+    <string name="hora_placeholder">Select time</string>
+
+    <!-- Reminders -->
+    <string name="recordatorios_titulo_top">Reminders</string>
+    <string name="agregar_nuevo_recordatorio_btn">Add new reminder</string>
+    <string name="recordatorio_ejemplo_nombre">Example reminder</string>
+    <string name="recordatorio_ejemplo_tipo">Type: Study</string>
+    <string name="recordatorio_ejemplo_fecha">12/10/2025 - 3:00 PM</string>
+
+    <!-- Reminder form -->
+    <string name="agregar_recordatorio_titulo_top">Add Reminder</string>
+    <string name="fecha_y_hora_titulo">Date and time</string>
+    <string name="texto_fecha">Date: %1$s</string>
+    <string name="texto_hora">Time: %1$s</string>
+
+    <string name="placeholder_fecha">Select date</string>
+    <string name="placeholder_hora">Select time</string>
+
+    <string name="label_nombre_recordatorio">Name</string>
+    <string name="label_descripcion_recordatorio">Description</string>
+    <string name="label_notificar">Notify</string>
+
+    <string name="btn_guardar_recordatorio">Save</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_recordatorios_fondo">Background</string>
+    <string name="cd_volver">Back button</string>
+    <string name="cd_calendario">Select date</string>
+    <string name="cd_reloj">Select time</string>
+    <string name="cd_agregar_recordatorio">Add reminder</string>
+
+    <!-- Register -->
+    <string name="registro_exitoso">Registration successful</string>
+    <string name="error_desconocido">Unknown error</string>
+    <string name="icono_usuario">User icon</string>
+
+    <!-- Titles -->
+    <string name="titulo_info_personal">Personal Information</string>
+    <string name="titulo_info_academica">Academic Information</string>
+
+    <!-- Labels -->
+    <string name="label_nombre">Name</string>
+    <string name="label_correo">Email</string>
+    <string name="label_contrasena">Password</string>
+    <string name="label_telefono">Phone Number</string>
+    <string name="label_area">Field of study</string>
+    <string name="label_institucion">Educational institution</string>
+
+    <!-- Errors -->
+    <string name="error_contrasena_corta">Password must be at least 6 characters long</string>
+
+    <string name="title_activity_notas">Notes</string>
+    <string name="title_activity_pendientes">Pendings</string>
+    <string name="title_activity_horarios">Schedules</string>
+    <string name="title_activity_recordatorios">Reminders</string>
+    <string name="title_activity_principal">Home</string>
+
+</resources>

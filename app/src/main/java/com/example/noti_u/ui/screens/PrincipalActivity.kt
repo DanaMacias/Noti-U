@@ -16,16 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.MainActivity
+import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.R as AppR
 import com.example.noti_u.ui.screens.EditarPerfilActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import com.example.noti_u.ui.theme.BarraLateralDesplegable
 
-class PrincipalActivity : ComponentActivity() {
+class PrincipalActivity :  BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,7 +40,6 @@ class PrincipalActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Composable
 fun PrincipalScreen() {
@@ -81,7 +83,6 @@ fun PrincipalScreen() {
             }
         )
 
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -96,24 +97,18 @@ fun PrincipalScreen() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val context = LocalContext.current
-
-
-
-
 
                 Image(
-                    painter = painterResource(id = com.example.noti_u.R.drawable.logo),
-                    contentDescription = "Logo",
+                    painter = painterResource(id = AppR.drawable.logo),
+                    contentDescription = stringResource(AppR.string.logo),
                     modifier = Modifier.size(100.dp)
                 )
-
 
                 var expanded by remember { mutableStateOf(false) }
 
                 Box {
                     buttonAnimation(
-                        drawableId = com.example.noti_u.R.drawable.perfil,
+                        drawableId = AppR.drawable.perfil,
                         modifier = Modifier.size(40.dp)
                     ) {
                         expanded = !expanded
@@ -123,8 +118,10 @@ fun PrincipalScreen() {
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                     ) {
+
+                        // Ver perfil
                         DropdownMenuItem(
-                            text = { Text("Ver perfil") },
+                            text = { Text(stringResource(AppR.string.ver_perfil)) },
                             onClick = {
                                 expanded = false
                                 val intent = Intent(context, PerfilActivity::class.java)
@@ -136,8 +133,9 @@ fun PrincipalScreen() {
                             }
                         )
 
+                        // Editar perfil
                         DropdownMenuItem(
-                            text = { Text("Editar perfil") },
+                            text = { Text(stringResource(AppR.string.editar_perfil)) },
                             onClick = {
                                 expanded = false
                                 val intent = Intent(context, EditarPerfilActivity::class.java)
@@ -149,11 +147,11 @@ fun PrincipalScreen() {
                             }
                         )
 
+                        // Cerrar sesión
                         DropdownMenuItem(
-                            text = { Text("Cerrar sesión") },
+                            text = { Text(stringResource(AppR.string.cerrar_sesion)) },
                             onClick = {
                                 expanded = false
-
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
                                 (context as? ComponentActivity)?.finish()
@@ -163,26 +161,35 @@ fun PrincipalScreen() {
                 }
             }
 
-
-
-
-
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                RecordatorioBox("Proyecto final", "Proyecto • Materia", "22/01/2025")
-                RecordatorioBox("Parcial segundo corte", "Examen • Materia", "22/01/2025")
-                RecordatorioBox("Exposición", "Presentación • Materia", "22/01/2025")
+                RecordatorioBox(
+                    titulo = stringResource(AppR.string.recordatorio_1_titulo),
+                    subtitulo = stringResource(AppR.string.recordatorio_1_sub),
+                    fecha = stringResource(AppR.string.recordatorio_1_fecha)
+                )
+
+                RecordatorioBox(
+                    titulo = stringResource(AppR.string.recordatorio_2_titulo),
+                    subtitulo = stringResource(AppR.string.recordatorio_2_sub),
+                    fecha = stringResource(AppR.string.recordatorio_2_fecha)
+                )
+
+                RecordatorioBox(
+                    titulo = stringResource(AppR.string.recordatorio_3_titulo),
+                    subtitulo = stringResource(AppR.string.recordatorio_3_sub),
+                    fecha = stringResource(AppR.string.recordatorio_3_fecha)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                "Páginas Recomendadas",
+                text = stringResource(AppR.string.paginas_recomendadas),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
@@ -203,7 +210,6 @@ fun PrincipalScreen() {
         }
     }
 }
-
 
 @Composable
 fun RecordatorioBox(titulo: String, subtitulo: String, fecha: String) {

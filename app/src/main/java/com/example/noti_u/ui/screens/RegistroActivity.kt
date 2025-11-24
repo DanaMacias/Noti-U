@@ -17,16 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel // Importante
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.R
+import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
-import com.example.noti_u.ui.viewmodel.RegistroViewModel // Importante
+import com.example.noti_u.ui.viewmodel.RegistroViewModel
 
-class RegistroActivity : ComponentActivity() {
+class RegistroActivity :  BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -48,7 +50,6 @@ fun RegistroScreen() {
     val viewModel: RegistroViewModel = viewModel()
     val registerState by viewModel.registerState.collectAsState()
 
-
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -57,16 +58,18 @@ fun RegistroScreen() {
     var institucion by remember { mutableStateOf("") }
 
     var mensajeError by remember { mutableStateOf("") }
-
+    val registroExitosoMsg = stringResource(R.string.registro_exitoso)
+    val errorDesconocidoMsg = stringResource(R.string.error_desconocido)
+    val errorContrasenaCortaMsg = stringResource(R.string.error_contrasena_corta)
 
     LaunchedEffect(registerState) {
         registerState?.onSuccess {
-            Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
-
+            Toast.makeText(context, registroExitosoMsg, Toast.LENGTH_SHORT)
+                .show()
             (context as? ComponentActivity)?.finish()
         }?.onFailure { exception ->
-            mensajeError = exception.message ?: "Error desconocido"
-            Toast.makeText(context, "Error: $mensajeError", Toast.LENGTH_LONG).show()
+            mensajeError = exception.message ?: errorDesconocidoMsg
+            Toast.makeText(context, mensajeError, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -75,41 +78,54 @@ fun RegistroScreen() {
             .fillMaxSize()
             .padding(32.dp)
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
         Image(
             painter = painterResource(id = R.drawable.iniciousuario),
-            contentDescription = "Icono de usuario",
+            contentDescription = stringResource(R.string.icono_usuario),
             modifier = Modifier.size(100.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Información Personal", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF212121))
+        Text(
+            stringResource(R.string.titulo_info_personal),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = Color(0xFF212121)
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomField("Nombre", nombre) { nombre = it }
-        CustomField("Correo", correo, keyboardType = KeyboardType.Email) { correo = it }
-        CustomField("Contraseña", contrasena, keyboardType = KeyboardType.Password) { contrasena = it }
-        CustomField("Número de Teléfono", telefono, keyboardType = KeyboardType.Phone) { telefono = it }
+        CustomField(stringResource(R.string.label_nombre), nombre) { nombre = it }
+        CustomField(stringResource(R.string.label_correo), correo, KeyboardType.Email) { correo = it }
+        CustomField(stringResource(R.string.label_contrasena), contrasena, KeyboardType.Password) { contrasena = it }
+        CustomField(stringResource(R.string.label_telefono), telefono, KeyboardType.Phone) { telefono = it }
 
         Spacer(modifier = Modifier.height(24.dp))
-        Text("Información Académica", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF212121))
+
+        Text(
+            stringResource(R.string.titulo_info_academica),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = Color(0xFF212121)
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomField("Área de estudio", area) { area = it }
-        CustomField("Institución educativa", institucion) { institucion = it }
+        CustomField(stringResource(R.string.label_area), area) { area = it }
+        CustomField(stringResource(R.string.label_institucion), institucion) { institucion = it }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
-                // Validaciones simples en UI
                 when {
-                    contrasena.length < 6 -> mensajeError = "La contraseña debe tener al menos 6 caracteres"
+                    contrasena.length < 6 ->
+                        mensajeError = errorContrasenaCortaMsg
+
                     else -> {
                         mensajeError = ""
 
@@ -126,20 +142,26 @@ fun RegistroScreen() {
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
             shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
         ) {
-            Text("Registrar", color = Color(0xFF212121), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(R.string.boton_registrar),
+                color = Color(0xFF212121),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
         if (mensajeError.isNotBlank()) {
             Spacer(modifier = Modifier.height(16.dp))
-            Text(mensajeError, color = Color.Red, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(mensajeError, color = Color.Red, fontSize = 14.sp)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
-
 
 @Composable
 fun CustomField(
@@ -149,14 +171,21 @@ fun CustomField(
     onChange: (String) -> Unit
 ) {
     val textColor = Color(0xFF212121)
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = label, color = textColor, fontSize = 16.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(bottom = 4.dp))
+        Text(
+            text = label,
+            color = textColor,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
         OutlinedTextField(
             value = value,
             onValueChange = onChange,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
-            textStyle = LocalTextStyle.current.copy(color = textColor),
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = textColor,
@@ -164,6 +193,7 @@ fun CustomField(
                 cursorColor = textColor
             )
         )
+
         Spacer(modifier = Modifier.height(12.dp))
     }
 }

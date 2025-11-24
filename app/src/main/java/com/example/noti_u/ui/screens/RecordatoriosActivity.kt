@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noti_u.R
+
 import com.example.noti_u.ui.theme.buttonAnimation
 import java.util.*
 
@@ -44,10 +46,14 @@ class RecordatoriosActivity : BaseMenuActivity() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("lista") {
-                RecordatoriosListScreen(onAgregarNuevo = { navController.navigate("formulario") })
+                RecordatoriosListScreen(
+                    onAgregarNuevo = { navController.navigate("formulario") }
+                )
             }
             composable("formulario") {
-                FormularioRecordatorioScreen(onVolver = { navController.popBackStack() })
+                FormularioRecordatorioScreen(
+                    onVolver = { navController.popBackStack() }
+                )
             }
         }
     }
@@ -64,7 +70,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
 
         Image(
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Fondo",
+            contentDescription = stringResource(R.string.cd_recordatorios_fondo),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -75,33 +81,14 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Recordatorios",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = DarkTextPrimary
-                )
-            }
-
-
+            Text(
+                text = stringResource(R.string.recordatorios_titulo),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = DarkTextPrimary
+            )
 
             Divider(
                 modifier = Modifier
@@ -110,11 +97,11 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                 color = Color.Black,
                 thickness = 1.dp
             )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Box(
                 modifier = Modifier
-
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(Color(0xFF8DD8E1), RoundedCornerShape(20.dp)),
@@ -122,7 +109,7 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "Agregar nuevo recordatorio",
+                        stringResource(R.string.agregar_nuevo_recordatorio),
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary,
@@ -130,15 +117,11 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
                     )
 
                     buttonAnimation(
-
                         drawableId = R.drawable.mas,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(top = 5.dp)
+                        modifier = Modifier.size(30.dp)
                     ) { onAgregarNuevo() }
                 }
             }
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -152,19 +135,19 @@ fun RecordatoriosListScreen(onAgregarNuevo: () -> Unit) {
             ) {
                 Column {
                     Text(
-                        "Recordatorio de ejemplo",
+                        stringResource(R.string.recordatorio_ejemplo),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary
                     )
                     Text(
-                        "Tipo: Estudio",
+                        stringResource(R.string.tipo_estudio),
                         fontSize = 14.sp,
                         color = DarkTextSecondary,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        "10/12/2025 - 15:00",
+                        stringResource(R.string.recordatorio_1_fecha),
                         fontSize = 13.sp,
                         color = DarkTextLight,
                         fontWeight = FontWeight.Medium
@@ -180,16 +163,20 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
     var nombre by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var notificar by remember { mutableStateOf(false) }
-    var hora by remember { mutableStateOf("Seleccionar hora") }
-    var fecha by remember { mutableStateOf("Seleccionar fecha") }
+    val placeholderHora = stringResource(R.string.placeholder_hora)
+    val placeholderFecha = stringResource(R.string.placeholder_fecha)
+
+    var hora by remember { mutableStateOf(placeholderHora) }
+    var fecha by remember { mutableStateOf(placeholderFecha) }
 
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Image(
             painter = painterResource(id = R.drawable.fondo),
-            contentDescription = "Fondo",
+            contentDescription = stringResource(R.string.cd_recordatorios_fondo),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -200,6 +187,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -211,13 +199,12 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                 ) { onVolver() }
 
                 Text(
-                    text = "Agregar Recordatorio",
+                    text = stringResource(R.string.agregar_recordatorio_titulo),
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                     fontSize = 17.sp,
                     color = Color.Black
                 )
-
             }
 
             Divider(
@@ -228,10 +215,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                 thickness = 1.dp
             )
 
-
-
             Spacer(modifier = Modifier.height(16.dp))
-
 
             Box(
                 modifier = Modifier
@@ -241,7 +225,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
             ) {
                 Column {
                     Text(
-                        "Fecha y hora",
+                        stringResource(R.string.fecha_y_hora),
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary
@@ -254,15 +238,16 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+
                         Column {
                             Text(
-                                "Fecha: $fecha",
+                                stringResource(R.string.fecha_seleccionada, fecha),
                                 fontSize = 16.sp,
                                 color = DarkTextSecondary,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                "Hora: $hora",
+                                stringResource(R.string.hora_placeholder, hora),
                                 fontSize = 16.sp,
                                 color = DarkTextSecondary,
                                 fontWeight = FontWeight.Bold
@@ -309,13 +294,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                label = {
-                    Text(
-                        "Nombre",
-                        color = DarkTextLight,
-                        fontWeight = FontWeight.Medium
-                    )
-                },
+                label = { Text(stringResource(R.string.nombre_label)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(color = DarkTextPrimary, fontWeight = FontWeight.Bold)
@@ -326,13 +305,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
             OutlinedTextField(
                 value = descripcion,
                 onValueChange = { descripcion = it },
-                label = {
-                    Text(
-                        "Descripción",
-                        color = DarkTextLight,
-                        fontWeight = FontWeight.Medium
-                    )
-                },
+                label = { Text(stringResource(R.string.descripcion_label_2)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -344,7 +317,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = notificar, onCheckedChange = { notificar = it })
-                Text("Notificar", color = DarkTextSecondary, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.notificar), color = DarkTextSecondary, fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -355,7 +328,7 @@ fun FormularioRecordatorioScreen(onVolver: () -> Unit) {
                 shape = RoundedCornerShape(20.dp)
             ) {
                 Text(
-                    "Guardar",
+                    stringResource(R.string.guardar),
                     color = DarkTextPrimary,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 18.sp
