@@ -1,8 +1,8 @@
 package com.example.noti_u.data.model
 
 data class Notas(
-    val idNotas: Int = 0,
+    var id: String = "",       // id generado por Firebase
     val titulo: String = "",
     val descripcion: String = "",
-    val usuarioIdUsuario: Int = 0
+    val userId: String = ""    // id del usuario dueño de la nota
 )
