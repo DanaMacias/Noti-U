@@ -3,6 +3,7 @@ package com.example.noti_u.ui.screens
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -10,8 +11,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,12 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.MainActivity
 import com.example.noti_u.R
+import com.example.noti_u.data.model.Materia
 import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
+import com.example.noti_u.ui.viewmodel.MateriaViewModel
 import java.util.*
 
-class NuevaMateriaActivity :  BaseLanguageActivity() {
+class NuevaMateriaActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,10 +48,24 @@ class NuevaMateriaActivity :  BaseLanguageActivity() {
 }
 
 @Composable
-fun NuevaMateriaScreen() {
+fun NuevaMateriaScreen(viewModel: MateriaViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var nombre by remember { mutableStateOf("") }
+    var salon by remember { mutableStateOf("") }
+    var enlace by remember { mutableStateOf("") }
+
+    val guardado = viewModel.guardadoExitoso.collectAsState()
+
+
+    if (guardado.value) {
+        LaunchedEffect(Unit) {
+            Toast.makeText(context, "Materia guardada", Toast.LENGTH_SHORT).show()
+            viewModel.resetGuardado()
+            (context as? ComponentActivity)?.finish()
+        }
+    }
 
     val dias = listOf(
         stringResource(R.string.lunes),
@@ -80,9 +99,12 @@ fun NuevaMateriaScreen() {
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -157,6 +179,7 @@ fun NuevaMateriaScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+
             Text(
                 text = stringResource(R.string.nombre_materia),
                 fontWeight = FontWeight.Bold
@@ -171,6 +194,7 @@ fun NuevaMateriaScreen() {
             )
 
             Spacer(modifier = Modifier.height(12.dp))
+
 
             Text(
                 text = stringResource(R.string.seleccione_horario),
@@ -197,6 +221,7 @@ fun NuevaMateriaScreen() {
                     Text(text = dia, modifier = Modifier.weight(1f))
 
                     if (checked) {
+
                         Button(
                             onClick = {
                                 val cal = Calendar.getInstance()
@@ -234,12 +259,35 @@ fun NuevaMateriaScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
             Text(
                 text = stringResource(R.string.color_opcional),
                 fontStyle = FontStyle.Italic
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            Text("Salón (opcional)")
+            OutlinedTextField(
+                value = salon,
+                onValueChange = { salon = it },
+                placeholder = { Text("Aula / salón") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(50.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text("Enlace (opcional)")
+            OutlinedTextField(
+                value = enlace,
+                onValueChange = { enlace = it },
+                placeholder = { Text("Enlace de reunión") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(50.dp)
+            )
+
+
 
             Row {
                 colores.forEach { color ->
@@ -260,12 +308,29 @@ fun NuevaMateriaScreen() {
 
             Spacer(modifier = Modifier.height(30.dp))
 
+
             Button(
-                onClick = { (context as? ComponentActivity)?.finish() },
+                onClick = {
+                    val colorHex = "#${(colorSeleccionado ?: Color.White)
+                        .value.toULong().toString(16)}"
+
+                    val materia = Materia(
+                        nombre = nombre,
+                        dias = diasSeleccionados,
+                        horaInicio = horaInicio,
+                        horaFin = horaFin,
+                        color = colorHex,
+                        salon = salon.ifBlank { null },
+                        enlace = enlace.ifBlank { null }
+                    )
+
+                    viewModel.guardarMateria(materia)
+                },
                 modifier = Modifier.fillMaxWidth(0.6f)
             ) {
-                Text(stringResource(R.string.guardar))
+                Text("Guardar")
             }
+
         }
     }
 }

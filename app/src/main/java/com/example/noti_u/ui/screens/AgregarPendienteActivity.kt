@@ -28,6 +28,8 @@ import com.example.noti_u.R
 import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
+
+
 import kotlinx.coroutines.launch
 
 class AgregarPendienteActivity :  BaseLanguageActivity() {
@@ -53,7 +55,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
         var descripcion by remember { mutableStateOf("") }
         var materiaSeleccionada by remember { mutableStateOf("") }
 
-        // Strings que sí pueden llamarse aquí
+
         val errorTituloMateria = stringResource(R.string.error_titulo_materia)
         val pendienteGuardado = stringResource(R.string.pendiente_guardado)
 
@@ -85,7 +87,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // ---------------------- HEADER ------------------------
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -144,7 +146,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
                         thickness = 1.dp
                     )
 
-                    // ---------------------- TÍTULO ------------------------
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -167,7 +169,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
 
                     Spacer(modifier = Modifier.height(18.dp))
 
-                    // ------------------ CAMPO TÍTULO ---------------------
+
                     Column(modifier = Modifier.fillMaxWidth()) {
 
                         Text(
@@ -192,7 +194,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // ---------------------- MATERIAS ------------------------
+
                     Text(
                         text = stringResource(R.string.seleccione_materia),
                         fontWeight = FontWeight.Medium,
@@ -233,7 +235,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // ------------------ DESCRIPCIÓN ---------------------
+
                     Column(modifier = Modifier.fillMaxWidth()) {
 
                         Text(
@@ -259,7 +261,7 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // ------------------- BOTÓN GUARDAR --------------------
+
                     Button(
                         onClick = {
                             if (titulo.isBlank() || materiaSeleccionada.isBlank()) {

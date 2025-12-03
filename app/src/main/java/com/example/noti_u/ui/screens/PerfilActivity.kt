@@ -33,7 +33,7 @@ import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
 import com.example.noti_u.ui.viewmodel.PerfilViewModel
 
-// CAMBIO 1: Heredar de BaseLanguageActivity para soportar el contexto de idioma
+
 class PerfilActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,18 +52,18 @@ fun PerfilScreen(
     val context = LocalContext.current
     val user = viewModel.userData.collectAsState().value
 
-    // CAMBIO 2: Función para guardar el idioma y reiniciar la app desde cero
+
     fun cambiarIdioma(idioma: String) {
-        // 1. Guardar el idioma en SharedPreferences
+
         val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
         prefs.edit().putString("language", idioma).apply()
 
-        // 2. Reiniciar la aplicación limpiando la pila de actividades
+
         val intent = Intent(context, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
 
-        // 3. Finalizar la actividad actual
+
         (context as? Activity)?.finish()
     }
 

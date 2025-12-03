@@ -22,11 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noti_u.MainActivity
 import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.ui.theme.BarraLateralDesplegable
 import com.example.noti_u.R as AppR
-import com.example.noti_u.ui.screens.EditarPerfilActivity
+
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
-import com.example.noti_u.ui.theme.BarraLateralDesplegable
+
 
 class PrincipalActivity :  BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

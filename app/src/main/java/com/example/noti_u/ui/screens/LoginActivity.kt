@@ -27,6 +27,7 @@ import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.viewmodel.LoginViewModel
 
+
 class LoginActivity :  BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +55,7 @@ fun LoginScreen() {
     val context = LocalContext.current
     val textColor = Color(0xFF212121)
 
-    // ------------------------------------------------------
-    // 📌 CORRECCIÓN: SE OBTIENEN AQUÍ LOS STRINGRESOURCE
-    // ------------------------------------------------------
+
     val txtLoginExito = stringResource(R.string.login_exito)
     val txtLoginError = stringResource(R.string.login_error)
     val txtErrorTodosVacios = stringResource(R.string.error_todos_vacios)

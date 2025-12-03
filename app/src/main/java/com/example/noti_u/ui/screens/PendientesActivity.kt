@@ -40,9 +40,7 @@ class PendientesActivity : BaseMenuActivity() {
     @Composable
     fun pendientePantalla() {
 
-        // --------------------------------------
-        // 📌 CORRECCIÓN: todos los strings AQUÍ
-        // --------------------------------------
+
         val tituloProyectoFinal = stringResource(R.string.proyecto_final)
         val materia = stringResource(R.string.materia)
         val estudiar = stringResource(R.string.estudiar)

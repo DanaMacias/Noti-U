@@ -3,14 +3,14 @@ package com.example.noti_u.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.noti_u.data.model.User
-import com.example.noti_u.data.repository.AuthRepository
+import com.example.noti_u.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PerfilViewModel(
-    private val repo: AuthRepository = AuthRepository()
+    private val repo: UserRepository = UserRepository()
 ) : ViewModel() {
 
     private val _userData = MutableStateFlow<User?>(null)

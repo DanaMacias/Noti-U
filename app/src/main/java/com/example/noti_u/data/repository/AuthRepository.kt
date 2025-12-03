@@ -7,10 +7,7 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
 
-
     private val auth = FirebaseDataSource.auth
-    private val db = FirebaseDataSource.database
-
 
     suspend fun login(email: String, password: String): Result<User> {
         return try {
@@ -18,55 +15,29 @@ class AuthRepository {
             val firebaseUser = result.user
 
             if (firebaseUser != null) {
-                val user = User(
-                    id = firebaseUser.uid,
-                    correo = firebaseUser.email ?: ""
+                Result.success(
+                    User(
+                        id = firebaseUser.uid,
+                        correo = firebaseUser.email ?: ""
+                    )
                 )
-                Result.success(user)
             } else {
                 Result.failure(Exception("Usuario nulo"))
             }
-
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-
-    suspend fun register(user: User, password: String): Result<Unit> {
+    suspend fun register(email: String, password: String): Result<String> {
         return try {
-            val result = auth.createUserWithEmailAndPassword(user.correo, password).await()
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
             val uid = result.user!!.uid
-
-            val userToSave = user.copy(id = uid)
-
-            db.getReference("users")
-                .child(uid)
-                .setValue(userToSave)
-                .await()
-
-            Result.success(Unit)
+            Result.success(uid)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-
-    suspend fun getUserData(uid: String): User? {
-        return try {
-            val snapshot = db.getReference("users")
-                .child(uid)
-                .get()
-                .await()
-
-            snapshot.getValue(User::class.java)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-
-    fun logout() {
-        auth.signOut()
-    }
+    fun logout() = auth.signOut()
 }
