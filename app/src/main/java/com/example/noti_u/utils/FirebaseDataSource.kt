@@ -5,12 +5,12 @@ import com.google.firebase.database.FirebaseDatabase
 
 object FirebaseDataSource {
 
-    // aut
+    // auth
     val auth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
 
-    // db
+    // realtime database
     val database: FirebaseDatabase by lazy {
         FirebaseDatabase.getInstance()
     }
