@@ -236,26 +236,47 @@ fun PerfilScreen(
                 .background(Color(0xFFFFB74D), RoundedCornerShape(12.dp))
                 .padding(12.dp)
         ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.duracion_2025),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = stringResource(R.string.fecha_inicio),
-                    color = Color.Black,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.fecha_fin),
-                    color = Color.Black,
-                    fontSize = 14.sp
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .background(Color(0xFFFFB74D), RoundedCornerShape(12.dp))
+                    .padding(12.dp)
+            ) {
+                Column {
+
+                    Text(
+                        text = "Periodo: ${user?.periodo ?: "Sin definir"}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = "Fecha inicio: ${user?.fechaInicio ?: "----"}",
+                        color = Color.Black,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Fecha fin: ${user?.fechaFin ?: "----"}",
+                        color = Color.Black,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = "Duración: ${user?.duracion ?: "----"}",
+                        color = Color.Black,
+                        fontSize = 14.sp
+                    )
+                }
             }
+
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -268,7 +289,7 @@ fun PerfilScreen(
             modifier = Modifier.align(Alignment.Start)
         )
 
-        // CAMBIO 3: Agregar interactividad a los botones de idioma
+
         Row(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -282,7 +303,7 @@ fun PerfilScreen(
                 fontSize = 14.sp,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable { cambiarIdioma("es") } // Cambiar a Español
+                    .clickable { cambiarIdioma("es") }
                     .padding(8.dp)
             )
             Divider(
@@ -296,7 +317,7 @@ fun PerfilScreen(
                 fontSize = 14.sp,
                 color = Color.Black,
                 modifier = Modifier
-                    .clickable { cambiarIdioma("en") } // Cambiar a Inglés
+                    .clickable { cambiarIdioma("en") }
                     .padding(8.dp)
             )
         }

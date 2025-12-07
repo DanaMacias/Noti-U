@@ -34,4 +34,18 @@ class UserRepository {
             null
         }
     }
+
+    suspend fun updateUser(user: User): Result<Unit> {
+        return try {
+            db.getReference("users")
+                .child(user.id)
+                .setValue(user)
+                .await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

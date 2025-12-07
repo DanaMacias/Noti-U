@@ -16,15 +16,22 @@ class PerfilViewModel(
     private val _userData = MutableStateFlow<User?>(null)
     val userData: StateFlow<User?> get() = _userData
 
-    init {
-        loadUser()
-    }
-
-    private fun loadUser() {
+    fun loadUser() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         viewModelScope.launch {
             _userData.value = repo.getUserData(uid)
         }
+    }
+
+    fun updateUser(user: User, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val result = repo.updateUser(user)
+            onResult(result.isSuccess)
+        }
+    }
+
+    init {
+        loadUser()
     }
 }

@@ -7,5 +7,10 @@ data class User(
     val nombre: String = "",
     val telefono: String = "",
     val area: String = "",
-    val institucion: String = ""
+    val institucion: String = "",
+
+    val periodo: String = "",
+    val fechaInicio: String = "",
+    val fechaFin: String = "",
+    val duracion: String = ""
 )
