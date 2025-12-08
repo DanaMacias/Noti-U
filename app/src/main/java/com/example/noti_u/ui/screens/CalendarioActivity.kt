@@ -59,9 +59,7 @@ fun PantallaContenido() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // -------------------------------
-            //      BARRA SUPERIOR
-            // -------------------------------
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -126,9 +124,6 @@ fun PantallaContenido() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // -------------------------------
-            //        TÍTULO + BOTONES
-            // -------------------------------
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -164,9 +159,7 @@ fun PantallaContenido() {
                 thickness = 1.dp
             )
 
-            // -------------------------------
-            //     TABLA DEL CALENDARIO
-            // -------------------------------
+
 
             val dias = listOf(
                 stringResource(R.string.dia_lun),
@@ -191,7 +184,7 @@ fun PantallaContenido() {
 
                 Column {
 
-                    // FILA DE DÍAS
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
 
                         Box(
@@ -221,7 +214,7 @@ fun PantallaContenido() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // FILAS DE HORAS + CELDAS
+
                     horas.forEach { hora ->
 
                         Row(verticalAlignment = Alignment.CenterVertically) {

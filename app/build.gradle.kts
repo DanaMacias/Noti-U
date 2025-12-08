@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.ui)
 
     // ❌ BORRA ESTA LÍNEA (Esta es la que causa el error "Could not find... 26.0.2")
     // implementation(libs.firebase.firestore.ktx)

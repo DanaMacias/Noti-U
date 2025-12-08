@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -91,6 +92,8 @@ fun NuevaMateriaScreen(viewModel: MateriaViewModel = androidx.lifecycle.viewmode
     val diasSeleccionados = remember { mutableStateMapOf<String, Boolean>() }
     val horaInicio = remember { mutableStateMapOf<String, String>() }
     val horaFin = remember { mutableStateMapOf<String, String>() }
+
+
 
     Box(
         modifier = Modifier
@@ -311,8 +314,11 @@ fun NuevaMateriaScreen(viewModel: MateriaViewModel = androidx.lifecycle.viewmode
 
             Button(
                 onClick = {
-                    val colorHex = "#${(colorSeleccionado ?: Color.White)
-                        .value.toULong().toString(16)}"
+                    val colorHex = String.format(
+                        "#%06X",
+                        (colorSeleccionado ?: Color.White).toArgb() and 0xFFFFFF
+                    )
+
 
                     val materia = Materia(
                         nombre = nombre,

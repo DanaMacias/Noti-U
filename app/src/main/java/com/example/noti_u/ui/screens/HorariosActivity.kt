@@ -3,6 +3,7 @@ package com.example.noti_u.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.noti_u.R
 import com.example.noti_u.data.model.Materia as MateriaModel
 import com.example.noti_u.ui.viewmodel.MateriaViewModel
@@ -24,27 +27,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 fun String.toComposeColor(): Color {
-
-
-    val hexString = if (this.startsWith("#ff") && this.length > 9) {
-
-        "#" + this.substring(3, 9)
-    } else if (this.startsWith("#") && this.length >= 7) {
-        this.substring(0, 7)
-    } else {
-        "#FFB300"
-    }
-
     return try {
-        Color(android.graphics.Color.parseColor(hexString))
-    } catch (e: IllegalArgumentException) {
+        Color(android.graphics.Color.parseColor(this))
+    } catch (e: Exception) {
         Color(0xFFFFB300)
     }
 }
-// ------------------------------------------------------------------------
 
 class HorariosActivity : BaseMenuActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +57,6 @@ class HorariosActivity : BaseMenuActivity() {
     fun HorarioScreen(
         onNuevaMateriaClick: () -> Unit,
         onCalendarioClick: () -> Unit,
-
         viewModel: MateriaViewModel = viewModel()
     ) {
 
@@ -75,8 +64,10 @@ class HorariosActivity : BaseMenuActivity() {
             viewModel.cargarMaterias()
         }
 
-
         val materias by viewModel.materias.collectAsState()
+
+        // Estado para manejar la ventana emergente
+        var materiaSeleccionada by remember { mutableStateOf<MateriaUI?>(null) }
 
         Box(
             modifier = Modifier
@@ -91,19 +82,19 @@ class HorariosActivity : BaseMenuActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-
-
                 Spacer(modifier = Modifier.height(30.dp))
-
-
 
                 materias.forEach { materia ->
 
                     val materiaUI = materia.toMateriaUI()
-                    MateriaCard(materia = materiaUI)
+
+                    MateriaCard(
+                        materia = materiaUI,
+                        onClick = { materiaSeleccionada = materiaUI }
+                    )
+
                     Spacer(modifier = Modifier.height(10.dp))
                 }
-
 
                 Button(
                     onClick = onNuevaMateriaClick,
@@ -114,16 +105,31 @@ class HorariosActivity : BaseMenuActivity() {
                         .height(70.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.nueva_materia),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = Color.Black
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.mas),
+                            contentDescription = "Agregar materia",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = stringResource(id = R.string.nueva_materia),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
 
                 Button(
                     onClick = onCalendarioClick,
@@ -139,9 +145,66 @@ class HorariosActivity : BaseMenuActivity() {
                 }
             }
         }
+
+
+        if (materiaSeleccionada != null) {
+            Dialog(onDismissRequest = { materiaSeleccionada = null }) {
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White,
+                    tonalElevation = 8.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .padding(16.dp)
+                ) {
+
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Text(
+                            text = materiaSeleccionada!!.nombre,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = materiaSeleccionada!!.horario,
+                            fontSize = 16.sp,
+                            color = Color.DarkGray
+                        )
+
+                        if (materiaSeleccionada!!.salonEnlace.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = materiaSeleccionada!!.salonEnlace,
+                                fontSize = 16.sp,
+                                color = Color.DarkGray
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Button(
+                            onClick = { materiaSeleccionada = null },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFB300)
+                            )
+                        ) {
+                            Text("Cerrar", color = Color.Black)
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    //esto toca moverlo
+// TOCA ORGANIZAR
 
     data class MateriaUI(
         val nombre: String,
@@ -149,7 +212,6 @@ class HorariosActivity : BaseMenuActivity() {
         val salonEnlace: String,
         val color: Color
     )
-
 
     private fun MateriaModel.toMateriaUI(): MateriaUI {
 
@@ -160,35 +222,29 @@ class HorariosActivity : BaseMenuActivity() {
             "$dia $inicio-$fin"
         }.replace(":", "")
 
-
         val detalles = mutableListOf<String>()
-        if (!salon.isNullOrBlank()) {
-            detalles.add("Salón: $salon")
-        }
-        if (!enlace.isNullOrBlank()) {
-            detalles.add("Enlace: $enlace")
-        }
-        val salonEnlaceString = detalles.joinToString(separator = " / ")
-
+        if (!salon.isNullOrBlank()) detalles.add("Salón: $salon")
+        if (!enlace.isNullOrBlank()) detalles.add("Enlace: $enlace")
 
         val composeColor = this.color.toComposeColor()
 
         return MateriaUI(
-            nombre = this.nombre,
+            nombre = nombre,
             horario = horarioString,
-            salonEnlace = salonEnlaceString,
+            salonEnlace = detalles.joinToString(" / "),
             color = composeColor
         )
     }
 
     @Composable
-    fun MateriaCard(materia: MateriaUI) {
+    fun MateriaCard(materia: MateriaUI, onClick: () -> Unit) {
         Surface(
             shape = RoundedCornerShape(10.dp),
             color = materia.color,
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .height(70.dp)
+                .clickable { onClick() }
         ) {
             Row(
                 modifier = Modifier
@@ -207,6 +263,7 @@ class HorariosActivity : BaseMenuActivity() {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF1C1C1C)
                     )
+
                     if (materia.salonEnlace.isNotEmpty()) {
                         Text(
                             text = materia.salonEnlace,
@@ -216,7 +273,6 @@ class HorariosActivity : BaseMenuActivity() {
                         )
                     }
                 }
-
 
                 Text(
                     text = materia.horario,
