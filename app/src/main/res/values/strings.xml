@@ -141,9 +141,7 @@
     <string name="agregar_pendiente" translatable="false">Agregar pendiente</string>
 
 
-
     <string name="mi_perfil" translatable="false">Mi Perfil</string>
-
 
 
     <string name="correo" translatable="false">Correo:</string>
@@ -165,7 +163,6 @@
 
     <!-- Dropdown -->
     <string name="ver_perfil" translatable="false">Ver perfil</string>
-
 
 
     <!-- Título sección -->
@@ -207,6 +204,7 @@
     <string name="fecha_y_hora_titulo" translatable="false">Fecha y hora</string>
     <string name="texto_fecha" translatable="false">Fecha: %1$s</string>
     <string name="texto_hora" translatable="false">Hora: %1$s</string>
+    <string name="fecha_entrega" translatable="false">Fecha de entrega</string>
 
     <string name="placeholder_fecha" translatable="false">Seleccionar fecha</string>
     <string name="placeholder_hora" translatable="false">Seleccionar hora</string>
@@ -232,6 +230,7 @@
     <!-- Títulos -->
     <string name="titulo_info_personal" translatable="false">Información Personal</string>
     <string name="titulo_info_academica" translatable="false">Información Académica</string>
+    <string name="sin_titulo">Sin título</string>
 
     <!-- Labels -->
     <string name="label_nombre" translatable="false">Nombre</string>

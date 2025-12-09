@@ -1,16 +1,21 @@
 package com.example.noti_u.ui.screens
 
+import android.app.DatePickerDialog // Importante
 import android.content.Intent
 import android.os.Bundle
+import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,17 +28,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.MainActivity
 import com.example.noti_u.R
-import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
+import com.example.noti_u.ui.viewmodel.AgregarPendienteViewModel
+import com.example.noti_u.data.model.Materia
 import com.example.noti_u.ui.theme.buttonAnimation
-
-
 import kotlinx.coroutines.launch
+import java.util.Calendar // Importante
 
-class AgregarPendienteActivity :  BaseLanguageActivity() {
-
+class AgregarPendienteActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,257 +47,258 @@ class AgregarPendienteActivity :  BaseLanguageActivity() {
             }
         }
     }
+}
 
-    @Composable
-    fun AgregarPendienteScreen() {
-        var expanded by remember { mutableStateOf(false) }
-        val context = LocalContext.current
+@Composable
+fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
+    var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
+    // Estados del formulario
+    var titulo by remember { mutableStateOf("") }
+    var descripcion by remember { mutableStateOf("") }
+    var materiaSeleccionadaId by remember { mutableStateOf("") }
 
-        var titulo by remember { mutableStateOf("") }
-        var descripcion by remember { mutableStateOf("") }
-        var materiaSeleccionada by remember { mutableStateOf("") }
+    var fechaSeleccionada by remember { mutableStateOf("") }
 
 
-        val errorTituloMateria = stringResource(R.string.error_titulo_materia)
-        val pendienteGuardado = stringResource(R.string.pendiente_guardado)
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val materias = listOf(
-            Pair(stringResource(R.string.materia1), Color(0xFFFDF187)),
-            Pair(stringResource(R.string.materia2), Color(0xFFD2B6F0)),
-            Pair(stringResource(R.string.materia3), Color(0xFFB8E2B2)),
-            Pair(stringResource(R.string.materia4), Color(0xFFD6F0C4)),
-            Pair(stringResource(R.string.materia5), Color(0xFFF0CCE1)),
-            Pair(stringResource(R.string.materia6), Color(0xFF8BAE96)),
-        )
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            fechaSeleccionada = "$dayOfMonth/${month + 1}/$year"
+        },
+        year, month, day
+    )
 
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { paddingValues ->
+    val guardado by viewModel.guardadoExitoso.collectAsState()
+    val materias by viewModel.materias.collectAsState()
 
-            Box(
+    LaunchedEffect(guardado) {
+        if (guardado) {
+            (context as? ComponentActivity)?.finish()
+            viewModel.reiniciarEstado()
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFFAF3E0))
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFFAF3E0))
-                    .padding(paddingValues)
-                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Column(
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Image(
-                            painter = painterResource(id = R.drawable.logo),
-                            contentDescription = stringResource(R.string.logo),
-                            modifier = Modifier.size(80.dp)
-                        )
-
-                        Box {
-                            buttonAnimation(
-                                drawableId = R.drawable.perfil,
-                                modifier = Modifier.size(40.dp)
-                            ) { expanded = !expanded }
-
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.ver_perfil)) },
-                                    onClick = {
-                                        expanded = false
-                                        context.startActivity(Intent(context, PerfilActivity::class.java))
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.editar_perfil)) },
-                                    onClick = {
-                                        expanded = false
-                                        context.startActivity(Intent(context, EditarPerfilActivity::class.java))
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.cerrar_sesion)) },
-                                    onClick = {
-                                        expanded = false
-                                        context.startActivity(Intent(context, MainActivity::class.java))
-                                        (context as? ComponentActivity)?.finish()
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        color = Color.Black,
-                        thickness = 1.dp
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = stringResource(R.string.logo),
+                        modifier = Modifier.size(80.dp)
                     )
-
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
+                    Box {
                         buttonAnimation(
-                            drawableId = R.drawable.atras,
-                            modifier = Modifier.size(32.dp)
-                        ) { (context as? ComponentActivity)?.finish() }
+                            drawableId = R.drawable.perfil,
+                            modifier = Modifier.size(40.dp)
+                        ) { expanded = !expanded }
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                        ) {
 
-                        Text(
-                            text = stringResource(R.string.agregar_editar),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            color = Color.Black
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(18.dp))
-
-
-                    Column(modifier = Modifier.fillMaxWidth()) {
-
-                        Text(
-                            text = stringResource(R.string.pendiente_label),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 18.sp
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        OutlinedTextField(
-                            value = titulo,
-                            onValueChange = { titulo = it },
-                            placeholder = {
-                                Text(stringResource(R.string.titulo_placeholder), color = Color.Gray)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-
-                    Text(
-                        text = stringResource(R.string.seleccione_materia),
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-
-                        materias.forEach { (nombre, color) ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-
-                                RadioButton(
-                                    selected = materiaSeleccionada == nombre,
-                                    onClick = { materiaSeleccionada = nombre },
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = color,
-                                        unselectedColor = Color.Gray
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.ver_perfil)) },
+                                onClick = {
+                                    expanded = false
+                                    context.startActivity(Intent(context, PerfilActivity::class.java))
+                                    (context as? ComponentActivity)?.overridePendingTransition(
+                                        android.R.anim.fade_in,
+                                        android.R.anim.fade_out
                                     )
-                                )
+                                }
+                            )
 
-                                Text(nombre, color = Color.Black)
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.editar_perfil)) },
+                                onClick = {
+                                    expanded = false
+                                    context.startActivity(Intent(context, EditarPerfilActivity::class.java))
+                                    (context as? ComponentActivity)?.overridePendingTransition(
+                                        android.R.anim.fade_in,
+                                        android.R.anim.fade_out
+                                    )
+                                }
+                            )
 
-                                Spacer(modifier = Modifier.width(6.dp))
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(14.dp)
-                                        .background(color, RoundedCornerShape(2.dp))
-                                )
-                            }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.cerrar_sesion)) },
+                                onClick = {
+                                    expanded = false
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent)
+                                    (context as? ComponentActivity)?.finish()
+                                }
+                            )
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-
-                    Column(modifier = Modifier.fillMaxWidth()) {
-
-                        Text(
-                            text = stringResource(R.string.descripcion_label),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 18.sp
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        OutlinedTextField(
-                            value = descripcion,
-                            onValueChange = { descripcion = it },
-                            placeholder = {
-                                Text(stringResource(R.string.descripcion_placeholder), color = Color.Gray)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp)
-                                .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                            textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-
-                    Button(
-                        onClick = {
-                            if (titulo.isBlank() || materiaSeleccionada.isBlank()) {
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(errorTituloMateria)
-                                }
-
-                            } else {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(pendienteGuardado)
-                                }
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF5B800)),
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(45.dp)
-                    ) {
-
-                        Text(
-                            stringResource(R.string.guardar),
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
+                Divider(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                        Image(painter = painterResource(id = R.drawable.atras), contentDescription = null, modifier = Modifier.size(32.dp))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.agregar_editar),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        color = Color.Black
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = stringResource(R.string.pendiente_label), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = titulo,
+                        onValueChange = { titulo = it },
+                        placeholder = { Text(stringResource(R.string.titulo_placeholder), color = Color.Black) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // CAMPO MATERIAS
+                Text(text = stringResource(R.string.seleccione_materia), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                Spacer(modifier = Modifier.height(8.dp))
+                Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    materias.forEach { materia ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(
+                                selected = materiaSeleccionadaId == materia.id,
+                                onClick = { materiaSeleccionadaId = materia.id },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = materiaColorSafe(materia),
+                                    unselectedColor = Color.Gray
+                                )
+                            )
+                            Text(text = materia.nombre, color = Color.Black, modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Box(modifier = Modifier.size(14.dp).background(materiaColorSafe(materia), RoundedCornerShape(2.dp)))
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                //Fecha
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = stringResource(R.string.fecha_entrega), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    OutlinedTextField(
+                        value = if (fechaSeleccionada.isEmpty()) stringResource(R.string.seleccionar_fecha) else fechaSeleccionada,
+                        onValueChange = { },
+                        readOnly = true,
+                        trailingIcon = {
+                            Icon(Icons.Default.DateRange, contentDescription = "Calendario", tint = Color.Black)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .clickable { datePickerDialog.show() },
+                        enabled = false,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledTextColor = Color.Black,
+                            disabledBorderColor = Color.Transparent,
+                            disabledPlaceholderColor = Color.Black,
+                            disabledLeadingIconColor = Color.Black,
+                            disabledTrailingIconColor = Color.Black
+                        ),
+                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // CAMPO DESCRIPCIÓN
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = stringResource(R.string.descripcion_label), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = descripcion,
+                        onValueChange = { descripcion = it },
+                        placeholder = { Text(stringResource(R.string.descripcion_placeholder), color = Color.Gray) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // BOTÓN GUARDAR
+                Button(
+                    onClick = {
+                        if (titulo.isBlank() || materiaSeleccionadaId.isBlank() || fechaSeleccionada.isBlank()) {
+                            scope.launch { snackbarHostState.showSnackbar("Por favor complete título, fecha y seleccione materia") }
+                        } else {
+                            viewModel.guardar(titulo, descripcion, materiaSeleccionadaId, fechaSeleccionada)
+
+                            scope.launch { snackbarHostState.showSnackbar("Pendiente guardado") }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF5B800)),
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier.width(150.dp).height(45.dp)
+                ) {
+                    Text(stringResource(R.string.guardar), color = Color.Black, fontWeight = FontWeight.Bold)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
+    }
+}
+
+fun materiaColorSafe(m: Materia): Color {
+    return try {
+        val hex = m.color.removePrefix("#")
+        val colorInt = android.graphics.Color.parseColor("#$hex")
+        Color(colorInt)
+    } catch (e: Exception) {
+        Color(0xFFBDBDBD)
     }
 }

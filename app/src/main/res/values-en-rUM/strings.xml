@@ -202,6 +202,7 @@
     <string name="fecha_y_hora_titulo">Date and time</string>
     <string name="texto_fecha">Date: %1$s</string>
     <string name="texto_hora">Time: %1$s</string>
+    <string name="fecha_entrega" translatable="false">Due date</string>
 
     <string name="placeholder_fecha">Select date</string>
     <string name="placeholder_hora">Select time</string>
@@ -227,6 +228,7 @@
     <!-- Titles -->
     <string name="titulo_info_personal">Personal Information</string>
     <string name="titulo_info_academica">Academic Information</string>
+    <string name="sin_titulo">Untitled</string>
 
     <!-- Labels -->
     <string name="label_nombre">Name</string>
