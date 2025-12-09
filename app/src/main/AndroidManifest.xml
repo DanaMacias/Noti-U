@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- PERMISOS FUERA DE APPLICATION -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,58 +18,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NotiU">
-        <activity
-            android:name=".ui.screens.AgregarPendienteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.EditarPerfilActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.PerfilActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.NuevaMateriaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.screens.HorariosActivity"
-            android:exported="false"
-            android:label="@string/title_activity_notas"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.PendientesActivity"
-            android:exported="false"
-            android:label="@string/title_activity_pendientes"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.CalendarioActivity"
-            android:exported="false"
-            android:label="@string/title_activity_horarios"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.RegistroActivity"
-            android:exported="false"
-            android:label="@string/title_activity_recordatorios"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.RecordatoriosActivity"
-            android:exported="false"
-            android:label="Calendario"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.base.BaseMenuActivity"
-            android:exported="false"
-            android:label="registro"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.NotasActivity"
-            android:exported="false"
-            android:label="registro"
-            android:theme="@style/Theme.NotiU" />
-        <activity
-            android:name=".ui.screens.PrincipalActivity"
-            android:exported="false"
-            android:label="@string/title_activity_principal"
-            android:theme="@style/Theme.NotiU" />
+
+        <!-- RECEIVER PARA NOTIFICACIONES -->
+        <receiver
+            android:name=".utils.NotificationReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.noti_u.NOTIFICATION_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- ACTIVITY PRINCIPAL - SOLO UNA VEZ -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -70,10 +37,72 @@
             android:theme="@style/Theme.NotiU">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- OTRAS ACTIVITIES -->
+        <activity
+            android:name=".ui.screens.PrincipalActivity"
+            android:exported="false"
+            android:label="@string/title_activity_principal"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.NotasActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.RecordatoriosActivity"
+            android:exported="false"
+            android:label="Recordatorios"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.CalendarioActivity"
+            android:exported="false"
+            android:label="@string/title_activity_horarios"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.PendientesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_pendientes"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.HorariosActivity"
+            android:exported="false"
+            android:label="@string/title_activity_notas"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.NuevaMateriaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.PerfilActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.EditarPerfilActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.AgregarPendienteActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.RegistroActivity"
+            android:exported="false"
+            android:label="@string/title_activity_recordatorios"
+            android:theme="@style/Theme.NotiU" />
+
     </application>
 
 </manifest>

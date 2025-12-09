@@ -35,6 +35,7 @@ import com.example.noti_u.ui.theme.buttonAnimation
 import com.example.noti_u.ui.viewmodel.RecordatoriosViewModel
 import com.example.noti_u.utils.FirebaseDataSource
 import java.util.*
+import androidx.compose.runtime.DisposableEffect
 
 val DarkTextPrimary = Color(0xFF1C1C1C)
 val DarkTextSecondary = Color(0xFF2F2F2F)
@@ -46,6 +47,12 @@ class RecordatoriosActivity : BaseMenuActivity() {
     override fun PantallaContenido(innerPadding: PaddingValues) {
         val navController = rememberNavController()
         val viewModel: RecordatoriosViewModel = viewModel()
+        val context = LocalContext.current
+
+        // Crear canal de notificaciones al iniciar
+        LaunchedEffect(Unit) {
+            com.example.noti_u.utils.NotificationHelper.createNotificationChannel(context)
+        }
 
         NavHost(
             navController = navController,
@@ -95,9 +102,22 @@ fun RecordatoriosListScreen(
     onEditarRecordatorio: (String) -> Unit
 ) {
     val userId = FirebaseDataSource.auth.currentUser!!.uid
+    val context = LocalContext.current
 
-    LaunchedEffect(Unit) { viewModel.cargarRecordatorios(userId) }
+    LaunchedEffect(Unit) {
+        viewModel.cargarRecordatorios(userId)
+        viewModel.iniciarVerificacionNotificaciones(context, userId)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.detenerVerificacionNotificaciones()
+        }
+    }
+
     val recordatorios = viewModel.recordatorios
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -430,6 +450,7 @@ fun FormularioRecordatorioScreen(
                 onClick = {
                     if (nombre.isNotBlank() && fecha != "--/--/----" && hora != "--:-- --") {
                         viewModel.agregarRecordatorio(
+                            context = context,
                             fecha = fecha,
                             hora = hora,
                             nombre = nombre,
@@ -667,7 +688,7 @@ fun EditarRecordatorioScreen(
                 ) {
                     Button(
                         onClick = {
-                            viewModel.eliminarRecordatorio(userId, recordatorioId) {
+                            viewModel.eliminarRecordatorio(context, userId, recordatorioId) {
                                 onVolver()
                             }
                         },
@@ -691,6 +712,7 @@ fun EditarRecordatorioScreen(
                         onClick = {
                             if (nombre.isNotBlank() && fecha.isNotBlank() && hora.isNotBlank()) {
                                 viewModel.editarRecordatorio(
+                                    context = context,
                                     recordatorioId = recordatorioId,
                                     fecha = fecha,
                                     hora = hora,
