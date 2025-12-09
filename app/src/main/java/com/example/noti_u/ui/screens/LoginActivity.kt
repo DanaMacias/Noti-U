@@ -9,6 +9,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,7 +21,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,10 +57,10 @@ fun LoginScreen() {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val textColor = Color(0xFF212121)
-
 
     val txtLoginExito = stringResource(R.string.login_exito)
     val txtLoginError = stringResource(R.string.login_error)
@@ -107,7 +113,11 @@ fun LoginScreen() {
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.correo_placeholder)) },
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -124,7 +134,30 @@ fun LoginScreen() {
                 onValueChange = { password = it },
                 label = { Text(stringResource(R.string.contrasena_placeholder)) },
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                ),
+                visualTransformation = if (passwordVisible)
+                    VisualTransformation.None
+                else
+                    PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible)
+                                Icons.Filled.Visibility
+                            else
+                                Icons.Filled.VisibilityOff,
+                            contentDescription = if (passwordVisible)
+                                "Ocultar contraseña"
+                            else
+                                "Mostrar contraseña",
+                            tint = Color.Black
+                        )
+                    }
+                }
             )
 
             Spacer(modifier = Modifier.height(30.dp))
