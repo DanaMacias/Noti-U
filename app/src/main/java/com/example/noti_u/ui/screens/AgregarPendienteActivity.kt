@@ -1,6 +1,6 @@
 package com.example.noti_u.ui.screens
 
-import android.app.DatePickerDialog // Importante
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.DatePicker
@@ -31,14 +31,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.MainActivity
 import com.example.noti_u.R
-import com.example.noti_u.ui.theme.NotiUTheme
-import com.example.noti_u.ui.viewmodel.AgregarPendienteViewModel
 import com.example.noti_u.data.model.Materia
+import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.theme.buttonAnimation
+import com.example.noti_u.ui.viewmodel.AgregarPendienteViewModel
 import kotlinx.coroutines.launch
-import java.util.Calendar // Importante
+import java.util.Calendar
 
-class AgregarPendienteActivity : ComponentActivity() {
+class AgregarPendienteActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -60,9 +61,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
     var titulo by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var materiaSeleccionadaId by remember { mutableStateOf("") }
-
     var fechaSeleccionada by remember { mutableStateOf("") }
-
 
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
@@ -79,6 +78,10 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
     val guardado by viewModel.guardadoExitoso.collectAsState()
     val materias by viewModel.materias.collectAsState()
+
+    // Strings for Snackbar
+    val errorMsg = stringResource(R.string.error_titulo_materia)
+    val successMsg = stringResource(R.string.pendiente_guardado)
 
     LaunchedEffect(guardado) {
         if (guardado) {
@@ -104,6 +107,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
+                // --- HEADER ---
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -113,7 +117,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.logo),
-                        contentDescription = stringResource(R.string.logo),
+                        contentDescription = stringResource(R.string.cd_logo),
                         modifier = Modifier.size(80.dp)
                     )
                     Box {
@@ -126,31 +130,20 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                         ) {
-
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.ver_perfil)) },
                                 onClick = {
                                     expanded = false
                                     context.startActivity(Intent(context, PerfilActivity::class.java))
-                                    (context as? ComponentActivity)?.overridePendingTransition(
-                                        android.R.anim.fade_in,
-                                        android.R.anim.fade_out
-                                    )
                                 }
                             )
-
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.editar_perfil)) },
                                 onClick = {
                                     expanded = false
                                     context.startActivity(Intent(context, EditarPerfilActivity::class.java))
-                                    (context as? ComponentActivity)?.overridePendingTransition(
-                                        android.R.anim.fade_in,
-                                        android.R.anim.fade_out
-                                    )
                                 }
                             )
-
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.cerrar_sesion)) },
                                 onClick = {
@@ -164,12 +157,18 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                     }
                 }
                 Divider(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp))
+
+                // --- TITLE ROW ---
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
-                        Image(painter = painterResource(id = R.drawable.atras), contentDescription = null, modifier = Modifier.size(32.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.atras),
+                            contentDescription = stringResource(R.string.cd_volver),
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -182,14 +181,19 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-
+                // --- PENDIENTE TITLE INPUT ---
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.pendiente_label), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Text(
+                        text = stringResource(R.string.pendiente_label),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = titulo,
                         onValueChange = { titulo = it },
-                        placeholder = { Text(stringResource(R.string.titulo_placeholder), color = Color.Black) },
+                        placeholder = { Text(stringResource(R.string.titulo_placeholder), color = Color.Gray) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
@@ -199,8 +203,13 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // CAMPO MATERIAS
-                Text(text = stringResource(R.string.seleccione_materia), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                // --- MATERIAS SELECTION ---
+                Text(
+                    text = stringResource(R.string.seleccione_materia),
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     materias.forEach { materia ->
@@ -221,9 +230,15 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                //Fecha
+
+                // --- DATE PICKER ---
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.fecha_entrega), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Text(
+                        text = stringResource(R.string.fecha_entrega),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
 
                     OutlinedTextField(
@@ -231,7 +246,11 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                         onValueChange = { },
                         readOnly = true,
                         trailingIcon = {
-                            Icon(Icons.Default.DateRange, contentDescription = "Calendario", tint = Color.Black)
+                            Icon(
+                                Icons.Default.DateRange,
+                                contentDescription = stringResource(R.string.cd_calendario),
+                                tint = Color.Black
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -251,9 +270,14 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // CAMPO DESCRIPCIÓN
+                // --- DESCRIPTION INPUT ---
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.descripcion_label), fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Color.Black)
+                    Text(
+                        text = stringResource(R.string.descripcion_label),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
                     OutlinedTextField(
                         value = descripcion,
@@ -269,15 +293,14 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // BOTÓN GUARDAR
+                // --- SAVE BUTTON ---
                 Button(
                     onClick = {
-                        if (titulo.isBlank() || materiaSeleccionadaId.isBlank() || fechaSeleccionada.isBlank()) {
-                            scope.launch { snackbarHostState.showSnackbar("Por favor complete título, fecha y seleccione materia") }
+                        if (titulo.isBlank() || materiaSeleccionadaId.isBlank() || fechaSeleccionada.isEmpty()) {
+                            scope.launch { snackbarHostState.showSnackbar(errorMsg) }
                         } else {
                             viewModel.guardar(titulo, descripcion, materiaSeleccionadaId, fechaSeleccionada)
-
-                            scope.launch { snackbarHostState.showSnackbar("Pendiente guardado") }
+                            scope.launch { snackbarHostState.showSnackbar(successMsg) }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF5B800)),

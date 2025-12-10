@@ -1,13 +1,15 @@
 package com.example.noti_u.ui.screens
 
-import android.R
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,33 +17,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.noti_u.R as AppR
-import com.example.noti_u.ui.viewmodel.PrincipalViewModel
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.noti_u.R
 import com.example.noti_u.data.model.Materia
 import com.example.noti_u.data.model.Pendientes
-import androidx.compose.ui.window.Dialog
+import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.ui.base.BaseMenuActivity
+import com.example.noti_u.ui.viewmodel.PrincipalViewModel
 
-
-class PrincipalActivity :  BaseMenuActivity() {
+class PrincipalActivity : BaseMenuActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setPantallaConMenu()
     }
+
     @Composable
     override fun PantallaContenido(innerPadding: PaddingValues) {
         PrincipalScreen()
     }
 }
+
 @Composable
-fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
     val pendientesHoy by viewModel.pendientesHoy.collectAsState()
     val pendientesManana by viewModel.pendientesManana.collectAsState()
     val materiasHoy by viewModel.materiasHoy.collectAsState()
@@ -50,7 +54,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
     // Estados para el diálogo de detalle
     var pendienteSeleccionado by remember { mutableStateOf<Pendientes?>(null) }
     var materiaSeleccionada by remember { mutableStateOf<Pair<Materia, String>?>(null) }
-    var dialogTitle by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -78,8 +81,9 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                             materiasHoy.isEmpty() && materiasManana.isEmpty()
                     if (todasVacias) {
                         item {
+                            // CHANGED: stringResource
                             Text(
-                                text = "No hay recordatorios para hoy o mañana",
+                                text = stringResource(R.string.no_hay_recordatorios),
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp,
                                 color = Color.DarkGray,
@@ -89,16 +93,16 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     } else {
                         // Pendientes - Hoy
                         if (pendientesHoy.isNotEmpty()) {
-                            item { Text("Pendientes - Hoy", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
+                            // CHANGED: stringResource
+                            item { Text(stringResource(R.string.pendientes_hoy), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(pendientesHoy) { p ->
                                 RecordatorioBox(
-                                    titulo = "Pendiente: ${p.titulo.ifBlank { "Sin título" }}",
-                                    subtitulo = p.descripcion.ifBlank { "Sin descripción" },
-                                    fecha = "Vence: ${p.fecha}",
+                                    titulo = stringResource(R.string.formato_pendiente, p.titulo.ifBlank { stringResource(R.string.sin_titulo) }),
+                                    subtitulo = p.descripcion.ifBlank { stringResource(R.string.sin_descripcion) },
+                                    fecha = stringResource(R.string.formato_vence, p.fecha),
                                     onClick = {
                                         pendienteSeleccionado = p
                                         materiaSeleccionada = null
-                                        dialogTitle = "Detalle pendiente"
                                     }
                                 )
                             }
@@ -106,16 +110,16 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
 
                         // Pendientes - Mañana
                         if (pendientesManana.isNotEmpty()) {
-                            item { Spacer(modifier = Modifier.height(8.dp)); Text("Pendientes - Mañana", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
+                            // CHANGED: stringResource
+                            item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.pendientes_manana), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(pendientesManana) { p ->
                                 RecordatorioBox(
-                                    titulo = "Pendiente: ${p.titulo.ifBlank { "Sin título" }}",
-                                    subtitulo = p.descripcion.ifBlank { "Sin descripción" },
-                                    fecha = "Vence: ${p.fecha}",
+                                    titulo = stringResource(R.string.formato_pendiente, p.titulo.ifBlank { stringResource(R.string.sin_titulo) }),
+                                    subtitulo = p.descripcion.ifBlank { stringResource(R.string.sin_descripcion) },
+                                    fecha = stringResource(R.string.formato_vence, p.fecha),
                                     onClick = {
                                         pendienteSeleccionado = p
                                         materiaSeleccionada = null
-                                        dialogTitle = "Detalle pendiente"
                                     }
                                 )
                             }
@@ -123,16 +127,19 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
 
                         // Materias - Hoy
                         if (materiasHoy.isNotEmpty()) {
-                            item { Spacer(modifier = Modifier.height(8.dp)); Text("Clases - Hoy", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
+                            // CHANGED: stringResource
+                            item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.clases_hoy), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(materiasHoy) { (materia, horario) ->
                                 RecordatorioBox(
-                                    titulo = "Clase: ${materia.nombre.ifBlank { "Materia" }}",
-                                    subtitulo = listOfNotNull("Horario: $horario", materia.salon?.let { "Salón: $it" }).joinToString(" · "),
-                                    fecha = "Hoy",
+                                    titulo = stringResource(R.string.formato_clase, materia.nombre.ifBlank { stringResource(R.string.materia_default) }),
+                                    subtitulo = listOfNotNull(
+                                        stringResource(R.string.formato_horario, horario),
+                                        materia.salon?.let { stringResource(R.string.formato_salon, it) }
+                                    ).joinToString(" · "),
+                                    fecha = stringResource(R.string.hoy),
                                     onClick = {
                                         materiaSeleccionada = Pair(materia, horario)
                                         pendienteSeleccionado = null
-                                        dialogTitle = "Detalle clase"
                                     }
                                 )
                             }
@@ -140,16 +147,19 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
 
                         // Materias - Mañana
                         if (materiasManana.isNotEmpty()) {
-                            item { Spacer(modifier = Modifier.height(8.dp)); Text("Clases - Mañana", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
+                            // CHANGED: stringResource
+                            item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.clases_manana), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(materiasManana) { (materia, horario) ->
                                 RecordatorioBox(
-                                    titulo = "Clase: ${materia.nombre.ifBlank { "Materia" }}",
-                                    subtitulo = listOfNotNull("Horario: $horario", materia.salon?.let { "Salón: $it" }).joinToString(" · "),
-                                    fecha = "Mañana",
+                                    titulo = stringResource(R.string.formato_clase, materia.nombre.ifBlank { stringResource(R.string.materia_default) }),
+                                    subtitulo = listOfNotNull(
+                                        stringResource(R.string.formato_horario, horario),
+                                        materia.salon?.let { stringResource(R.string.formato_salon, it) }
+                                    ).joinToString(" · "),
+                                    fecha = stringResource(R.string.manana),
                                     onClick = {
                                         materiaSeleccionada = Pair(materia, horario)
                                         pendienteSeleccionado = null
-                                        dialogTitle = "Detalle clase"
                                     }
                                 )
                             }
@@ -161,7 +171,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = stringResource(AppR.string.paginas_recomendadas),
+                text = stringResource(R.string.paginas_recomendadas),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
@@ -203,7 +213,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                 ) {
 
                     Text(
-                        text = p.titulo.ifBlank { "Sin título" },
+                        text = p.titulo.ifBlank { stringResource(R.string.sin_titulo) },
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -212,7 +222,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        text = "Descripción: ${p.descripcion.ifBlank { "Sin descripción" }}",
+                        text = stringResource(R.string.formato_descripcion, p.descripcion.ifBlank { stringResource(R.string.sin_descripcion) }),
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
@@ -220,15 +230,16 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        text = "Fecha: ${p.fecha}",
+                        text = stringResource(R.string.formato_fecha, p.fecha),
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
 
+                    val estadoTexto = if (p.estado) stringResource(R.string.completado) else stringResource(R.string.pendiente_estado)
                     Text(
-                        text = "Estado: ${if (p.estado) "Completado" else "Pendiente"}",
+                        text = stringResource(R.string.formato_estado, estadoTexto),
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
@@ -241,7 +252,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                             containerColor = Color(0xFFFFB300)
                         )
                     ) {
-                        Text("Cerrar", color = Color.Black)
+                        Text(stringResource(R.string.cerrar), color = Color.Black)
                     }
                 }
             }
@@ -270,7 +281,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                 ) {
 
                     Text(
-                        text = m.nombre.ifBlank { "Materia" },
+                        text = m.nombre.ifBlank { stringResource(R.string.materia_default) },
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -279,7 +290,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        text = "Horario: $horario",
+                        text = stringResource(R.string.formato_horario, horario),
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
@@ -287,7 +298,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     if (!m.salon.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Salón: ${m.salon}",
+                            text = stringResource(R.string.formato_salon, m.salon),
                             fontSize = 16.sp,
                             color = Color.DarkGray
                         )
@@ -296,7 +307,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                     if (!m.enlace.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Enlace: ${m.enlace}",
+                            text = stringResource(R.string.formato_enlace, m.enlace),
                             fontSize = 16.sp,
                             color = Color.DarkGray
                         )
@@ -310,7 +321,7 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = androidx.lifecycle.viewmodel
                             containerColor = Color(0xFFFFB300)
                         )
                     ) {
-                        Text("Cerrar", color = Color.Black)
+                        Text(stringResource(R.string.cerrar), color = Color.Black)
                     }
                 }
             }

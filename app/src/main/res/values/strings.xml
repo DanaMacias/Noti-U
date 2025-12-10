@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">Noti-U</string>
 
-    <!-- Menú perfil -->
     <string name="editar_perfil" translatable="false">Editar perfil</string>
     <string name="cerrar_sesion" translatable="false">Cerrar sesión</string>
 
-    <!-- Agregar pendiente -->
     <string name="agregar_editar" translatable="false">Agregar/Editar</string>
     <string name="pendiente_label" translatable="false">Pendiente:</string>
     <string name="titulo_placeholder" translatable="false">Título</string>
@@ -13,14 +11,11 @@
     <string name="descripcion_label" translatable="false">Descripción:</string>
     <string name="descripcion_placeholder" translatable="false">Agrega una descripción</string>
 
-    <!-- Snackbars -->
     <string name="error_titulo_materia" translatable="false">Por favor completa el título y selecciona una materia.</string>
     <string name="pendiente_guardado" translatable="false">Pendiente guardado correctamente.</string>
 
-    <!-- Botón -->
     <string name="guardar" translatable="false">Guardar</string>
 
-    <!-- Materias -->
     <string name="materia1" translatable="false">Materia 1</string>
     <string name="materia2" translatable="false">Materia 2</string>
     <string name="materia3" translatable="false">Materia 3</string>
@@ -28,28 +23,22 @@
     <string name="materia5" translatable="false">Materia 5</string>
     <string name="materia6" translatable="false">Materia 6</string>
 
-    <!-- Otros -->
     <string name="logo" translatable="false">Logo</string>
 
-    <!-- Barra lateral -->
     <string name="menu_horarios" translatable="false">Horarios</string>
     <string name="menu_pendientes" translatable="false">Pendientes</string>
     <string name="menu_recordatorios" translatable="false">Recordatorios</string>
     <string name="menu_notas" translatable="false">Notas</string>
     <string name="menu_fondo" translatable="false">Fondo menú</string>
 
-    <!-- Top bar -->
     <string name="menu_ver_perfil" translatable="false">Ver perfil</string>
     <string name="menu_editar_perfil" translatable="false">Editar perfil</string>
     <string name="menu_cerrar_sesion" translatable="false">Cerrar sesión</string>
 
-    <!-- Content descriptions -->
     <string name="cd_logo" translatable="false">Logo de la aplicación</string>
 
-    <!-- Calendario -->
     <string name="calendario_titulo" translatable="false">Calendario</string>
 
-    <!-- Días -->
     <string name="dia_lun" translatable="false">MON</string>
     <string name="dia_mar" translatable="false">TUE</string>
     <string name="dia_mie" translatable="false">WED</string>
@@ -57,7 +46,6 @@
     <string name="dia_vie" translatable="false">FRI</string>
     <string name="dia_sab" translatable="false">SAT</string>
 
-    <!-- Horas -->
     <string name="hora_8_10" translatable="false">8-10</string>
     <string name="hora_10_12" translatable="false">10-12</string>
     <string name="hora_12_14" translatable="false">12-14</string>
@@ -74,7 +62,7 @@
     <string name="materias_titulo" translatable="false">Materias</string>
     <string name="nueva_materia" translatable="false">Nueva Materia</string>
     <string name="cd_agregar_materia" translatable="false">Agregar materia</string>
-    <!-- Login -->
+
     <string name="login_exito" translatable="false">Inicio de sesión exitoso</string>
     <string name="login_error" translatable="false">Correo o contraseña incorrectos</string>
 
@@ -87,34 +75,28 @@
     <string name="boton_iniciar" translatable="false">Iniciar</string>
     <string name="boton_registrar" translatable="false">Registrarse</string>
 
-    <!-- Errores -->
     <string name="error_todos_vacios" translatable="false">Debes llenar todos los campos</string>
     <string name="error_correo_vacio" translatable="false">El correo no puede estar vacío</string>
     <string name="error_contrasena_vacia" translatable="false">La contraseña no puede estar vacía</string>
 
-    <!-- Content descriptions -->
     <string name="cd_fondo" translatable="false">Fondo</string>
-    <string name="cd_icono_usuario" translatable="false">Icono del usuario</string>
+
     <string name="todas_las_notas" translatable="false">Todas las Notas</string>
     <string name="buscar" translatable="false">Buscar</string>
     <string name="no_hay_notas" translatable="false">No hay notas todavía</string>
     <string name="cantidad_notas" translatable="false">%1$d notas</string>
     <string name="agregar_nota" translatable="false">Agregar nota</string>
 
-    <!-- Agregar nota -->
     <string name="volver" translatable="false">Volver</string>
     <string name="descripcion" translatable="false">Descripción</string>
 
 
-    <!-- Otros -->
     <string name="fondo" translatable="false">Fondo</string>
-    <!-- Nueva Materia -->
     <string name="agregar_editar_materia" translatable="false">Agregar / Editar Materia</string>
     <string name="nombre_materia" translatable="false">Nombre:</string>
     <string name="placeholder_nombre_materia" translatable="false">Ingrese nombre de la materia</string>
     <string name="seleccione_horario" translatable="false">Seleccione el horario:</string>
 
-    <!-- Días -->
     <string name="lunes" translatable="false">Lunes</string>
     <string name="martes" translatable="false">Martes</string>
     <string name="miercoles" translatable="false">Miércoles</string>
@@ -123,15 +105,11 @@
     <string name="sabado" translatable="false">Sábado</string>
     <string name="domingo" translatable="false">Domingo</string>
 
-    <!-- Horas -->
     <string name="hora_inicio" translatable="false">Inicio</string>
     <string name="hora_fin" translatable="false">Fin</string>
 
-    <!-- Color -->
     <string name="color_opcional" translatable="false">Color (Opcional):</string>
 
-    <!-- Menu -->
-    <!-- Pendientes -->
     <string name="proyecto_final" translatable="false">Proyecto final</string>
     <string name="materia" translatable="false">Materia</string>
     <string name="descripcion_generica" translatable="false">Descripción</string>
@@ -161,14 +139,11 @@
     <string name="english" translatable="false">English</string>
 
 
-    <!-- Dropdown -->
     <string name="ver_perfil" translatable="false">Ver perfil</string>
 
 
-    <!-- Título sección -->
     <string name="paginas_recomendadas" translatable="false">Páginas Recomendadas</string>
 
-    <!-- Recordatorios -->
     <string name="recordatorio_1_titulo" translatable="false">Proyecto final</string>
     <string name="recordatorio_1_sub" translatable="false">Proyecto • Materia</string>
     <string name="recordatorio_1_fecha" translatable="false">22/01/2025</string>
@@ -192,14 +167,12 @@
     <string name="fecha_placeholder" translatable="false">Seleccionar fecha</string>
     <string name="hora_placeholder" translatable="false">Seleccionar hora</string>
 
-    <!-- Recordatorios -->
     <string name="recordatorios_titulo_top" translatable="false">Recordatorios</string>
     <string name="agregar_nuevo_recordatorio_btn" translatable="false">Agregar nuevo recordatorio</string>
     <string name="recordatorio_ejemplo_nombre" translatable="false">Recordatorio de ejemplo</string>
     <string name="recordatorio_ejemplo_tipo" translatable="false">Tipo: Estudio</string>
     <string name="recordatorio_ejemplo_fecha" translatable="false">10/12/2025 - 15:00</string>
 
-    <!-- Formulario Recordatorio -->
     <string name="agregar_recordatorio_titulo_top" translatable="false">Agregar Recordatorio</string>
     <string name="fecha_y_hora_titulo" translatable="false">Fecha y hora</string>
     <string name="texto_fecha" translatable="false">Fecha: %1$s</string>
@@ -215,24 +188,20 @@
 
     <string name="btn_guardar_recordatorio" translatable="false">Guardar</string>
 
-    <!-- Content descriptions -->
     <string name="cd_recordatorios_fondo" translatable="false">Fondo</string>
     <string name="cd_volver" translatable="false">Botón volver</string>
     <string name="cd_calendario" translatable="false">Seleccionar fecha</string>
     <string name="cd_reloj" translatable="false">Seleccionar hora</string>
     <string name="cd_agregar_recordatorio" translatable="false">Agregar recordatorio</string>
 
-    <!-- Registro -->
     <string name="registro_exitoso" translatable="false">Registro exitoso</string>
     <string name="error_desconocido" translatable="false">Error desconocido</string>
     <string name="icono_usuario" translatable="false">Icono de usuario</string>
 
-    <!-- Títulos -->
     <string name="titulo_info_personal" translatable="false">Información Personal</string>
     <string name="titulo_info_academica" translatable="false">Información Académica</string>
     <string name="sin_titulo">Sin título</string>
 
-    <!-- Labels -->
     <string name="label_nombre" translatable="false">Nombre</string>
     <string name="label_correo" translatable="false">Correo</string>
     <string name="label_contrasena" translatable="false">Contraseña</string>
@@ -240,15 +209,80 @@
     <string name="label_area" translatable="false">Área de estudio</string>
     <string name="label_institucion" translatable="false">Institución educativa</string>
 
-    <!-- Botones -->
-
-
-    <!-- Errores -->
     <string name="error_contrasena_corta" translatable="false">La contraseña debe tener al menos 6 caracteres</string>
     <string name="title_activity_notas" translatable="false">Notas</string>
     <string name="title_activity_pendientes" translatable="false">Pendientes</string>
     <string name="title_activity_horarios" translatable="false">Horarios</string>
     <string name="title_activity_recordatorios" translatable="false">Recordatorios</string>
     <string name="title_activity_principal" translatable="false">Inicio</string>
+
+    <string name="no_hay_actividades">No hay actividades para este día</string>
+    <string name="clases_header">Clases</string>
+    <string name="entregas_pendientes_header">Entregas y Pendientes</string>
+    <string name="recordatorios_header">Recordatorios Personales</string>
+    <string name="pendiente_default">Pendiente</string>
+    <string name="salon_format">Salón: %1$s</string>
+    <string name="editar_perfil_titulo">Editar Perfil</string>
+    <string name="periodo_ejemplo">Periodo (ej. 2025-1)</string>
+    <string name="elegir">Elegir</string>
+
+    <string name="formato_fecha_inicio">Fecha inicio: %1$s</string>
+    <string name="formato_fecha_fin">Fecha fin: %1$s</string>
+    <string name="formato_duracion">Desde %1$s hasta %2$s</string>
+    <string name="formato_duracion_label">Duración: %1$s</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="editar">Editar</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="cd_mostrar_password">Mostrar contraseña</string>
+    <string name="cd_ocultar_password">Ocultar contraseña</string>
+    <string name="buscar_notas_hint">Buscar notas...</string>
+    <string name="cd_cerrar_busqueda">Cerrar búsqueda</string>
+    <string name="no_se_encontraron_notas">No se encontraron notas</string>
+    <string name="notas_encontradas">%1$d nota(s) encontrada(s)</string>
+    <string name="titulo_nota_placeholder">Título</string>
+    <string name="escribe_nota_aqui">Escribe tu nota aquí...</string>
+    <string name="editar_materia">Editar Materia</string>
+    <string name="materia_guardada">Materia guardada correctamente</string>
+    <string name="actualizar">Actualizar</string>
+
+    <string name="salon_opcional">Salón (opcional)</string>
+    <string name="placeholder_salon">Aula / salón</string>
+    <string name="enlace_opcional">Enlace (opcional)</string>
+    <string name="placeholder_enlace">Enlace de reunión</string>
+
+    <string name="no_hay_pendientes">No hay ningún pendiente registrado</string>
+
+    <string name="sin_definir">Sin definir</string>
+    <string name="formato_periodo">Periodo: %1$s</string>
+    <string name="no_hay_recordatorios">No hay recordatorios para hoy o mañana</string>
+    <string name="pendientes_hoy">Pendientes - Hoy</string>
+    <string name="pendientes_manana">Pendientes - Mañana</string>
+    <string name="clases_hoy">Clases - Hoy</string>
+    <string name="clases_manana">Clases - Mañana</string>
+
+    <string name="sin_descripcion">Sin descripción</string>
+    <string name="materia_default">Materia</string>
+
+    <string name="completado">Completado</string>
+    <string name="pendiente_estado">Pendiente</string>
+
+    <string name="hoy">Hoy</string>
+    <string name="manana">Mañana</string>
+
+    <string name="formato_pendiente">Pendiente: %1$s</string>
+    <string name="formato_vence">Vence: %1$s</string>
+    <string name="formato_clase">Clase: %1$s</string>
+    <string name="formato_horario">Horario: %1$s</string>
+    <string name="formato_salon">Salón: %1$s</string>
+    <string name="formato_descripcion">Descripción: %1$s</string>
+    <string name="formato_fecha">Fecha: %1$s</string>
+    <string name="formato_estado">Estado: %1$s</string>
+    <string name="formato_enlace">Enlace: %1$s</string>
+    <string name="cantidad_recordatorios">%1$d recordatorio(s)</string>
+    <string name="formato_fecha_simple">📅 %1$s</string>
+    <string name="formato_hora_simple">🕐 %1$s</string>
+    <string name="notificacion_activada">🔔 Notificación activada</string>
+    <string name="editar_recordatorio_titulo">Editar Recordatorio</string>
+    <string name="cd_icono_usuario">Icono de usuario</string>
 
 </resources>

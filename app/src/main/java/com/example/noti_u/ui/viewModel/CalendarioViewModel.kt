@@ -117,4 +117,25 @@ class CalendarioViewModel : ViewModel() {
             DayOfWeek.SUNDAY -> "Domingo"
         }
     }
+    fun actualizarMaterias() {
+        viewModelScope.launch {
+            // 1. Check Expiration
+            materiaRepo.verificarVencimientoPeriodo()
+
+            // 2. Reload Data
+            todasLasMaterias = materiaRepo.obtenerMaterias()
+            mapaMaterias = todasLasMaterias.associateBy { it.id }
+            filtrarDatos(_fechaSeleccionada.value)
+        }
+    }
+
+
+    init {
+        viewModelScope.launch {
+            // Check expiration on init too
+            materiaRepo.verificarVencimientoPeriodo()
+
+            cargarDatos()
+        }}
+
 }

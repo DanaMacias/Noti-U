@@ -2,6 +2,8 @@ package com.example.noti_u.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,12 +23,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.R
+import com.example.noti_u.ui.base.BaseMenuActivity
 import com.example.noti_u.data.model.Materia as MateriaModel
 import com.example.noti_u.ui.viewmodel.MateriaViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
-
+// Extensión para convertir String Hex a Color
 fun String.toComposeColor(): Color {
     return try {
         Color(android.graphics.Color.parseColor(this))
@@ -45,7 +49,9 @@ class HorariosActivity : BaseMenuActivity() {
     override fun PantallaContenido(innerPadding: PaddingValues) {
         HorarioScreen(
             onNuevaMateriaClick = {
-                startActivity(Intent(this, NuevaMateriaActivity::class.java))
+                // Al crear nueva, no pasamos ID
+                val intent = Intent(this, NuevaMateriaActivity::class.java)
+                startActivity(intent)
             },
             onCalendarioClick = {
                 startActivity(Intent(this, CalendarioActivity::class.java))
@@ -59,7 +65,9 @@ class HorariosActivity : BaseMenuActivity() {
         onCalendarioClick: () -> Unit,
         viewModel: MateriaViewModel = viewModel()
     ) {
+        val context = LocalContext.current
 
+        // Cargar materias al iniciar
         LaunchedEffect(Unit) {
             viewModel.cargarMaterias()
         }
@@ -84,8 +92,8 @@ class HorariosActivity : BaseMenuActivity() {
 
                 Spacer(modifier = Modifier.height(30.dp))
 
+                // LISTA DE MATERIAS
                 materias.forEach { materia ->
-
                     val materiaUI = materia.toMateriaUI()
 
                     MateriaCard(
@@ -96,6 +104,7 @@ class HorariosActivity : BaseMenuActivity() {
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                // BOTÓN "AGREGAR MATERIA"
                 Button(
                     onClick = onNuevaMateriaClick,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE0E0E0)),
@@ -110,7 +119,6 @@ class HorariosActivity : BaseMenuActivity() {
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-
                         Icon(
                             painter = painterResource(id = R.drawable.mas),
                             contentDescription = "Agregar materia",
@@ -131,6 +139,7 @@ class HorariosActivity : BaseMenuActivity() {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // BOTÓN "IR AL CALENDARIO"
                 Button(
                     onClick = onCalendarioClick,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
@@ -146,7 +155,7 @@ class HorariosActivity : BaseMenuActivity() {
             }
         }
 
-
+        // DIÁLOGO DETALLE DE MATERIA
         if (materiaSeleccionada != null) {
             Dialog(onDismissRequest = { materiaSeleccionada = null }) {
 
@@ -155,48 +164,88 @@ class HorariosActivity : BaseMenuActivity() {
                     color = Color.White,
                     tonalElevation = 8.dp,
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
+                        .fillMaxWidth(0.95f)
                         .padding(16.dp)
                 ) {
-
                     Column(
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-
+                        // Título (Nombre Materia)
                         Text(
                             text = materiaSeleccionada!!.nombre,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = Color.Black,
+                            textAlign = TextAlign.Center
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
 
+                        // Horario
                         Text(
                             text = materiaSeleccionada!!.horario,
                             fontSize = 16.sp,
-                            color = Color.DarkGray
+                            color = Color.DarkGray,
+                            textAlign = TextAlign.Center
                         )
 
+                        // Salón / Enlace
                         if (materiaSeleccionada!!.salonEnlace.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 text = materiaSeleccionada!!.salonEnlace,
                                 fontSize = 16.sp,
-                                color = Color.DarkGray
+                                color = Color.DarkGray,
+                                textAlign = TextAlign.Center
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                        Button(
-                            onClick = { materiaSeleccionada = null },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFFB300)
-                            )
+                        // --- BOTONES DE ACCIÓN (EDITAR / ELIMINAR / CERRAR) ---
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Text("Cerrar", color = Color.Black)
+                            // 1. ELIMINAR
+                            Button(
+                                onClick = {
+                                    // Acción Eliminar en ViewModel
+                                    viewModel.eliminarMateria(materiaSeleccionada!!.id)
+                                    materiaSeleccionada = null
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)), // Rojo suave
+                                modifier = Modifier.weight(1f).padding(end = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text("Eliminar", color = Color.White, fontSize = 13.sp, maxLines = 1)
+                            }
+
+                            // 2. EDITAR
+                            Button(
+                                onClick = {
+                                    val intent = Intent(context, NuevaMateriaActivity::class.java)
+                                    intent.putExtra("materia_id", materiaSeleccionada!!.id) // PASAR ID
+                                    context.startActivity(intent)
+                                    materiaSeleccionada = null
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5)), // Azul suave
+                                modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text("Editar", color = Color.White, fontSize = 13.sp, maxLines = 1)
+                            }
+
+                            // 3. CERRAR
+                            Button(
+                                onClick = { materiaSeleccionada = null },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)), // Amarillo
+                                modifier = Modifier.weight(1f).padding(start = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text("Cerrar", color = Color.Black, fontSize = 13.sp, maxLines = 1)
+                            }
                         }
                     }
                 }
@@ -204,21 +253,20 @@ class HorariosActivity : BaseMenuActivity() {
         }
     }
 
-// TOCA ORGANIZAR
-
+    // --- MODELO UI INTERNO ---
     data class MateriaUI(
+        val id: String,         // ID necesario para editar/eliminar
         val nombre: String,
         val horario: String,
         val salonEnlace: String,
         val color: Color
     )
 
+    // --- MAPEO DE MODELO ---
     private fun MateriaModel.toMateriaUI(): MateriaUI {
-
         val horarioString = dias.filter { it.value }.keys.joinToString(separator = "\n") { dia ->
             val inicio = horaInicio[dia]?.removeSuffix(":00") ?: ""
             val fin = horaFin[dia]?.removeSuffix(":00") ?: ""
-
             "$dia $inicio-$fin"
         }.replace(":", "")
 
@@ -229,6 +277,7 @@ class HorariosActivity : BaseMenuActivity() {
         val composeColor = this.color.toComposeColor()
 
         return MateriaUI(
+            id = id, // Mapeamos el ID real de Firebase
             nombre = nombre,
             horario = horarioString,
             salonEnlace = detalles.joinToString(" / "),
@@ -236,6 +285,7 @@ class HorariosActivity : BaseMenuActivity() {
         )
     }
 
+    // --- TARJETA VISUAL ---
     @Composable
     fun MateriaCard(materia: MateriaUI, onClick: () -> Unit) {
         Surface(
@@ -253,17 +303,13 @@ class HorariosActivity : BaseMenuActivity() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = materia.nombre,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF1C1C1C)
                     )
-
                     if (materia.salonEnlace.isNotEmpty()) {
                         Text(
                             text = materia.salonEnlace,
@@ -273,7 +319,6 @@ class HorariosActivity : BaseMenuActivity() {
                         )
                     }
                 }
-
                 Text(
                     text = materia.horario,
                     textAlign = TextAlign.End,

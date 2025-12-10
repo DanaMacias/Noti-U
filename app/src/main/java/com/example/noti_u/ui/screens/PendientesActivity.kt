@@ -31,6 +31,7 @@ import com.example.noti_u.data.model.Pendientes
 import com.example.noti_u.ui.viewmodel.PendientesViewModel
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.clip
+import com.example.noti_u.ui.base.BaseMenuActivity
 
 class PendientesActivity : BaseMenuActivity() {
 
@@ -67,8 +68,9 @@ fun PendientesScreen(vm: PendientesViewModel) {
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
+                    // CHANGED: stringResource
                     Text(
-                        text = "No hay ningún pendiente registrado",
+                        text = stringResource(R.string.no_hay_pendientes),
                         fontSize = 18.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
@@ -108,7 +110,6 @@ fun PendientesScreen(vm: PendientesViewModel) {
 
         FloatingActionButton(
             onClick = {
-                // --- CORRECCIÓN 1: Navegación (El código es correcto, ver nota abajo) ---
                 val intent = Intent(context, AgregarPendienteActivity::class.java)
                 context.startActivity(intent)
             },

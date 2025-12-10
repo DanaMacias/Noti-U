@@ -88,6 +88,7 @@ fun PerfilScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // --- TITLE ROW ---
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -133,6 +134,7 @@ fun PerfilScreen(
             thickness = 1.dp
         )
 
+        // --- USER DATA SECTION ---
         Text(
             text = stringResource(R.string.datos_usuario),
             fontWeight = FontWeight.Bold,
@@ -222,6 +224,7 @@ fun PerfilScreen(
 
         Spacer(modifier = Modifier.height(25.dp))
 
+        // --- ACADEMIC PERIOD SECTION ---
         Text(
             text = stringResource(R.string.periodo_academico),
             fontWeight = FontWeight.Bold,
@@ -243,9 +246,9 @@ fun PerfilScreen(
                     .padding(12.dp)
             ) {
                 Column {
-
+                    // CHANGED: Dynamic strings with format args
                     Text(
-                        text = "Periodo: ${user?.periodo ?: "Sin definir"}",
+                        text = stringResource(R.string.formato_periodo, user?.periodo ?: stringResource(R.string.sin_definir)),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
@@ -254,7 +257,7 @@ fun PerfilScreen(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "Fecha inicio: ${user?.fechaInicio ?: "----"}",
+                        text = stringResource(R.string.formato_fecha_inicio, user?.fechaInicio ?: "----"),
                         color = Color.Black,
                         fontSize = 14.sp
                     )
@@ -262,7 +265,7 @@ fun PerfilScreen(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "Fecha fin: ${user?.fechaFin ?: "----"}",
+                        text = stringResource(R.string.formato_fecha_fin, user?.fechaFin ?: "----"),
                         color = Color.Black,
                         fontSize = 14.sp
                     )
@@ -270,7 +273,7 @@ fun PerfilScreen(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "Duración: ${user?.duracion ?: "----"}",
+                        text = stringResource(R.string.formato_duracion_label, user?.duracion ?: "----"),
                         color = Color.Black,
                         fontSize = 14.sp
                     )
@@ -281,6 +284,7 @@ fun PerfilScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        // --- LANGUAGE CONFIG SECTION ---
         Text(
             text = stringResource(R.string.configuracion_idioma),
             fontWeight = FontWeight.Bold,

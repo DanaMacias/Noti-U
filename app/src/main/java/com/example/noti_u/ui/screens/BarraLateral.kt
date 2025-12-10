@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +25,13 @@ fun BarraLateralDesplegable(
     onSelect: (String?) -> Unit,
     onNavigate: (String) -> Unit
 ) {
-    val tabs = listOf("Horarios", "Pendientes", "Recordatorios", "Notas")
+    // CAMBIO: Usamos los IDs del archivo strings.xml en lugar de texto fijo
+    val tabs = listOf(
+        R.string.menu_horarios,
+        R.string.menu_pendientes,
+        R.string.menu_recordatorios,
+        R.string.menu_notas
+    )
 
     Column(
         modifier = Modifier
@@ -34,22 +41,22 @@ fun BarraLateralDesplegable(
         verticalArrangement = Arrangement.spacedBy(1.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        tabs.forEachIndexed { index, name ->
+        tabs.forEachIndexed { index, resId ->
+            // CAMBIO: Obtenemos la traducción aquí mismo
+            val name = stringResource(id = resId)
+
             val isSelected = selectedTab == name
             val widthAnim by animateDpAsState(
                 targetValue = if (isSelected) 220.dp else 75.dp,
                 animationSpec = tween(400)
             )
 
-
-
-
             Box(
                 modifier = Modifier
                     .width(widthAnim)
                     .weight(1f)
-
                     .clickable {
+                        // Pasamos el nombre traducido a los eventos
                         onSelect(if (isSelected) null else name)
                         onNavigate(name)
                     },
@@ -58,12 +65,10 @@ fun BarraLateralDesplegable(
 
                 Image(
                     painter = painterResource(id = R.drawable.menu),
-                    contentDescription = "Fondo menú",
-                    modifier = Modifier
-                        .fillMaxSize()
-
+                    // CAMBIO: Traducción para accesibilidad
+                    contentDescription = stringResource(id = R.string.menu_fondo),
+                    modifier = Modifier.fillMaxSize()
                 )
-
 
                 Box(
                     modifier = Modifier
@@ -72,7 +77,7 @@ fun BarraLateralDesplegable(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = name,
+                        text = name, // Muestra el texto traducido (Schedules, Pending, etc.)
                         fontSize = 11.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,

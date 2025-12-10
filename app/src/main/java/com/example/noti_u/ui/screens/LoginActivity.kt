@@ -34,7 +34,7 @@ import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.viewmodel.LoginViewModel
 
 
-class LoginActivity :  BaseLanguageActivity() {
+class LoginActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,6 +62,7 @@ fun LoginScreen() {
     val context = LocalContext.current
     val textColor = Color(0xFF212121)
 
+    // Strings loaded once
     val txtLoginExito = stringResource(R.string.login_exito)
     val txtLoginError = stringResource(R.string.login_error)
     val txtErrorTodosVacios = stringResource(R.string.error_todos_vacios)
@@ -145,15 +146,17 @@ fun LoginScreen() {
                     PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        val description = if (passwordVisible)
+                            stringResource(R.string.cd_ocultar_password)
+                        else
+                            stringResource(R.string.cd_mostrar_password)
+
                         Icon(
                             imageVector = if (passwordVisible)
                                 Icons.Filled.Visibility
                             else
                                 Icons.Filled.VisibilityOff,
-                            contentDescription = if (passwordVisible)
-                                "Ocultar contraseña"
-                            else
-                                "Mostrar contraseña",
+                            contentDescription = description,
                             tint = Color.Black
                         )
                     }

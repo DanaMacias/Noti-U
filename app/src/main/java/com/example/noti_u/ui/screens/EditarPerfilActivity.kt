@@ -15,10 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.noti_u.R
 import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.viewmodel.PerfilViewModel
@@ -43,7 +45,8 @@ fun EditarPerfilScreen(
     val user = viewModel.userData.collectAsState().value
 
     if (user == null) {
-        Text("Cargando...")
+        // CAMBIO: stringResource
+        Text(stringResource(R.string.cargando))
         return
     }
 
@@ -58,9 +61,13 @@ fun EditarPerfilScreen(
     var fechaFin by remember { mutableStateOf(user.fechaFin) }
     var duracion by remember { mutableStateOf(user.duracion) }
 
+    // Obtenemos la plantilla del string para usarla en la lógica (ej: "Desde %1$s hasta %2$s")
+    val formatoDuracionTemplate = stringResource(R.string.formato_duracion)
+
     fun calcularDuracion() {
         if (fechaInicio.isNotEmpty() && fechaFin.isNotEmpty()) {
-            duracion = "Desde $fechaInicio hasta $fechaFin"
+            // Usamos String.format para inyectar las variables en el texto traducido
+            duracion = String.format(formatoDuracionTemplate, fechaInicio, fechaFin)
         }
     }
 
@@ -81,34 +88,37 @@ fun EditarPerfilScreen(
             .padding(20.dp)
     ) {
 
-        Text("Editar Perfil", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        // CAMBIO: stringResource
+        Text(stringResource(R.string.editar_perfil_titulo), fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
         Spacer(Modifier.height(20.dp))
 
         // === CAMPOS BÁSICOS ===
-        CampoEditable("Nombre", nombre) { nombre = it }
-        CampoEditable("Correo", correo) { correo = it }
-        CampoEditable("Teléfono", telefono) { telefono = it }
-        CampoEditable("Área", area) { area = it }
-        CampoEditable("Institución", institucion) { institucion = it }
+        // Usamos los labels que ya definimos antes
+        CampoEditable(stringResource(R.string.label_nombre), nombre) { nombre = it }
+        CampoEditable(stringResource(R.string.label_correo), correo) { correo = it }
+        CampoEditable(stringResource(R.string.label_telefono), telefono) { telefono = it }
+        CampoEditable(stringResource(R.string.label_area), area) { area = it }
+        CampoEditable(stringResource(R.string.label_institucion), institucion) { institucion = it }
 
         Divider()
-        Text("Periodo Académico", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Text(stringResource(R.string.periodo_academico), fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
-        CampoEditable("Periodo (ej. 2025-1)", periodo) { periodo = it }
+        CampoEditable(stringResource(R.string.periodo_ejemplo), periodo) { periodo = it }
 
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Fecha inicio: $fechaInicio")
+            // CAMBIO: Formato dinámico
+            Text(stringResource(R.string.formato_fecha_inicio, fechaInicio))
             Button(onClick = {
                 abrirDatePicker {
                     fechaInicio = it
                     calcularDuracion()
                 }
-            }) { Text("Elegir") }
+            }) { Text(stringResource(R.string.elegir)) }
         }
 
 
@@ -116,17 +126,19 @@ fun EditarPerfilScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Fecha fin: $fechaFin")
+            // CAMBIO: Formato dinámico
+            Text(stringResource(R.string.formato_fecha_fin, fechaFin))
             Button(onClick = {
                 abrirDatePicker {
                     fechaFin = it
                     calcularDuracion()
                 }
-            }) { Text("Elegir") }
+            }) { Text(stringResource(R.string.elegir)) }
         }
 
         Spacer(Modifier.height(8.dp))
-        Text("Duración: $duracion", fontWeight = FontWeight.Medium)
+        // CAMBIO: Formato dinámico para mostrar la duración actual
+        Text(stringResource(R.string.formato_duracion_label, duracion), fontWeight = FontWeight.Medium)
 
         Spacer(Modifier.height(25.dp))
 
@@ -152,7 +164,7 @@ fun EditarPerfilScreen(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(Color(0xFFFFA726))
         ) {
-            Text("Guardar", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.guardar), color = Color.Black, fontWeight = FontWeight.Bold)
         }
     }
 }

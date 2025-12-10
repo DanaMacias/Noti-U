@@ -28,7 +28,7 @@ import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.viewmodel.RegistroViewModel
 
-class RegistroActivity :  BaseLanguageActivity() {
+class RegistroActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -58,14 +58,15 @@ fun RegistroScreen() {
     var institucion by remember { mutableStateOf("") }
 
     var mensajeError by remember { mutableStateOf("") }
+
+    // Strings loaded once
     val registroExitosoMsg = stringResource(R.string.registro_exitoso)
     val errorDesconocidoMsg = stringResource(R.string.error_desconocido)
     val errorContrasenaCortaMsg = stringResource(R.string.error_contrasena_corta)
 
     LaunchedEffect(registerState) {
         registerState?.onSuccess {
-            Toast.makeText(context, registroExitosoMsg, Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(context, registroExitosoMsg, Toast.LENGTH_SHORT).show()
             (context as? ComponentActivity)?.finish()
         }?.onFailure { exception ->
             mensajeError = exception.message ?: errorDesconocidoMsg
@@ -84,12 +85,13 @@ fun RegistroScreen() {
 
         Image(
             painter = painterResource(id = R.drawable.iniciousuario),
-            contentDescription = stringResource(R.string.icono_usuario),
+            contentDescription = stringResource(R.string.cd_icono_usuario),
             modifier = Modifier.size(100.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // CHANGED: stringResource
         Text(
             stringResource(R.string.titulo_info_personal),
             fontWeight = FontWeight.Bold,
@@ -99,6 +101,7 @@ fun RegistroScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // CHANGED: stringResources
         CustomField(stringResource(R.string.label_nombre), nombre) { nombre = it }
         CustomField(stringResource(R.string.label_correo), correo, KeyboardType.Email) { correo = it }
         CustomField(stringResource(R.string.label_contrasena), contrasena, KeyboardType.Password) { contrasena = it }
@@ -106,6 +109,7 @@ fun RegistroScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // CHANGED: stringResource
         Text(
             stringResource(R.string.titulo_info_academica),
             fontWeight = FontWeight.Bold,
@@ -115,6 +119,7 @@ fun RegistroScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // CHANGED: stringResources
         CustomField(stringResource(R.string.label_area), area) { area = it }
         CustomField(stringResource(R.string.label_institucion), institucion) { institucion = it }
 
@@ -146,6 +151,7 @@ fun RegistroScreen() {
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
+            // CHANGED: stringResource
             Text(
                 stringResource(R.string.boton_registrar),
                 color = Color(0xFF212121),

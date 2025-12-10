@@ -1,6 +1,7 @@
 package com.example.noti_u.ui.screens
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,15 +27,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noti_u.R
 import com.example.noti_u.data.model.Notas
+import com.example.noti_u.ui.base.BaseMenuActivity
 import com.example.noti_u.ui.viewmodel.NotasViewModel
 import com.example.noti_u.utils.FirebaseDataSource
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 val DarkTextColor = Color(0xFF1C1C1C)
 
@@ -69,6 +71,7 @@ class NotasActivity : BaseMenuActivity() {
 fun PerfilAnimado(modifier: Modifier = Modifier, onClick: () -> Unit) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (pressed) 0.8f else 1f)
+    // Animation logic would go here if implemented further
 }
 
 /* ---------------------------------------------------
@@ -87,7 +90,7 @@ fun NotasScreen(
     LaunchedEffect(Unit) { viewModel.cargarNotas(userId) }
     val notas = viewModel.notas
 
-    // Filtrar notas según búsqueda
+    // Filter notes based on search text
     val notasFiltradas = if (textoBusqueda.text.isBlank()) {
         notas
     } else {
@@ -107,7 +110,7 @@ fun NotasScreen(
                 .size(80.dp)
                 .align(Alignment.TopEnd)
                 .padding(top = 30.dp, end = 30.dp)
-        ) { println("Perfil tocado") }
+        ) { /* Handle profile click */ }
 
         Column(
             modifier = Modifier
@@ -144,11 +147,11 @@ fun NotasScreen(
                         )
                     }
                 } else {
-                    // Campo de búsqueda activo
+                    // Active search field
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .height(56.dp) // altura más grande
+                            .height(56.dp)
                             .background(
                                 Color.White.copy(alpha = 0.8f),
                                 RoundedCornerShape(16.dp)
@@ -158,7 +161,7 @@ fun NotasScreen(
                     ) {
                         if (textoBusqueda.text.isEmpty()) {
                             Text(
-                                text = "Buscar notas...",
+                                text = stringResource(R.string.buscar_notas_hint),
                                 fontSize = 20.sp,
                                 color = DarkTextColor.copy(alpha = 0.5f),
                                 maxLines = 1,
@@ -169,7 +172,7 @@ fun NotasScreen(
                         BasicTextField(
                             value = textoBusqueda,
                             onValueChange = { textoBusqueda = it },
-                            singleLine = true, // ⚡ evita salto de línea
+                            singleLine = true,
                             textStyle = TextStyle(
                                 fontSize = 20.sp,
                                 color = DarkTextColor,
@@ -187,7 +190,7 @@ fun NotasScreen(
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.atras),
-                            contentDescription = "Cerrar búsqueda",
+                            contentDescription = stringResource(R.string.cd_cerrar_busqueda),
                             tint = DarkTextColor,
                             modifier = Modifier.size(28.dp)
                         )
@@ -200,8 +203,8 @@ fun NotasScreen(
 
             Text(
                 text = if (busquedaActiva && textoBusqueda.text.isNotBlank()) {
-                    if (notasFiltradas.isEmpty()) "No se encontraron notas"
-                    else "${notasFiltradas.size} nota(s) encontrada(s)"
+                    if (notasFiltradas.isEmpty()) stringResource(R.string.no_se_encontraron_notas)
+                    else stringResource(R.string.notas_encontradas, notasFiltradas.size)
                 } else {
                     if (notas.isEmpty()) stringResource(id = R.string.no_hay_notas)
                     else stringResource(id = R.string.cantidad_notas, notas.size)
@@ -354,7 +357,7 @@ fun AgregarNotaScreen(
                     decorationBox = { innerTextField ->
                         if (titulo.text.isEmpty()) {
                             Text(
-                                text = "Título",
+                                text = stringResource(R.string.titulo_nota_placeholder),
                                 fontSize = 22.sp,
                                 color = DarkTextColor.copy(alpha = 0.5f),
                                 fontWeight = FontWeight.Bold
@@ -378,7 +381,7 @@ fun AgregarNotaScreen(
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.listo),
-                        contentDescription = "Guardar",
+                        contentDescription = stringResource(R.string.guardar),
                         tint = DarkTextColor
                     )
                 }
@@ -395,7 +398,7 @@ fun AgregarNotaScreen(
                 decorationBox = { innerTextField ->
                     if (descripcion.text.isEmpty()) {
                         Text(
-                            text = "Escribe tu nota aquí...",
+                            text = stringResource(R.string.escribe_nota_aqui),
                             fontSize = 18.sp,
                             color = DarkTextColor.copy(alpha = 0.5f)
                         )
@@ -428,7 +431,7 @@ fun AgregarNotaScreen(
                 shape = RoundedCornerShape(50)
             ) {
                 Text(
-                    text = "Guardar",
+                    text = stringResource(R.string.guardar),
                     color = DarkTextColor,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
@@ -453,7 +456,7 @@ fun EditarNotaScreen(
     var isLoading by remember { mutableStateOf(true) }
     val userId = FirebaseDataSource.auth.currentUser!!.uid
 
-    // Cargar la nota existente
+    // Load existing note
     LaunchedEffect(notaId) {
         val nota = viewModel.consultarNota(userId, notaId)
         if (nota != null) {
@@ -524,7 +527,7 @@ fun EditarNotaScreen(
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.listo),
-                            contentDescription = "Guardar",
+                            contentDescription = stringResource(R.string.guardar),
                             tint = DarkTextColor
                         )
                     }
@@ -562,7 +565,7 @@ fun EditarNotaScreen(
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            text = "Eliminar",
+                            text = stringResource(R.string.eliminar),
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
@@ -589,7 +592,7 @@ fun EditarNotaScreen(
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            text = "Guardar",
+                            text = stringResource(R.string.guardar),
                             color = DarkTextColor,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp

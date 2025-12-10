@@ -36,6 +36,8 @@ import com.example.noti_u.ui.viewmodel.RecordatoriosViewModel
 import com.example.noti_u.utils.FirebaseDataSource
 import java.util.*
 import androidx.compose.runtime.DisposableEffect
+import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.ui.base.BaseMenuActivity
 
 val DarkTextPrimary = Color(0xFF1C1C1C)
 val DarkTextSecondary = Color(0xFF2F2F2F)
@@ -49,7 +51,7 @@ class RecordatoriosActivity : BaseMenuActivity() {
         val viewModel: RecordatoriosViewModel = viewModel()
         val context = LocalContext.current
 
-        // Crear canal de notificaciones al iniciar
+        // Create notification channel on start
         LaunchedEffect(Unit) {
             com.example.noti_u.utils.NotificationHelper.createNotificationChannel(context)
         }
@@ -92,7 +94,7 @@ class RecordatoriosActivity : BaseMenuActivity() {
 }
 
 /* ---------------------------------------------------
-            LISTA DE RECORDATORIOS
+            RECORDATORIOS LIST
  ---------------------------------------------------*/
 
 @Composable
@@ -117,8 +119,6 @@ fun RecordatoriosListScreen(
 
     val recordatorios = viewModel.recordatorios
 
-
-
     Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
@@ -135,8 +135,9 @@ fun RecordatoriosListScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            // CHANGED: stringResource
             Text(
-                text = stringResource(R.string.recordatorios_titulo),
+                text = stringResource(R.string.recordatorios_titulo_top),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -151,9 +152,12 @@ fun RecordatoriosListScreen(
                 thickness = 1.dp
             )
 
+            // CHANGED: stringResource logic
             Text(
-                text = if (recordatorios.isEmpty()) "No hay recordatorios"
-                else "${recordatorios.size} recordatorio(s)",
+                text = if (recordatorios.isEmpty())
+                    stringResource(R.string.no_hay_recordatorios)
+                else
+                    stringResource(R.string.cantidad_recordatorios, recordatorios.size),
                 fontSize = 16.sp,
                 color = DarkTextSecondary,
                 textAlign = TextAlign.Center,
@@ -170,8 +174,9 @@ fun RecordatoriosListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    // CHANGED: stringResource
                     Text(
-                        stringResource(R.string.agregar_nuevo_recordatorio),
+                        stringResource(R.string.agregar_nuevo_recordatorio_btn),
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary,
@@ -236,14 +241,15 @@ fun RecordatorioCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // CHANGED: stringResource for format
                 Text(
-                    "📅 ${recordatorio.fecha}",
+                    stringResource(R.string.formato_fecha_simple, recordatorio.fecha),
                     fontSize = 13.sp,
                     color = DarkTextLight,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    "🕐 ${recordatorio.hora}",
+                    stringResource(R.string.formato_hora_simple, recordatorio.hora),
                     fontSize = 13.sp,
                     color = DarkTextLight,
                     fontWeight = FontWeight.Medium
@@ -251,8 +257,9 @@ fun RecordatorioCard(
             }
             if (recordatorio.notificar) {
                 Spacer(modifier = Modifier.height(4.dp))
+                // CHANGED: stringResource
                 Text(
-                    "🔔 Notificación activada",
+                    stringResource(R.string.notificacion_activada),
                     fontSize = 12.sp,
                     color = Color(0xFF1976D2),
                     fontWeight = FontWeight.Bold
@@ -308,8 +315,9 @@ fun FormularioRecordatorioScreen(
                     modifier = Modifier.size(50.dp)
                 ) { onVolver() }
 
+                // CHANGED: stringResource
                 Text(
-                    text = stringResource(R.string.agregar_recordatorio_titulo),
+                    text = stringResource(R.string.agregar_recordatorio_titulo_top),
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                     fontSize = 17.sp,
@@ -336,8 +344,9 @@ fun FormularioRecordatorioScreen(
                     .padding(16.dp)
             ) {
                 Column {
+                    // CHANGED: stringResource
                     Text(
-                        stringResource(R.string.fecha_y_hora),
+                        stringResource(R.string.fecha_y_hora_titulo),
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = DarkTextPrimary
@@ -352,14 +361,15 @@ fun FormularioRecordatorioScreen(
                     ) {
 
                         Column {
+                            // CHANGED: stringResource
                             Text(
-                                "📅 $fecha",
+                                stringResource(R.string.formato_fecha_simple, fecha),
                                 fontSize = 16.sp,
                                 color = DarkTextSecondary,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                "🕐 $hora",
+                                stringResource(R.string.formato_hora_simple, hora),
                                 fontSize = 16.sp,
                                 color = DarkTextSecondary,
                                 fontWeight = FontWeight.Bold
@@ -400,7 +410,7 @@ fun FormularioRecordatorioScreen(
                                     },
                                     calendar.get(Calendar.HOUR_OF_DAY),
                                     calendar.get(Calendar.MINUTE),
-                                    false  // false = formato 12 horas con AM/PM
+                                    false  // false = 12h format
                                 )
                                 timePicker.show()
                             }
@@ -414,7 +424,8 @@ fun FormularioRecordatorioScreen(
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                label = { Text(stringResource(R.string.nombre_label)) },
+                // CHANGED: stringResource
+                label = { Text(stringResource(R.string.label_nombre_recordatorio)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(color = DarkTextPrimary, fontWeight = FontWeight.Bold)
@@ -425,7 +436,8 @@ fun FormularioRecordatorioScreen(
             OutlinedTextField(
                 value = descripcion,
                 onValueChange = { descripcion = it },
-                label = { Text(stringResource(R.string.descripcion_label_2)) },
+                // CHANGED: stringResource
+                label = { Text(stringResource(R.string.label_descripcion_recordatorio)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -437,8 +449,9 @@ fun FormularioRecordatorioScreen(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = notificar, onCheckedChange = { notificar = it })
+                // CHANGED: stringResource
                 Text(
-                    stringResource(R.string.notificar),
+                    stringResource(R.string.label_notificar),
                     color = DarkTextSecondary,
                     fontWeight = FontWeight.Bold
                 )
@@ -467,8 +480,9 @@ fun FormularioRecordatorioScreen(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
+                // CHANGED: stringResource
                 Text(
-                    stringResource(R.string.guardar),
+                    stringResource(R.string.btn_guardar_recordatorio),
                     color = DarkTextPrimary,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 18.sp
@@ -499,7 +513,7 @@ fun EditarRecordatorioScreen(
     val calendar = Calendar.getInstance()
     val userId = FirebaseDataSource.auth.currentUser!!.uid
 
-    // Cargar datos del recordatorio
+    // Load data
     LaunchedEffect(recordatorioId) {
         val recordatorio = viewModel.consultarRecordatorio(userId, recordatorioId)
         if (recordatorio != null) {
@@ -544,8 +558,9 @@ fun EditarRecordatorioScreen(
                         modifier = Modifier.size(50.dp)
                     ) { onVolver() }
 
+                    // CHANGED: stringResource
                     Text(
-                        text = "Editar Recordatorio",
+                        text = stringResource(R.string.editar_recordatorio_titulo),
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         fontSize = 17.sp,
@@ -572,8 +587,9 @@ fun EditarRecordatorioScreen(
                         .padding(16.dp)
                 ) {
                     Column {
+                        // CHANGED: stringResource
                         Text(
-                            "Fecha y Hora",
+                            stringResource(R.string.fecha_y_hora_titulo),
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp,
                             color = DarkTextPrimary
@@ -588,14 +604,15 @@ fun EditarRecordatorioScreen(
                         ) {
 
                             Column {
+                                // CHANGED: stringResource
                                 Text(
-                                    "Fecha: $fecha",
+                                    stringResource(R.string.texto_fecha, fecha),
                                     fontSize = 16.sp,
                                     color = DarkTextSecondary,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    "Hora: $hora",
+                                    stringResource(R.string.texto_hora, hora),
                                     fontSize = 16.sp,
                                     color = DarkTextSecondary,
                                     fontWeight = FontWeight.Bold
@@ -636,7 +653,7 @@ fun EditarRecordatorioScreen(
                                         },
                                         calendar.get(Calendar.HOUR_OF_DAY),
                                         calendar.get(Calendar.MINUTE),
-                                        false  // false = formato 12 horas con AM/PM
+                                        false  // false = 12h format
                                     )
                                     timePicker.show()
                                 }
@@ -650,7 +667,8 @@ fun EditarRecordatorioScreen(
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre") },
+                    // CHANGED: stringResource
+                    label = { Text(stringResource(R.string.label_nombre_recordatorio)) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(color = DarkTextPrimary, fontWeight = FontWeight.Bold)
@@ -661,7 +679,8 @@ fun EditarRecordatorioScreen(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    label = { Text("Descripción") },
+                    // CHANGED: stringResource
+                    label = { Text(stringResource(R.string.label_descripcion_recordatorio)) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -673,8 +692,9 @@ fun EditarRecordatorioScreen(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = notificar, onCheckedChange = { notificar = it })
+                    // CHANGED: stringResource
                     Text(
-                        "Notificar",
+                        stringResource(R.string.label_notificar),
                         color = DarkTextSecondary,
                         fontWeight = FontWeight.Bold
                     )
@@ -698,8 +718,9 @@ fun EditarRecordatorioScreen(
                             .weight(1f)
                             .height(50.dp)
                     ) {
+                        // CHANGED: stringResource
                         Text(
-                            "Eliminar",
+                            stringResource(R.string.eliminar),
                             color = Color.White,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 16.sp
@@ -730,8 +751,9 @@ fun EditarRecordatorioScreen(
                             .weight(1f)
                             .height(50.dp)
                     ) {
+                        // CHANGED: stringResource
                         Text(
-                            "Guardar",
+                            stringResource(R.string.btn_guardar_recordatorio),
                             color = DarkTextPrimary,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 16.sp
