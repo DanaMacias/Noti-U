@@ -21,18 +21,23 @@ class PendientesRepositoryInstrumentedTest {
     private lateinit var db: FirebaseDatabase
     private lateinit var userId: String
 
+
     @Before
     fun setUp() = runBlocking {
-        // 1. Inicializar Firebase
+        // 1. Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance()
-        repository = PendientesRepository()
 
-        // 2. Login Anónimo para tener permisos
+        // 2. PRIMERO: Iniciar sesión anónima
+        // Es vital hacerlo antes de instanciar el repositorio
         val authResult = auth.signInAnonymously().await()
         userId = authResult.user?.uid ?: throw Exception("Error al obtener usuario de prueba")
 
-        // 3. Limpiar la base de datos de pendientes para este usuario
+        // 3. DESPUÉS: Inicializar el repositorio
+        // Ahora el repositorio encontrará un auth.currentUser válido
+        repository = PendientesRepository()
+
+        // 4. Limpiar datos
         limpiarPendientesUsuario()
     }
 
