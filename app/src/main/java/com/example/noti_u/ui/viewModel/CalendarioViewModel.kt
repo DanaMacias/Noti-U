@@ -25,7 +25,7 @@ class CalendarioViewModel : ViewModel() {
     private val recordatoriosRepo = RecordatoriosRepository()
     private val userId = FirebaseDataSource.auth.currentUser?.uid ?: ""
 
-    // --- Listas completas (Caché) ---
+
     private var todasLasMaterias: List<Materia> = emptyList()
     private var todosLosPendientes: List<Pendientes> = emptyList()
     private var todosLosRecordatorios: List<Recordatorios> = emptyList()

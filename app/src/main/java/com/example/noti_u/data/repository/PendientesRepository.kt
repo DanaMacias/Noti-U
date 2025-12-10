@@ -16,11 +16,11 @@ class PendientesRepository {
     private val db = FirebaseDatabase.getInstance().reference
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-    // Guardar Pendiente
+
     suspend fun guardarPendiente(pendiente: Pendientes): Result<Boolean> {
         return try {
             userId?.let { uid ->
-                // Referencia: usuarios/uid/pendientes
+
                 val ref = db.child("usuarios").child(uid).child("pendientes")
 
                 val key = pendiente.idPendientes.ifEmpty {
@@ -36,7 +36,7 @@ class PendientesRepository {
         }
     }
 
-    // Obtener Pendientes en Tiempo Real (Flow)
+
     fun obtenerPendientes(): Flow<List<Pendientes>> = callbackFlow {
         val uid = userId
         if (uid == null) {
@@ -61,7 +61,7 @@ class PendientesRepository {
         awaitClose { ref.removeEventListener(listener) }
     }
 
-    // Eliminar
+
     suspend fun eliminarPendiente(id: String) {
         userId?.let { uid ->
             db.child("usuarios").child(uid).child("pendientes").child(id).removeValue().await()

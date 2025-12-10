@@ -59,11 +59,11 @@ class CalendarioActivity : BaseLanguageActivity() {
 fun CalendarioScreen(
     viewModel: CalendarioViewModel = viewModel()
 ) {
-    // ESTADOS DEL VIEWMODEL
+
     val fechaSeleccionada by viewModel.fechaSeleccionada.collectAsState()
     val lunesSemanaVisible by viewModel.lunesSemanaVisible.collectAsState()
 
-    // Listas de datos
+
     val materiasDelDia by viewModel.materiasDelDia.collectAsState()
     val pendientesDelDia by viewModel.pendientesDelDia.collectAsState()
     val recordatoriosDelDia by viewModel.recordatoriosDelDia.collectAsState()
@@ -71,7 +71,7 @@ fun CalendarioScreen(
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Corrección: Usamos Locale.getDefault() o explícito para evitar errores
+
     val mesFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale("es", "ES"))
 
     Box(
@@ -85,7 +85,7 @@ fun CalendarioScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // --- HEADER ---
+
             Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -131,9 +131,9 @@ fun CalendarioScreen(
 
             Divider(modifier = Modifier.fillMaxWidth().padding(top = 6.dp, bottom = 10.dp), color = Color.Black, thickness = 1.dp)
 
-            // --- NAVEGACIÓN SEMANAL ---
 
-            // Corrección: Formateo seguro del texto del mes
+
+
             val tituloMes = lunesSemanaVisible.format(mesFormatter)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
@@ -168,7 +168,7 @@ fun CalendarioScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // --- LISTA ---
+
 
             if (materiasDelDia.isEmpty() && pendientesDelDia.isEmpty() && recordatoriosDelDia.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -179,7 +179,7 @@ fun CalendarioScreen(
                     contentPadding = PaddingValues(bottom = 20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // MATERIAS
+
                     if (materiasDelDia.isNotEmpty()) {
                         item { SeccionHeader("Clases") }
                         items(materiasDelDia) { materia ->
@@ -187,7 +187,7 @@ fun CalendarioScreen(
                         }
                     }
 
-                    // PENDIENTES
+
                     if (pendientesDelDia.isNotEmpty()) {
                         item { SeccionHeader("Entregas y Pendientes") }
                         items(pendientesDelDia) { pendiente ->
@@ -196,7 +196,7 @@ fun CalendarioScreen(
                         }
                     }
 
-                    // RECORDATORIOS
+
                     if (recordatoriosDelDia.isNotEmpty()) {
                         item { SeccionHeader("Recordatorios Personales") }
                         items(recordatoriosDelDia) { recordatorio ->
@@ -208,10 +208,6 @@ fun CalendarioScreen(
         }
     }
 }
-
-// --------------------------------------------------------
-// COMPONENTES DE UI
-// --------------------------------------------------------
 
 @Composable
 fun SeccionHeader(titulo: String) {
@@ -240,7 +236,7 @@ fun PendienteCalendarioCard(pendiente: Pendientes, materia: Materia?) {
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Corrección: Usamos Iconos nativos en vez de R.drawable
+
             val icono = if (pendiente.estado) Icons.Default.Check else Icons.Default.Notifications
             val colorIcono = if (pendiente.estado) Color(0xFF4CAF50) else Color(0xFFF44336)
 
@@ -303,7 +299,7 @@ fun RecordatorioCalendarioCard(recordatorio: Recordatorios) {
 
 @Composable
 fun DiaItem(fecha: LocalDate, esSeleccionado: Boolean, onClick: () -> Unit) {
-    // Corrección: Formateo de letras de día seguro
+
     val diaSemanaLetra = fecha.format(DateTimeFormatter.ofPattern("EEE", Locale("es", "ES")))
         .take(1)
         .uppercase(Locale.getDefault())
@@ -326,7 +322,7 @@ fun DiaItem(fecha: LocalDate, esSeleccionado: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun MateriaSemanaCard(materia: Materia, fecha: LocalDate) {
-    // Corrección: Lógica limpia para obtener el nombre del día en Español
+
     val nombreDia = when (fecha.dayOfWeek.value) {
         1 -> "Lunes"
         2 -> "Martes"

@@ -16,6 +16,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // (Opcional) Ayuda si tu app crece mucho
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -28,13 +31,15 @@ android {
         }
     }
 
+    // --- CORRECCIÓN 1: Habilitar Desugaring y usar Java 8 ---
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -43,6 +48,9 @@ android {
 }
 
 dependencies {
+    // --- CORRECCIÓN 2: La librería mágica para LocalDate ---
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
     implementation("androidx.compose.material:material-icons-extended")
 
     // ... tus otras dependencias ...
@@ -61,9 +69,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ui)
 
-    // ❌ BORRA ESTA LÍNEA (Esta es la que causa el error "Could not find... 26.0.2")
-    // implementation(libs.firebase.firestore.ktx)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,7 +86,6 @@ dependencies {
     // Analytics
     implementation("com.google.firebase:firebase-analytics")
 
-    // ✅ AGREGA ESTA LÍNEA PARA FIRESTORE (El BoM pondrá la versión correcta)
-
+    // Database
     implementation("com.google.firebase:firebase-database")
 }
