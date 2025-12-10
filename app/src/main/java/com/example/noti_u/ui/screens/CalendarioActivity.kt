@@ -59,11 +59,6 @@ class CalendarioActivity : BaseLanguageActivity() {
 fun CalendarioScreen(
     viewModel: CalendarioViewModel = viewModel()
 ) {
-
-    // ---------------------------------------
-
-    // ESTADOS DEL VIEWMODEL (el resto sigue igual)
-
     // ESTADOS DEL VIEWMODEL
     val fechaSeleccionada by viewModel.fechaSeleccionada.collectAsState()
     val lunesSemanaVisible by viewModel.lunesSemanaVisible.collectAsState()
@@ -76,8 +71,9 @@ fun CalendarioScreen(
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Corrección: Usamos Locale.getDefault() o explícito para evitar errores
-    val mesFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale("es", "ES"))
+    // ✅ CORRECCIÓN: Detectar idioma actual del sistema
+    val currentLocale = Locale.getDefault()
+    val mesFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", currentLocale)
 
     Box(
         modifier = Modifier
@@ -92,7 +88,9 @@ fun CalendarioScreen(
 
             // --- HEADER ---
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -108,10 +106,32 @@ fun CalendarioScreen(
                         modifier = Modifier.size(40.dp)
                     ) { expanded = !expanded }
 
-                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        DropdownMenuItem(text = { Text(stringResource(R.string.ver_perfil)) }, onClick = { expanded = false; context.startActivity(Intent(context, PerfilActivity::class.java)) })
-                        DropdownMenuItem(text = { Text(stringResource(R.string.editar_perfil)) }, onClick = { expanded = false; context.startActivity(Intent(context, EditarPerfilActivity::class.java)) })
-                        DropdownMenuItem(text = { Text(stringResource(R.string.cerrar_sesion)) }, onClick = { expanded = false; context.startActivity(Intent(context, MainActivity::class.java)); (context as? ComponentActivity)?.finish() })
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.ver_perfil)) },
+                            onClick = {
+                                expanded = false
+                                context.startActivity(Intent(context, PerfilActivity::class.java))
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.editar_perfil)) },
+                            onClick = {
+                                expanded = false
+                                context.startActivity(Intent(context, EditarPerfilActivity::class.java))
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.cerrar_sesion)) },
+                            onClick = {
+                                expanded = false
+                                context.startActivity(Intent(context, MainActivity::class.java))
+                                (context as? ComponentActivity)?.finish()
+                            }
+                        )
                     }
                 }
             }
@@ -123,7 +143,12 @@ fun CalendarioScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                buttonAnimation(drawableId = R.drawable.atras, modifier = Modifier.size(32.dp)) { (context as? ComponentActivity)?.finish() }
+                buttonAnimation(
+                    drawableId = R.drawable.atras,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    (context as? ComponentActivity)?.finish()
+                }
                 Text(
                     text = stringResource(R.string.calendario_titulo),
                     fontWeight = FontWeight.Bold,
@@ -131,16 +156,28 @@ fun CalendarioScreen(
                     fontSize = 22.sp,
                     color = Color.Black
                 )
-                buttonAnimation(drawableId = R.drawable.editar, modifier = Modifier.size(32.dp)) { }
+                buttonAnimation(
+                    drawableId = R.drawable.editar,
+                    modifier = Modifier.size(32.dp)
+                ) { }
             }
 
-            Divider(modifier = Modifier.fillMaxWidth().padding(top = 6.dp, bottom = 10.dp), color = Color.Black, thickness = 1.dp)
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp, bottom = 10.dp),
+                color = Color.Black,
+                thickness = 1.dp
+            )
 
             // --- NAVEGACIÓN SEMANAL ---
 
-            // Corrección: Formateo seguro del texto del mes
+            // ✅ CORRECCIÓN: Formateo del mes con idioma dinámico
             val tituloMes = lunesSemanaVisible.format(mesFormatter)
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                .replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                    else it.toString()
+                }
 
             Text(
                 text = tituloMes,
@@ -155,19 +192,34 @@ fun CalendarioScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = { viewModel.cambiarSemana(false) }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Anterior", tint = Color.Black)
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "Anterior",
+                        tint = Color.Black
+                    )
                 }
 
-                Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.SpaceAround) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
                     for (i in 0 until 7) {
                         val diaActual = lunesSemanaVisible.plusDays(i.toLong())
                         val esSeleccionado = diaActual == fechaSeleccionada
-                        DiaItem(fecha = diaActual, esSeleccionado = esSeleccionado, onClick = { viewModel.seleccionarFecha(diaActual) })
+                        DiaItem(
+                            fecha = diaActual,
+                            esSeleccionado = esSeleccionado,
+                            onClick = { viewModel.seleccionarFecha(diaActual) }
+                        )
                     }
                 }
 
                 IconButton(onClick = { viewModel.cambiarSemana(true) }) {
-                    Icon(Icons.Default.ArrowForward, contentDescription = "Siguiente", tint = Color.Black)
+                    Icon(
+                        Icons.Default.ArrowForward,
+                        contentDescription = "Siguiente",
+                        tint = Color.Black
+                    )
                 }
             }
 
@@ -176,8 +228,15 @@ fun CalendarioScreen(
             // --- LISTA ---
 
             if (materiasDelDia.isEmpty() && pendientesDelDia.isEmpty() && recordatoriosDelDia.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No hay actividades para este día", color = Color.Gray, fontSize = 16.sp)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        stringResource(R.string.no_hay_actividades),
+                        color = Color.Gray,
+                        fontSize = 16.sp
+                    )
                 }
             } else {
                 LazyColumn(
@@ -186,7 +245,9 @@ fun CalendarioScreen(
                 ) {
                     // MATERIAS
                     if (materiasDelDia.isNotEmpty()) {
-                        item { SeccionHeader("Clases") }
+                        item {
+                            SeccionHeader(stringResource(R.string.clases_header))
+                        }
                         items(materiasDelDia) { materia ->
                             MateriaSemanaCard(materia, fechaSeleccionada)
                         }
@@ -194,7 +255,9 @@ fun CalendarioScreen(
 
                     // PENDIENTES
                     if (pendientesDelDia.isNotEmpty()) {
-                        item { SeccionHeader("Entregas y Pendientes") }
+                        item {
+                            SeccionHeader(stringResource(R.string.entregas_pendientes_header))
+                        }
                         items(pendientesDelDia) { pendiente ->
                             val materiaAsociada = viewModel.obtenerMateriaDePendiente(pendiente.materiaIdMateria)
                             PendienteCalendarioCard(pendiente, materiaAsociada)
@@ -203,7 +266,9 @@ fun CalendarioScreen(
 
                     // RECORDATORIOS
                     if (recordatoriosDelDia.isNotEmpty()) {
-                        item { SeccionHeader("Recordatorios Personales") }
+                        item {
+                            SeccionHeader(stringResource(R.string.recordatorios_header))
+                        }
                         items(recordatoriosDelDia) { recordatorio ->
                             RecordatorioCalendarioCard(recordatorio)
                         }
@@ -231,10 +296,16 @@ fun SeccionHeader(titulo: String) {
 
 @Composable
 fun PendienteCalendarioCard(pendiente: Pendientes, materia: Materia?) {
+    val context = LocalContext.current
+
     val colorFondo = try {
-        if (!materia?.color.isNullOrEmpty()) Color(android.graphics.Color.parseColor(materia!!.color))
-        else Color(0xFFD1C4E9)
-    } catch (e: Exception) { Color(0xFFD1C4E9) }
+        if (!materia?.color.isNullOrEmpty())
+            Color(android.graphics.Color.parseColor(materia!!.color))
+        else
+            Color(0xFFD1C4E9)
+    } catch (e: Exception) {
+        Color(0xFFD1C4E9)
+    }
 
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -245,7 +316,6 @@ fun PendienteCalendarioCard(pendiente: Pendientes, materia: Materia?) {
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Corrección: Usamos Iconos nativos en vez de R.drawable
             val icono = if (pendiente.estado) Icons.Default.Check else Icons.Default.Notifications
             val colorIcono = if (pendiente.estado) Color(0xFF4CAF50) else Color(0xFFF44336)
 
@@ -260,16 +330,27 @@ fun PendienteCalendarioCard(pendiente: Pendientes, materia: Materia?) {
 
             Column {
                 Text(
-                    text = pendiente.titulo.ifBlank { materia?.nombre ?: "Pendiente" },
+                    text = pendiente.titulo.ifBlank {
+                        materia?.nombre ?: context.getString(R.string.pendiente_default)
+                    },
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = Color.Black
                 )
                 if (materia != null) {
-                    Text(text = materia.nombre, fontSize = 12.sp, color = Color.DarkGray)
+                    Text(
+                        text = materia.nombre,
+                        fontSize = 12.sp,
+                        color = Color.DarkGray
+                    )
                 }
                 if (pendiente.descripcion.isNotEmpty()) {
-                    Text(text = pendiente.descripcion, fontSize = 12.sp, color = Color.Gray, maxLines = 1)
+                    Text(
+                        text = pendiente.descripcion,
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        maxLines = 1
+                    )
                 }
             }
         }
@@ -294,7 +375,12 @@ fun RecordatorioCalendarioCard(recordatorio: Recordatorios) {
                     fontSize = 16.sp,
                     color = Color.Black
                 )
-                Text(text = recordatorio.descripcion, fontSize = 12.sp, color = Color.DarkGray, maxLines = 1)
+                Text(
+                    text = recordatorio.descripcion,
+                    fontSize = 12.sp,
+                    color = Color.DarkGray,
+                    maxLines = 1
+                )
             }
             Text(
                 text = recordatorio.hora,
@@ -308,10 +394,13 @@ fun RecordatorioCalendarioCard(recordatorio: Recordatorios) {
 
 @Composable
 fun DiaItem(fecha: LocalDate, esSeleccionado: Boolean, onClick: () -> Unit) {
-    // Corrección: Formateo de letras de día seguro
-    val diaSemanaLetra = fecha.format(DateTimeFormatter.ofPattern("EEE", Locale("es", "ES")))
-        .take(1)
-        .uppercase(Locale.getDefault())
+    // ✅ CORRECCIÓN: Usar el idioma del sistema dinámicamente
+    val currentLocale = Locale.getDefault()
+
+    // Obtener abreviatura del día (L, M, X, J, V, S, D)
+    val diaSemanaLetra = fecha.format(
+        DateTimeFormatter.ofPattern("EEE", currentLocale)
+    ).take(1).uppercase(Locale.getDefault())
 
     val numeroDia = fecha.dayOfMonth.toString()
 
@@ -323,44 +412,111 @@ fun DiaItem(fecha: LocalDate, esSeleccionado: Boolean, onClick: () -> Unit) {
             .background(if (esSeleccionado) Color(0xFFFFB300) else Color.Transparent)
             .padding(8.dp)
     ) {
-        Text(text = diaSemanaLetra, fontSize = 12.sp, color = if (esSeleccionado) Color.Black else Color.Gray)
+        Text(
+            text = diaSemanaLetra,
+            fontSize = 12.sp,
+            color = if (esSeleccionado) Color.Black else Color.Gray
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = numeroDia, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if (esSeleccionado) Color.Black else Color.Black)
+        Text(
+            text = numeroDia,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
     }
 }
 
 @Composable
 fun MateriaSemanaCard(materia: Materia, fecha: LocalDate) {
-    // Definimos el día base en español
-    val diaBase = when (fecha.dayOfWeek.value) {
-        1 -> "Lunes" 2 -> "Martes" 3 -> "Miércoles" 4 -> "Jueves"
-        5 -> "Viernes" 6 -> "Sábado" 7 -> "Domingo" else -> "Lunes"
-    }
+    val context = LocalContext.current
 
-    // Buscamos la llave del mapa ignorando mayúsculas y tildes
+    // ✅ CORRECCIÓN: Mapeo correcto de días
+    val diasMapeo = mapOf(
+        1 to "Lunes",
+        2 to "Martes",
+        3 to "Miércoles",
+        4 to "Jueves",
+        5 to "Viernes",
+        6 to "Sábado",
+        7 to "Domingo"
+    )
+
+    val diaBase = diasMapeo[fecha.dayOfWeek.value] ?: "Lunes"
+
+    // Buscar la llave correcta ignorando mayúsculas y tildes
     val keyCorrecta = materia.horaInicio.keys.find { key ->
-        key.lowercase().replace("á","a").replace("é","e").replace("í","i").replace("ó","o") ==
-                diaBase.lowercase().replace("á","a").replace("é","e").replace("í","i").replace("ó","o")
+        key.lowercase().replace("á", "a").replace("é", "e")
+            .replace("í", "i").replace("ó", "o").replace("ú", "u") ==
+                diaBase.lowercase().replace("á", "a").replace("é", "e")
+                    .replace("í", "i").replace("ó", "o").replace("ú", "u")
     } ?: diaBase
 
     val horaInicio = materia.horaInicio[keyCorrecta] ?: "--:--"
     val horaFin = materia.horaFin[keyCorrecta] ?: "--:--"
-    val colorMateria = try { Color(android.graphics.Color.parseColor(materia.color)) } catch (e: Exception) { Color(0xFFFFB300) }
 
-    Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-        Column(horizontalAlignment = Alignment.End, modifier = Modifier.width(60.dp).padding(end = 8.dp, top = 8.dp)) {
-            Text(text = horaInicio, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(text = horaFin, fontSize = 12.sp, color = Color.Gray)
+    val colorMateria = try {
+        Color(android.graphics.Color.parseColor(materia.color))
+    } catch (e: Exception) {
+        Color(0xFFFFB300)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .width(60.dp)
+                .padding(end = 8.dp, top = 8.dp)
+        ) {
+            Text(
+                text = horaInicio,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Text(
+                text = horaFin,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
         }
-        Surface(shape = RoundedCornerShape(16.dp), color = colorMateria.copy(alpha = 0.2f), modifier = Modifier.weight(1f)) {
+
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = colorMateria.copy(alpha = 0.2f),
+            modifier = Modifier.weight(1f)
+        ) {
             Row(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.fillMaxHeight().width(6.dp).background(colorMateria))
-                Column(modifier = Modifier.padding(12.dp).fillMaxSize(), verticalArrangement = Arrangement.Center) {
-                    Text(text = materia.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.Black)
-                    if (!materia.salon.isNullOrEmpty()) Text(text = "Salón: ${materia.salon}", fontSize = 14.sp, color = Color.DarkGray)
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(6.dp)
+                        .background(colorMateria)
+                )
+                Column(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = materia.nombre,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                    if (!materia.salon.isNullOrEmpty()) {
+                        Text(
+                            text = context.getString(R.string.salon_format, materia.salon),
+                            fontSize = 14.sp,
+                            color = Color.DarkGray
+                        )
+                    }
                 }
             }
         }
     }
-
 }

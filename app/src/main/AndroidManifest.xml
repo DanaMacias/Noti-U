@@ -29,11 +29,12 @@
             </intent-filter>
         </receiver>
 
-        <!-- ACTIVITY PRINCIPAL - SOLO UNA VEZ -->
+        <!-- ACTIVITY PRINCIPAL -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.NotiU">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,13 +42,41 @@
             </intent-filter>
         </activity>
 
-        <!-- OTRAS ACTIVITIES -->
+        <!-- OTRAS ACTIVITIES IMPORTANTES -->
         <activity
             android:name=".ui.screens.PrincipalActivity"
             android:exported="false"
             android:label="@string/title_activity_principal"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
             android:theme="@style/Theme.NotiU" />
 
+        <activity
+            android:name=".ui.screens.RegistroActivity"
+            android:exported="false"
+            android:label="@string/title_activity_recordatorios"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.PerfilActivity"
+            android:exported="false"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
+            android:theme="@style/Theme.NotiU" />
+
+        <activity
+            android:name=".ui.screens.EditarPerfilActivity"
+            android:exported="false"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
+            android:theme="@style/Theme.NotiU" />
+
+        <!-- LoginActivity - SOLO SI LA VAS A USAR -->
+        <activity
+            android:name=".ui.screens.LoginActivity"
+            android:exported="false"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
+            android:theme="@style/Theme.NotiU" />
+
+        <!-- OTRAS ACTIVITIES  -->
         <activity
             android:name=".ui.screens.NotasActivity"
             android:exported="false"
@@ -83,24 +112,8 @@
             android:theme="@style/Theme.NotiU" />
 
         <activity
-            android:name=".ui.screens.PerfilActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NotiU" />
-
-        <activity
-            android:name=".ui.screens.EditarPerfilActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NotiU" />
-
-        <activity
             android:name=".ui.screens.AgregarPendienteActivity"
             android:exported="false"
-            android:theme="@style/Theme.NotiU" />
-
-        <activity
-            android:name=".ui.screens.RegistroActivity"
-            android:exported="false"
-            android:label="@string/title_activity_recordatorios"
             android:theme="@style/Theme.NotiU" />
 
     </application>

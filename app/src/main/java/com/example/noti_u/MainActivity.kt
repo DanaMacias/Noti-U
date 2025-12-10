@@ -1,25 +1,17 @@
 package com.example.noti_u
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.fillMaxSize
-import com.example.noti_u.ui.screens.LoginScreen
-import com.example.noti_u.ui.theme.NotiUTheme
+import com.example.noti_u.ui.base.BaseLanguageActivity
+import com.example.noti_u.ui.screens.LoginActivity
 import com.google.firebase.FirebaseApp
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        FirebaseApp.initializeApp(this) // ANTES de super.onCreate
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
-        setContent {
-            NotiUTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    LoginScreen()
-                }
-            }
-        }
+
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 }

@@ -135,7 +135,6 @@ fun RecordatoriosListScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // CHANGED: stringResource
             Text(
                 text = stringResource(R.string.recordatorios_titulo_top),
                 fontSize = 22.sp,
@@ -152,7 +151,6 @@ fun RecordatoriosListScreen(
                 thickness = 1.dp
             )
 
-            // CHANGED: stringResource logic
             Text(
                 text = if (recordatorios.isEmpty())
                     stringResource(R.string.no_hay_recordatorios)
@@ -174,7 +172,6 @@ fun RecordatoriosListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    // CHANGED: stringResource
                     Text(
                         stringResource(R.string.agregar_nuevo_recordatorio_btn),
                         fontWeight = FontWeight.ExtraBold,
@@ -241,7 +238,6 @@ fun RecordatorioCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // CHANGED: stringResource for format
                 Text(
                     stringResource(R.string.formato_fecha_simple, recordatorio.fecha),
                     fontSize = 13.sp,
@@ -257,7 +253,6 @@ fun RecordatorioCard(
             }
             if (recordatorio.notificar) {
                 Spacer(modifier = Modifier.height(4.dp))
-                // CHANGED: stringResource
                 Text(
                     stringResource(R.string.notificacion_activada),
                     fontSize = 12.sp,
@@ -315,7 +310,6 @@ fun FormularioRecordatorioScreen(
                     modifier = Modifier.size(50.dp)
                 ) { onVolver() }
 
-                // CHANGED: stringResource
                 Text(
                     text = stringResource(R.string.agregar_recordatorio_titulo_top),
                     fontWeight = FontWeight.Bold,
@@ -344,7 +338,6 @@ fun FormularioRecordatorioScreen(
                     .padding(16.dp)
             ) {
                 Column {
-                    // CHANGED: stringResource
                     Text(
                         stringResource(R.string.fecha_y_hora_titulo),
                         fontWeight = FontWeight.ExtraBold,
@@ -361,7 +354,6 @@ fun FormularioRecordatorioScreen(
                     ) {
 
                         Column {
-                            // CHANGED: stringResource
                             Text(
                                 stringResource(R.string.formato_fecha_simple, fecha),
                                 fontSize = 16.sp,
@@ -424,7 +416,6 @@ fun FormularioRecordatorioScreen(
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                // CHANGED: stringResource
                 label = { Text(stringResource(R.string.label_nombre_recordatorio)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -436,7 +427,6 @@ fun FormularioRecordatorioScreen(
             OutlinedTextField(
                 value = descripcion,
                 onValueChange = { descripcion = it },
-                // CHANGED: stringResource
                 label = { Text(stringResource(R.string.label_descripcion_recordatorio)) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
@@ -449,7 +439,6 @@ fun FormularioRecordatorioScreen(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = notificar, onCheckedChange = { notificar = it })
-                // CHANGED: stringResource
                 Text(
                     stringResource(R.string.label_notificar),
                     color = DarkTextSecondary,
@@ -480,7 +469,6 @@ fun FormularioRecordatorioScreen(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                // CHANGED: stringResource
                 Text(
                     stringResource(R.string.btn_guardar_recordatorio),
                     color = DarkTextPrimary,
@@ -558,7 +546,6 @@ fun EditarRecordatorioScreen(
                         modifier = Modifier.size(50.dp)
                     ) { onVolver() }
 
-                    // CHANGED: stringResource
                     Text(
                         text = stringResource(R.string.editar_recordatorio_titulo),
                         fontWeight = FontWeight.Bold,
@@ -587,7 +574,6 @@ fun EditarRecordatorioScreen(
                         .padding(16.dp)
                 ) {
                     Column {
-                        // CHANGED: stringResource
                         Text(
                             stringResource(R.string.fecha_y_hora_titulo),
                             fontWeight = FontWeight.ExtraBold,
@@ -604,7 +590,6 @@ fun EditarRecordatorioScreen(
                         ) {
 
                             Column {
-                                // CHANGED: stringResource
                                 Text(
                                     stringResource(R.string.texto_fecha, fecha),
                                     fontSize = 16.sp,
@@ -667,7 +652,6 @@ fun EditarRecordatorioScreen(
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    // CHANGED: stringResource
                     label = { Text(stringResource(R.string.label_nombre_recordatorio)) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth(),
@@ -679,7 +663,6 @@ fun EditarRecordatorioScreen(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    // CHANGED: stringResource
                     label = { Text(stringResource(R.string.label_descripcion_recordatorio)) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
@@ -692,7 +675,6 @@ fun EditarRecordatorioScreen(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = notificar, onCheckedChange = { notificar = it })
-                    // CHANGED: stringResource
                     Text(
                         stringResource(R.string.label_notificar),
                         color = DarkTextSecondary,
@@ -718,7 +700,6 @@ fun EditarRecordatorioScreen(
                             .weight(1f)
                             .height(50.dp)
                     ) {
-                        // CHANGED: stringResource
                         Text(
                             stringResource(R.string.eliminar),
                             color = Color.White,
@@ -751,7 +732,6 @@ fun EditarRecordatorioScreen(
                             .weight(1f)
                             .height(50.dp)
                     ) {
-                        // CHANGED: stringResource
                         Text(
                             stringResource(R.string.btn_guardar_recordatorio),
                             color = DarkTextPrimary,

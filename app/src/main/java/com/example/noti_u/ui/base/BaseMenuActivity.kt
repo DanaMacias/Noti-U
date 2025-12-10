@@ -169,8 +169,6 @@ abstract class BaseMenuActivity : BaseLanguageActivity() {
             // Animación suave de transición
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
-            // Opcional: Si quieres que al cambiar de menú se cierre la anterior para ahorrar memoria:
-            // finish()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.noti_u.ui.screens
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -94,7 +95,7 @@ class HorariosActivity : BaseMenuActivity() {
 
                 // LISTA DE MATERIAS
                 materias.forEach { materia ->
-                    val materiaUI = materia.toMateriaUI()
+                    val materiaUI = materia.toMateriaUI(context)
 
                     MateriaCard(
                         materia = materiaUI,
@@ -121,7 +122,7 @@ class HorariosActivity : BaseMenuActivity() {
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.mas),
-                            contentDescription = "Agregar materia",
+                            contentDescription = stringResource(R.string.cd_agregar_materia),
                             tint = Color.Black,
                             modifier = Modifier.size(24.dp)
                         )
@@ -211,40 +212,54 @@ class HorariosActivity : BaseMenuActivity() {
                             // 1. ELIMINAR
                             Button(
                                 onClick = {
-                                    // Acción Eliminar en ViewModel
                                     viewModel.eliminarMateria(materiaSeleccionada!!.id)
                                     materiaSeleccionada = null
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)), // Rojo suave
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)),
                                 modifier = Modifier.weight(1f).padding(end = 4.dp),
                                 contentPadding = PaddingValues(horizontal = 4.dp)
                             ) {
-                                Text("Eliminar", color = Color.White, fontSize = 13.sp, maxLines = 1)
+                                Text(
+                                    stringResource(R.string.eliminar),
+                                    color = Color.White,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
                             }
 
                             // 2. EDITAR
                             Button(
                                 onClick = {
                                     val intent = Intent(context, NuevaMateriaActivity::class.java)
-                                    intent.putExtra("materia_id", materiaSeleccionada!!.id) // PASAR ID
+                                    intent.putExtra("materia_id", materiaSeleccionada!!.id)
                                     context.startActivity(intent)
                                     materiaSeleccionada = null
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5)), // Azul suave
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5)),
                                 modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                                 contentPadding = PaddingValues(horizontal = 4.dp)
                             ) {
-                                Text("Editar", color = Color.White, fontSize = 13.sp, maxLines = 1)
+                                Text(
+                                    stringResource(R.string.editar),
+                                    color = Color.White,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
                             }
 
                             // 3. CERRAR
                             Button(
                                 onClick = { materiaSeleccionada = null },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)), // Amarillo
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
                                 modifier = Modifier.weight(1f).padding(start = 4.dp),
                                 contentPadding = PaddingValues(horizontal = 4.dp)
                             ) {
-                                Text("Cerrar", color = Color.Black, fontSize = 13.sp, maxLines = 1)
+                                Text(
+                                    stringResource(R.string.cerrar),
+                                    color = Color.Black,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
                             }
                         }
                     }
@@ -255,7 +270,7 @@ class HorariosActivity : BaseMenuActivity() {
 
     // --- MODELO UI INTERNO ---
     data class MateriaUI(
-        val id: String,         // ID necesario para editar/eliminar
+        val id: String,
         val nombre: String,
         val horario: String,
         val salonEnlace: String,
@@ -263,21 +278,37 @@ class HorariosActivity : BaseMenuActivity() {
     )
 
     // --- MAPEO DE MODELO ---
-    private fun MateriaModel.toMateriaUI(): MateriaUI {
+    private fun MateriaModel.toMateriaUI(context: Context): MateriaUI {
+        // Mapeo de nombres de días en español a traducidos
+        val diasTraducidos = mapOf(
+            "Lunes" to context.getString(R.string.lunes),
+            "Martes" to context.getString(R.string.martes),
+            "Miércoles" to context.getString(R.string.miercoles),
+            "Jueves" to context.getString(R.string.jueves),
+            "Viernes" to context.getString(R.string.viernes),
+            "Sábado" to context.getString(R.string.sabado),
+            "Domingo" to context.getString(R.string.domingo)
+        )
+
         val horarioString = dias.filter { it.value }.keys.joinToString(separator = "\n") { dia ->
-            val inicio = horaInicio[dia]?.removeSuffix(":00") ?: ""
-            val fin = horaFin[dia]?.removeSuffix(":00") ?: ""
-            "$dia $inicio-$fin"
-        }.replace(":", "")
+            val diaTraducido = diasTraducidos[dia] ?: dia
+            val inicio = horaInicio[dia] ?: ""
+            val fin = horaFin[dia] ?: ""
+            "$diaTraducido $inicio-$fin"
+        }
 
         val detalles = mutableListOf<String>()
-        if (!salon.isNullOrBlank()) detalles.add("Salón: $salon")
-        if (!enlace.isNullOrBlank()) detalles.add("Enlace: $enlace")
+        if (!salon.isNullOrBlank()) {
+            detalles.add(context.getString(R.string.salon_label, salon))
+        }
+        if (!enlace.isNullOrBlank()) {
+            detalles.add(context.getString(R.string.enlace_label, enlace))
+        }
 
         val composeColor = this.color.toComposeColor()
 
         return MateriaUI(
-            id = id, // Mapeamos el ID real de Firebase
+            id = id,
             nombre = nombre,
             horario = horarioString,
             salonEnlace = detalles.joinToString(" / "),

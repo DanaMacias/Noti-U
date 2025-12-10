@@ -80,10 +80,10 @@ fun NuevaMateriaScreen(
     val listaDiasConfig = listOf(
         DiaConfig(R.string.lunes, "Lunes"),
         DiaConfig(R.string.martes, "Martes"),
-        DiaConfig(R.string.miercoles, "Miércoles"), // Usamos tilde si tu ViewModel la espera
+        DiaConfig(R.string.miercoles, "Miércoles"),
         DiaConfig(R.string.jueves, "Jueves"),
         DiaConfig(R.string.viernes, "Viernes"),
-        DiaConfig(R.string.sabado, "Sábado"),       // Usamos tilde si tu ViewModel la espera
+        DiaConfig(R.string.sabado, "Sábado"),
         DiaConfig(R.string.domingo, "Domingo")
     )
 
@@ -95,7 +95,9 @@ fun NuevaMateriaScreen(
                     nombre = materia.nombre
                     salon = materia.salon ?: ""
                     enlace = materia.enlace ?: ""
-                    try { colorSeleccionado = Color(android.graphics.Color.parseColor(materia.color)) } catch (e: Exception) { }
+                    try {
+                        colorSeleccionado = Color(android.graphics.Color.parseColor(materia.color))
+                    } catch (e: Exception) { }
 
                     // Cargamos los datos usando las llaves de la BD
                     materia.dias.forEach { (k, v) -> diasSeleccionados[k] = v }
@@ -135,51 +137,69 @@ fun NuevaMateriaScreen(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ... Header ... (Igual que antes)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(painter = painterResource(id = R.drawable.logo), contentDescription = null, modifier = Modifier.size(80.dp))
-                    // ... (Menú perfil igual) ...
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = stringResource(R.string.cd_logo),
+                        modifier = Modifier.size(80.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
                 Divider(color = Color.Black, thickness = 1.dp)
 
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    buttonAnimation(drawableId = R.drawable.atras, modifier = Modifier.size(32.dp)) { (context as? ComponentActivity)?.finish() }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    buttonAnimation(
+                        drawableId = R.drawable.atras,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        (context as? ComponentActivity)?.finish()
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (materiaId == null) stringResource(R.string.agregar_editar_materia) else stringResource(R.string.editar_materia),
-                        fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.Black
+                        text = if (materiaId == null)
+                            stringResource(R.string.agregar_editar_materia)
+                        else
+                            stringResource(R.string.editar_materia),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        color = Color.Black
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Inputs
-                Text(text = stringResource(R.string.nombre_materia), fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(R.string.nombre_materia),
+                    fontWeight = FontWeight.Bold
+                )
                 OutlinedTextField(
-                    value = nombre, onValueChange = { nombre = it },
+                    value = nombre,
+                    onValueChange = { nombre = it },
                     placeholder = { Text(stringResource(R.string.placeholder_nombre_materia)) },
-                    shape = RoundedCornerShape(50.dp), modifier = Modifier.fillMaxWidth()
+                    shape = RoundedCornerShape(50.dp),
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(text = stringResource(R.string.seleccione_horario), fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(R.string.seleccione_horario),
+                    fontWeight = FontWeight.Bold
+                )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // --- BUCLE CORREGIDO ---
                 listaDiasConfig.forEach { diaConfig ->
-
-                    // 1. Nombre Visual (Depende del idioma del cel)
                     val nombreVisual = stringResource(diaConfig.nombreRes)
-
-                    // 2. Llave Interna (Siempre Español: "Lunes", "Martes"...)
                     val llave = diaConfig.llaveBD
-
                     val isChecked = diasSeleccionados[llave] == true
 
                     Row(
@@ -195,21 +215,51 @@ fun NuevaMateriaScreen(
                         Text(text = nombreVisual, modifier = Modifier.weight(1f))
 
                         if (isChecked) {
-                            Button(onClick = {
-                                val cal = Calendar.getInstance()
-                                TimePickerDialog(context, { _, h, m ->
-                                    horaInicio[llave] = "%02d:%02d".format(h, m)
-                                }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-                            }) { Text(horaInicio[llave] ?: stringResource(R.string.hora_inicio)) }
+                            Button(
+                                onClick = {
+                                    val cal = Calendar.getInstance()
+                                    TimePickerDialog(
+                                        context,
+                                        { _, h, m ->
+                                            horaInicio[llave] = "%02d:%02d".format(h, m)
+                                        },
+                                        cal.get(Calendar.HOUR_OF_DAY),
+                                        cal.get(Calendar.MINUTE),
+                                        true
+                                    ).show()
+                                },
+                                modifier = Modifier.width(80.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    horaInicio[llave] ?: stringResource(R.string.hora_inicio),
+                                    fontSize = 12.sp
+                                )
+                            }
 
                             Spacer(modifier = Modifier.width(4.dp))
 
-                            Button(onClick = {
-                                val cal = Calendar.getInstance()
-                                TimePickerDialog(context, { _, h, m ->
-                                    horaFin[llave] = "%02d:%02d".format(h, m)
-                                }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-                            }) { Text(horaFin[llave] ?: stringResource(R.string.hora_fin)) }
+                            Button(
+                                onClick = {
+                                    val cal = Calendar.getInstance()
+                                    TimePickerDialog(
+                                        context,
+                                        { _, h, m ->
+                                            horaFin[llave] = "%02d:%02d".format(h, m)
+                                        },
+                                        cal.get(Calendar.HOUR_OF_DAY),
+                                        cal.get(Calendar.MINUTE),
+                                        true
+                                    ).show()
+                                },
+                                modifier = Modifier.width(80.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    horaFin[llave] ?: stringResource(R.string.hora_fin),
+                                    fontSize = 12.sp
+                                )
+                            }
                         }
                     }
                 }
@@ -218,21 +268,42 @@ fun NuevaMateriaScreen(
 
                 // Salon y Enlace
                 Text(stringResource(R.string.salon_opcional))
-                OutlinedTextField(value = salon, onValueChange = { salon = it }, placeholder = { Text(stringResource(R.string.placeholder_salon)) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(50.dp))
+                OutlinedTextField(
+                    value = salon,
+                    onValueChange = { salon = it },
+                    placeholder = { Text(stringResource(R.string.placeholder_salon)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(50.dp)
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(stringResource(R.string.enlace_opcional))
-                OutlinedTextField(value = enlace, onValueChange = { enlace = it }, placeholder = { Text(stringResource(R.string.placeholder_enlace)) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(50.dp))
+                OutlinedTextField(
+                    value = enlace,
+                    onValueChange = { enlace = it },
+                    placeholder = { Text(stringResource(R.string.placeholder_enlace)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(50.dp)
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Color
                 Text(text = stringResource(R.string.color_opcional))
-                Row(modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     colores.forEach { color ->
                         Box(
-                            modifier = Modifier.size(40.dp).background(color, CircleShape)
-                                .border(width = if (color == colorSeleccionado) 3.dp else 0.dp, color = Color.Black, shape = CircleShape)
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(color, CircleShape)
+                                .border(
+                                    width = if (color == colorSeleccionado) 3.dp else 0.dp,
+                                    color = Color.Black,
+                                    shape = CircleShape
+                                )
                                 .clickable { colorSeleccionado = color }
                         )
                     }
@@ -242,12 +313,15 @@ fun NuevaMateriaScreen(
 
                 Button(
                     onClick = {
-                        val colorHex = String.format("#%06X", (colorSeleccionado ?: Color(0xFFFFB300)).toArgb() and 0xFFFFFF)
+                        val colorHex = String.format(
+                            "#%06X",
+                            (colorSeleccionado ?: Color(0xFFFFB300)).toArgb() and 0xFFFFFF
+                        )
 
                         val materia = Materia(
                             id = materiaId ?: "",
                             nombre = nombre,
-                            dias = diasSeleccionados.toMap(), // Guarda con llaves fijas ("Lunes", etc)
+                            dias = diasSeleccionados.toMap(),
                             horaInicio = horaInicio.toMap(),
                             horaFin = horaFin.toMap(),
                             color = colorHex,
@@ -258,7 +332,12 @@ fun NuevaMateriaScreen(
                     },
                     modifier = Modifier.fillMaxWidth(0.6f)
                 ) {
-                    Text(if (materiaId == null) stringResource(R.string.guardar) else stringResource(R.string.actualizar))
+                    Text(
+                        if (materiaId == null)
+                            stringResource(R.string.guardar)
+                        else
+                            stringResource(R.string.actualizar)
+                    )
                 }
             }
         }

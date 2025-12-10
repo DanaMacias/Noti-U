@@ -31,12 +31,9 @@ class MateriaRepository {
 
 
                 if (fechaFin != null && fechaHoy.isAfter(fechaFin)) {
-                    // 3. DELETE Materias and Pendientes
                     db.child("usuarios").child(userId).child("materias").removeValue().await()
                     db.child("usuarios").child(userId).child("pendientes").removeValue().await()
 
-                    // Optional: You might want to clear the dates in the profile too so it doesn't run every time
-                    // db.child("users").child(userId).child("fechaFin").removeValue()
                 }
             }
         } catch (e: Exception) {
@@ -54,8 +51,6 @@ class MateriaRepository {
             } catch (e2: Exception) { null }
         }
     }
-
-    // ... (Keep your existing functions: guardarMateria, obtenerMaterias, eliminarMateria, etc.) ...
 
     suspend fun obtenerMaterias(): List<Materia> {
         if (userId.isEmpty()) return emptyList()
