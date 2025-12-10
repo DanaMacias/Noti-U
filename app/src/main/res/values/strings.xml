@@ -97,6 +97,11 @@
     <!-- Content descriptions -->
     <string name="cd_fondo">Fondo</string>
     <string name="cd_icono_usuario">Icono de usuario</string>
+    <string name="atencion_titulo">Atención</string>
+    <string name="advertencia_periodo_vacio">No has definido el periodo académico. Esto podría causar problemas al registrar materias y calcular fechas de vencimiento. ¿Deseas continuar de todas formas?</string>
+    <string name="continuar">Continuar</string>
+    <string name="cancelar">Cancelar</string>
+
 
     <!-- Notes -->
     <string name="todas_las_notas">Todas las Notas</string>
@@ -282,7 +287,7 @@
     <!-- Date formats -->
     <string name="formato_fecha_inicio">Fecha inicio: %1$s</string>
     <string name="formato_fecha_fin">Fecha fin: %1$s</string>
-    <string name="formato_duracion">Desde %1$s hasta %2$s</string>
+
     <string name="formato_duracion_label">Duración: %1$s</string>
 
     <!-- Dialog buttons -->
@@ -335,4 +340,7 @@
     <string name="notificacion_activada">🔔 Notificación activada</string>
     <string name="editar_recordatorio_titulo">Editar Recordatorio</string>
 
+    <string name="error_campos_vacios">Por favor llena los campos obligatorios</string>
+
+    <string name="formato_duracion">Desde %1$s hasta %2$s</string>
 </resources>

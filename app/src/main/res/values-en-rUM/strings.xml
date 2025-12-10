@@ -259,7 +259,14 @@
     <string name="label_institucion">Educational institution</string>
 
     <!-- Errors -->
-    <string name="error_contrasena_corta">Password must be at least 6 characters long</string>
+
+    <string name="atencion_titulo">Warning</string>
+    <string name="advertencia_periodo_vacio">You have not defined the academic period. This could cause issues when registering subjects and calculating deadlines. Do you want to continue anyway?</string>
+    <string name="continuar">Continue</string>
+    <string name="cancelar">Cancel</string>
+
+    <string name="error_contrasena_corta">Password must be at least 6 characters</string>
+
 
     <!-- Activity titles -->
     <string name="title_activity_notas">Notes</string>

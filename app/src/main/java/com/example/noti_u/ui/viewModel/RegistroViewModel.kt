@@ -17,43 +17,30 @@ class RegistroViewModel(
     private val _registerState = MutableStateFlow<Result<Unit>?>(null)
     val registerState: StateFlow<Result<Unit>?> get() = _registerState
 
-    fun register(
-        nombre: String,
-        correo: String,
-        telefono: String,
-        area: String,
-        institucion: String,
-        password: String
-    ) {
-        if (nombre.isBlank() || correo.isBlank() || telefono.isBlank() ||
-            area.isBlank() || institucion.isBlank() || password.isBlank()
-        ) {
-            _registerState.value = Result.failure(Exception("Debes llenar todos los campos"))
+    // MÉTODO CORREGIDO: Recibe email, password y el objeto User completo
+    fun register(email: String, password: String, userData: User) {
+
+        // Validación básica (los campos del periodo son opcionales si el usuario aceptó la alerta)
+        if (userData.nombre.isBlank() || email.isBlank() || password.isBlank()) {
+            _registerState.value = Result.failure(Exception("Faltan campos obligatorios"))
             return
         }
 
         viewModelScope.launch {
-            // 1️⃣ Registrar en Firebase Auth
-            val authResult = authRepo.register(correo, password)
+            // 1. Registrar en Firebase Authentication
+            val authResult = authRepo.register(email, password)
 
             if (authResult.isFailure) {
                 _registerState.value = Result.failure(authResult.exceptionOrNull()!!)
                 return@launch
             }
 
-            val uid = authResult.getOrNull()!!  // UID generado por Firebase
+            val uid = authResult.getOrNull()!! // Obtener el UID generado
 
-            // 2️⃣ Crear objeto User completo y guardarlo en Realtime Database
-            val user = User(
-                id = uid,
-                nombre = nombre,
-                correo = correo,
-                telefono = telefono,
-                area = area,
-                institucion = institucion
-            )
+            // 2. Asignar el UID al objeto User y guardarlo en Database
+            val userToSave = userData.copy(id = uid)
 
-            val dbResult = userRepo.saveUser(user)
+            val dbResult = userRepo.saveUser(userToSave)
 
             _registerState.value = dbResult
         }

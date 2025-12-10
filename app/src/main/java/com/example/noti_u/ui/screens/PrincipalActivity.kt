@@ -1,10 +1,8 @@
 package com.example.noti_u.ui.screens
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.R
 import com.example.noti_u.data.model.Materia
 import com.example.noti_u.data.model.Pendientes
-import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.base.BaseMenuActivity
 import com.example.noti_u.ui.viewmodel.PrincipalViewModel
 
@@ -79,9 +75,9 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
                 ) {
                     val todasVacias = pendientesHoy.isEmpty() && pendientesManana.isEmpty() &&
                             materiasHoy.isEmpty() && materiasManana.isEmpty()
+
                     if (todasVacias) {
                         item {
-                            // CHANGED: stringResource
                             Text(
                                 text = stringResource(R.string.no_hay_recordatorios),
                                 fontWeight = FontWeight.Medium,
@@ -93,7 +89,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
                     } else {
                         // Pendientes - Hoy
                         if (pendientesHoy.isNotEmpty()) {
-                            // CHANGED: stringResource
                             item { Text(stringResource(R.string.pendientes_hoy), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(pendientesHoy) { p ->
                                 RecordatorioBox(
@@ -110,7 +105,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
 
                         // Pendientes - Mañana
                         if (pendientesManana.isNotEmpty()) {
-                            // CHANGED: stringResource
                             item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.pendientes_manana), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(pendientesManana) { p ->
                                 RecordatorioBox(
@@ -127,7 +121,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
 
                         // Materias - Hoy
                         if (materiasHoy.isNotEmpty()) {
-                            // CHANGED: stringResource
                             item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.clases_hoy), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(materiasHoy) { (materia, horario) ->
                                 RecordatorioBox(
@@ -147,7 +140,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
 
                         // Materias - Mañana
                         if (materiasManana.isNotEmpty()) {
-                            // CHANGED: stringResource
                             item { Spacer(modifier = Modifier.height(8.dp)); Text(stringResource(R.string.clases_manana), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color.Black) }
                             items(materiasManana) { (materia, horario) ->
                                 RecordatorioBox(
@@ -167,28 +159,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.paginas_recomendadas),
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color.Black,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(60.dp)
-                    .background(Color(0xFF5B8D8D), RoundedCornerShape(20.dp))
-                    .align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 
@@ -327,7 +297,6 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
             }
         }
     }
-
 }
 
 @Composable

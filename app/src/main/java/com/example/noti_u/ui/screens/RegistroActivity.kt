@@ -1,5 +1,6 @@
 package com.example.noti_u.ui.screens
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,9 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.R
+import com.example.noti_u.data.model.User
 import com.example.noti_u.ui.base.BaseLanguageActivity
 import com.example.noti_u.ui.theme.NotiUTheme
 import com.example.noti_u.ui.viewmodel.RegistroViewModel
+import java.util.Calendar
 
 class RegistroActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +53,7 @@ fun RegistroScreen() {
     val viewModel: RegistroViewModel = viewModel()
     val registerState by viewModel.registerState.collectAsState()
 
+    // --- ESTADOS DE DATOS ---
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -57,12 +61,61 @@ fun RegistroScreen() {
     var area by remember { mutableStateOf("") }
     var institucion by remember { mutableStateOf("") }
 
+    // Nuevos campos académicos
+    var periodo by remember { mutableStateOf("") }
+    var fechaInicio by remember { mutableStateOf("") }
+    var fechaFin by remember { mutableStateOf("") }
+    var duracion by remember { mutableStateOf("") }
+
+    // Estado para la Alerta
+    var mostrarAlertaPeriodo by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf("") }
 
-    // Strings loaded once
+    // --- HELPERS PARA FECHAS ---
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    fun calcularDuracion() {
+        if (fechaInicio.isNotEmpty() && fechaFin.isNotEmpty()) {
+            val formato = context.getString(R.string.formato_duracion)
+            duracion = String.format(formato, fechaInicio, fechaFin)
+        }
+    }
+
+    val datePickerDialogInicio = DatePickerDialog(context, { _, y, m, d ->
+        fechaInicio = "$d/${m + 1}/$y"
+        calcularDuracion()
+    }, year, month, day)
+
+    val datePickerDialogFin = DatePickerDialog(context, { _, y, m, d ->
+        fechaFin = "$d/${m + 1}/$y"
+        calcularDuracion()
+    }, year, month, day)
+
+    // --- LÓGICA DE REGISTRO ---
+    fun realizarRegistro() {
+        // Creamos el objeto User con TODOS los campos
+        val user = User(
+            nombre = nombre,
+            correo = correo.trim(),
+            contrasena = "", // No guardamos la contraseña en texto plano en la BD por seguridad
+            telefono = telefono,
+            area = area,
+            institucion = institucion,
+            periodo = periodo,
+            fechaInicio = fechaInicio,
+            fechaFin = fechaFin,
+            duracion = duracion
+        )
+        // CAMBIO: Llamamos al método actualizado del ViewModel
+        viewModel.register(correo.trim(), contrasena.trim(), user)
+    }
+
+    // --- MANEJO DE RESPUESTA ---
     val registroExitosoMsg = stringResource(R.string.registro_exitoso)
     val errorDesconocidoMsg = stringResource(R.string.error_desconocido)
-    val errorContrasenaCortaMsg = stringResource(R.string.error_contrasena_corta)
 
     LaunchedEffect(registerState) {
         registerState?.onSuccess {
@@ -74,6 +127,32 @@ fun RegistroScreen() {
         }
     }
 
+    // --- DIÁLOGO DE ADVERTENCIA ---
+    if (mostrarAlertaPeriodo) {
+        AlertDialog(
+            onDismissRequest = { mostrarAlertaPeriodo = false },
+            title = { Text(stringResource(R.string.atencion_titulo)) },
+            text = { Text(stringResource(R.string.advertencia_periodo_vacio)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        mostrarAlertaPeriodo = false
+                        realizarRegistro() // El usuario decidió continuar sin fechas
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300))
+                ) {
+                    Text(stringResource(R.string.continuar), color = Color.Black)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { mostrarAlertaPeriodo = false }) {
+                    Text(stringResource(R.string.cancelar))
+                }
+            }
+        )
+    }
+
+    // --- UI PRINCIPAL ---
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +160,7 @@ fun RegistroScreen() {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Image(
             painter = painterResource(id = R.drawable.iniciousuario),
@@ -91,17 +170,13 @@ fun RegistroScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // CHANGED: stringResource
+        // 1. INFORMACIÓN PERSONAL
         Text(
             stringResource(R.string.titulo_info_personal),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Color(0xFF212121)
+            fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF212121)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // CHANGED: stringResources
         CustomField(stringResource(R.string.label_nombre), nombre) { nombre = it }
         CustomField(stringResource(R.string.label_correo), correo, KeyboardType.Email) { correo = it }
         CustomField(stringResource(R.string.label_contrasena), contrasena, KeyboardType.Password) { contrasena = it }
@@ -109,49 +184,80 @@ fun RegistroScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // CHANGED: stringResource
+        // 2. INFORMACIÓN ACADÉMICA
         Text(
             stringResource(R.string.titulo_info_academica),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Color(0xFF212121)
+            fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF212121)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // CHANGED: stringResources
         CustomField(stringResource(R.string.label_area), area) { area = it }
         CustomField(stringResource(R.string.label_institucion), institucion) { institucion = it }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 3. PERIODO ACADÉMICO (NUEVO)
+        Text(
+            stringResource(R.string.periodo_academico),
+            fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color(0xFF212121)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        CustomField(stringResource(R.string.periodo_ejemplo), periodo) { periodo = it }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(
+                onClick = { datePickerDialogInicio.show() },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(if (fechaInicio.isEmpty()) stringResource(R.string.fecha_inicio) else fechaInicio, fontSize = 12.sp)
+            }
+
+            OutlinedButton(
+                onClick = { datePickerDialogFin.show() },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(if (fechaFin.isEmpty()) stringResource(R.string.fecha_fin) else fechaFin, fontSize = 12.sp)
+            }
+        }
+
+        if(duracion.isNotEmpty()){
+            Text(text = duracion, fontSize = 12.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
+        // --- BOTÓN REGISTRAR ---
         Button(
             onClick = {
                 when {
+                    nombre.isBlank() || correo.isBlank() || contrasena.isBlank() ->
+                        mensajeError = context.getString(R.string.error_campos_vacios)
+
                     contrasena.length < 6 ->
-                        mensajeError = errorContrasenaCortaMsg
+                        mensajeError = context.getString(R.string.error_contrasena_corta)
 
                     else -> {
                         mensajeError = ""
+                        val periodoIncompleto = periodo.isBlank() || fechaInicio.isBlank() || fechaFin.isBlank()
 
-                        viewModel.register(
-                            nombre = nombre,
-                            correo = correo.trim(),
-                            telefono = telefono,
-                            area = area,
-                            institucion = institucion,
-                            password = contrasena.trim()
-                        )
+                        if (periodoIncompleto) {
+                            mostrarAlertaPeriodo = true
+                        } else {
+                            realizarRegistro()
+                        }
                     }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)),
             shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
+            modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {
-            // CHANGED: stringResource
             Text(
                 stringResource(R.string.boton_registrar),
                 color = Color(0xFF212121),
@@ -182,7 +288,7 @@ fun CustomField(
         Text(
             text = label,
             color = textColor,
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 4.dp)
         )
@@ -197,9 +303,9 @@ fun CustomField(
                 focusedBorderColor = textColor,
                 unfocusedBorderColor = textColor.copy(alpha = 0.5f),
                 cursorColor = textColor
-            )
+            ),
+            singleLine = true
         )
-
         Spacer(modifier = Modifier.height(12.dp))
     }
 }
