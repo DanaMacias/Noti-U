@@ -67,7 +67,6 @@ fun NuevaMateriaScreen(
     var enlace by remember { mutableStateOf("") }
     var colorSeleccionado by remember { mutableStateOf<Color?>(null) }
 
-    // Usamos las LLAVES FIJAS ("Lunes", "Martes") para guardar los datos
     val diasSeleccionados = remember { mutableStateMapOf<String, Boolean>() }
     val horaInicio = remember { mutableStateMapOf<String, String>() }
     val horaFin = remember { mutableStateMapOf<String, String>() }
@@ -75,8 +74,6 @@ fun NuevaMateriaScreen(
     var isLoading by remember { mutableStateOf(materiaId != null) }
     val guardado = viewModel.guardadoExitoso.collectAsState()
 
-    // --- LISTA MAESTRA DE DÍAS ---
-    // Mapeamos: Lo que se ve (R.string...) <-> Lo que se guarda ("String Fijo")
     val listaDiasConfig = listOf(
         DiaConfig(R.string.lunes, "Lunes"),
         DiaConfig(R.string.martes, "Martes"),
@@ -87,7 +84,6 @@ fun NuevaMateriaScreen(
         DiaConfig(R.string.domingo, "Domingo")
     )
 
-    // Cargar datos (Edit Mode)
     LaunchedEffect(materiaId) {
         if (materiaId != null) {
             viewModel.obtenerMateriaPorId(materiaId) { materia ->
@@ -99,7 +95,6 @@ fun NuevaMateriaScreen(
                         colorSeleccionado = Color(android.graphics.Color.parseColor(materia.color))
                     } catch (e: Exception) { }
 
-                    // Cargamos los datos usando las llaves de la BD
                     materia.dias.forEach { (k, v) -> diasSeleccionados[k] = v }
                     materia.horaInicio.forEach { (k, v) -> horaInicio[k] = v }
                     materia.horaFin.forEach { (k, v) -> horaFin[k] = v }
@@ -120,6 +115,20 @@ fun NuevaMateriaScreen(
     val colores = listOf(
         Color(0xFFFFF176), Color(0xFFFF8A65), Color(0xFFFFB300),
         Color(0xFFD1C4E9), Color(0xFF80DEEA), Color(0xFFA5D6A7), Color(0xFF4DB6AC)
+    )
+
+    // Definimos el estilo de colores común para todos los inputs
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black,
+        focusedBorderColor = Color.Black,
+        unfocusedBorderColor = Color.Black,
+        cursorColor = Color.Black,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        // Color del placeholder (texto de ayuda)
+        focusedPlaceholderColor = Color.Gray,
+        unfocusedPlaceholderColor = Color.Gray
     )
 
     Box(
@@ -170,33 +179,39 @@ fun NuevaMateriaScreen(
                             stringResource(R.string.editar_materia),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
-                        color = Color.Black
+                        color = Color.Black // Título Negro
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Inputs
+                // --- INPUT NOMBRE ---
                 Text(
                     text = stringResource(R.string.nombre_materia),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black, // Label Negro
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
                     placeholder = { Text(stringResource(R.string.placeholder_nombre_materia)) },
                     shape = RoundedCornerShape(50.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = textFieldColors // Aplicamos colores negros
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
+
+                // --- SECCIÓN HORARIO ---
                 Text(
                     text = stringResource(R.string.seleccione_horario),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black, // Label Negro
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // --- BUCLE CORREGIDO ---
                 listaDiasConfig.forEach { diaConfig ->
                     val nombreVisual = stringResource(diaConfig.nombreRes)
                     val llave = diaConfig.llaveBD
@@ -210,9 +225,20 @@ fun NuevaMateriaScreen(
                             checked = isChecked,
                             onCheckedChange = { checked ->
                                 diasSeleccionados[llave] = checked
-                            }
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color.Black,
+                                uncheckedColor = Color.Black,
+                                checkmarkColor = Color.White
+                            )
                         )
-                        Text(text = nombreVisual, modifier = Modifier.weight(1f))
+                        // Nombre del día en NEGRO
+                        Text(
+                            text = nombreVisual,
+                            modifier = Modifier.weight(1f),
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium
+                        )
 
                         if (isChecked) {
                             Button(
@@ -229,11 +255,13 @@ fun NuevaMateriaScreen(
                                     ).show()
                                 },
                                 modifier = Modifier.width(80.dp),
-                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300))
                             ) {
                                 Text(
                                     horaInicio[llave] ?: stringResource(R.string.hora_inicio),
-                                    fontSize = 12.sp
+                                    fontSize = 12.sp,
+                                    color = Color.Black
                                 )
                             }
 
@@ -253,11 +281,13 @@ fun NuevaMateriaScreen(
                                     ).show()
                                 },
                                 modifier = Modifier.width(80.dp),
-                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300))
                             ) {
                                 Text(
                                     horaFin[llave] ?: stringResource(R.string.hora_fin),
-                                    fontSize = 12.sp
+                                    fontSize = 12.sp,
+                                    color = Color.Black
                                 )
                             }
                         }
@@ -266,30 +296,49 @@ fun NuevaMateriaScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Salon y Enlace
-                Text(stringResource(R.string.salon_opcional))
+                // --- INPUT SALÓN ---
+                Text(
+                    text = stringResource(R.string.salon_opcional),
+                    color = Color.Black, // Label Negro
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 OutlinedTextField(
                     value = salon,
                     onValueChange = { salon = it },
                     placeholder = { Text(stringResource(R.string.placeholder_salon)) },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(50.dp)
+                    shape = RoundedCornerShape(50.dp),
+                    colors = textFieldColors // Aplicamos colores negros
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(stringResource(R.string.enlace_opcional))
+
+                // --- INPUT ENLACE ---
+                Text(
+                    text = stringResource(R.string.enlace_opcional),
+                    color = Color.Black, // Label Negro
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 OutlinedTextField(
                     value = enlace,
                     onValueChange = { enlace = it },
                     placeholder = { Text(stringResource(R.string.placeholder_enlace)) },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(50.dp)
+                    shape = RoundedCornerShape(50.dp),
+                    colors = textFieldColors // Aplicamos colores negros
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Color
-                Text(text = stringResource(R.string.color_opcional))
+                // --- SECCIÓN COLOR ---
+                Text(
+                    text = stringResource(R.string.color_opcional),
+                    color = Color.Black, // Label Negro
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Row(
                     modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -330,13 +379,15 @@ fun NuevaMateriaScreen(
                         )
                         viewModel.guardarMateria(materia)
                     },
-                    modifier = Modifier.fillMaxWidth(0.6f)
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300))
                 ) {
                     Text(
                         if (materiaId == null)
                             stringResource(R.string.guardar)
                         else
-                            stringResource(R.string.actualizar)
+                            stringResource(R.string.actualizar),
+                        color = Color.Black
                     )
                 }
             }

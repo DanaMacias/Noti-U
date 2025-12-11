@@ -282,14 +282,15 @@ fun CustomField(
     keyboardType: KeyboardType = KeyboardType.Text,
     onChange: (String) -> Unit
 ) {
-    val textColor = Color(0xFF212121)
+    // CAMBIO 1: Usamos negro absoluto en lugar de gris oscuro
+    val textColor = Color.Black
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
-            color = textColor,
+            color = textColor, // El título ahora será negro puro
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold, // Aumenté un poco el peso para que resalte más
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
@@ -300,12 +301,22 @@ fun CustomField(
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             colors = OutlinedTextFieldDefaults.colors(
+                // CAMBIO 2: Configuramos explícitamente el color del texto interno
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+
+                // Colores de los bordes y cursor
                 focusedBorderColor = textColor,
-                unfocusedBorderColor = textColor.copy(alpha = 0.5f),
-                cursorColor = textColor
+                unfocusedBorderColor = textColor, // Quité la transparencia para que el borde se vea más negro también
+                cursorColor = textColor,
+
+                // Opcional: Asegura que el fondo no afecte el contraste
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent
             ),
             singleLine = true
         )
         Spacer(modifier = Modifier.height(12.dp))
     }
+
 }
