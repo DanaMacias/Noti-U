@@ -9,7 +9,6 @@ import com.example.noti_u.data.repository.PendientesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-// Ya no necesitamos Date ni SimpleDateFormat aquí porque la fecha viene de la Vista
 
 class AgregarPendienteViewModel : ViewModel() {
 
@@ -34,18 +33,15 @@ class AgregarPendienteViewModel : ViewModel() {
         }
     }
 
-    // --- CAMBIO AQUÍ: Agregamos el parámetro 'fecha' ---
+    // Método para crear uno NUEVO
     fun guardar(titulo: String, descripcion: String, materiaId: String, fecha: String) {
         viewModelScope.launch {
-
-            // Eliminamos la línea que calculaba la fecha automática:
-            // val fechaActual = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-
             val nuevoPendiente = Pendientes(
+                idPendientes = "", // ID vacío para crear nuevo
                 titulo = titulo,
                 descripcion = descripcion,
                 materiaIdMateria = materiaId,
-                fecha = fecha, // --- CAMBIO AQUÍ: Usamos la fecha que recibimos del calendario ---
+                fecha = fecha,
                 estado = false
             )
 
@@ -53,6 +49,35 @@ class AgregarPendienteViewModel : ViewModel() {
             if (resultado.isSuccess) {
                 _guardadoExitoso.value = true
             }
+        }
+    }
+
+    // --- NUEVO MÉTODO: Actualizar uno EXISTENTE ---
+    fun actualizarPendiente(id: String, titulo: String, descripcion: String, materiaId: String, fecha: String) {
+        viewModelScope.launch {
+            // Creamos el objeto usando el ID que recibimos
+            val pendienteEditado = Pendientes(
+                idPendientes = id, // Importante: Usamos el ID existente
+                titulo = titulo,
+                descripcion = descripcion,
+                materiaIdMateria = materiaId,
+                fecha = fecha,
+                estado = false // Por defecto mantenemos false, o podríamos buscar el estado anterior si fuera necesario
+            )
+
+            // El repo detectará que tiene ID y hará update en lugar de push
+            val resultado = pendientesRepo.guardarPendiente(pendienteEditado)
+            if (resultado.isSuccess) {
+                _guardadoExitoso.value = true
+            }
+        }
+    }
+
+    // --- NUEVO MÉTODO: Obtener datos para llenar el formulario en modo edición ---
+    fun obtenerPendientePorId(id: String, onResult: (Pendientes?) -> Unit) {
+        viewModelScope.launch {
+            val pendiente = pendientesRepo.obtenerPendientePorId(id)
+            onResult(pendiente)
         }
     }
 

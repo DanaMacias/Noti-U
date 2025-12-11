@@ -2,36 +2,35 @@ package com.example.noti_u.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.setContent
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.noti_u.R
 import com.example.noti_u.data.model.Materia
 import com.example.noti_u.data.model.Pendientes
-import com.example.noti_u.ui.viewmodel.PendientesViewModel
-import androidx.compose.material3.Surface
-import androidx.compose.ui.draw.clip
 import com.example.noti_u.ui.base.BaseMenuActivity
+import com.example.noti_u.ui.viewmodel.PendientesViewModel
 
 class PendientesActivity : BaseMenuActivity() {
 
@@ -50,9 +49,11 @@ class PendientesActivity : BaseMenuActivity() {
 @Composable
 fun PendientesScreen(vm: PendientesViewModel) {
     val context = LocalContext.current
-    // Recolectamos el estado de la lista
     val pendientes by vm.pendientes.collectAsState()
     val materiasMap by vm.materiasMap.collectAsState()
+
+    // Estado para la ventana emergente
+    var pendienteSeleccionado by remember { mutableStateOf<Pendientes?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -68,7 +69,6 @@ fun PendientesScreen(vm: PendientesViewModel) {
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    // CHANGED: stringResource
                     Text(
                         text = stringResource(R.string.no_hay_pendientes),
                         fontSize = 18.sp,
@@ -99,8 +99,9 @@ fun PendientesScreen(vm: PendientesViewModel) {
                             onCambioEstado = { nuevoEstado ->
                                 vm.cambiarEstadoPendiente(pendiente, nuevoEstado)
                             },
-                            onEliminar = {
-                                vm.eliminarPendiente(pendiente.idPendientes)
+                            // Al hacer click en la tarjeta, abrimos el diálogo
+                            onClick = {
+                                pendienteSeleccionado = pendiente
                             }
                         )
                     }
@@ -116,14 +117,139 @@ fun PendientesScreen(vm: PendientesViewModel) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp),
-            containerColor = Color.White, // Fondo Blanco
-            contentColor = Color.Black    // Ícono Negro (o el color que prefieras para contraste)
+            containerColor = Color.White,
+            contentColor = Color.Black
         ) {
             Image(
                 painter = painterResource(id = R.drawable.agregar),
                 contentDescription = stringResource(R.string.agregar_pendiente),
                 modifier = Modifier.size(45.dp)
             )
+        }
+
+        // --- DIÁLOGO EMERGENTE (POPUP) ---
+        if (pendienteSeleccionado != null) {
+            val p = pendienteSeleccionado!!
+            val mat = materiasMap[p.materiaIdMateria]
+            val tituloDisplay = p.titulo.ifBlank { mat?.nombre ?: stringResource(R.string.sin_titulo) }
+
+            Dialog(onDismissRequest = { pendienteSeleccionado = null }) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White,
+                    tonalElevation = 8.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Título
+                        Text(
+                            text = tituloDisplay,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Descripción
+                        if (p.descripcion.isNotBlank()) {
+                            Text(
+                                text = p.descripcion,
+                                fontSize = 16.sp,
+                                color = Color.DarkGray,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+
+                        // Fecha
+                        Text(
+                            text = stringResource(R.string.fecha_entrega) + ": " + p.fecha,
+                            fontSize = 16.sp,
+                            color = Color.DarkGray,
+                            fontWeight = FontWeight.Medium
+                        )
+
+                        // Nombre Materia
+                        if (mat != null) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = mat.nombre,
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // --- BOTONES (ELIMINAR / EDITAR / CERRAR) ---
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            // 1. ELIMINAR
+                            Button(
+                                onClick = {
+                                    vm.eliminarPendiente(p.idPendientes)
+                                    pendienteSeleccionado = null
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)), // Rojo
+                                modifier = Modifier.weight(1f).padding(end = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text(
+                                    stringResource(R.string.eliminar),
+                                    color = Color.White,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
+                            }
+
+                            // 2. EDITAR
+                            Button(
+                                onClick = {
+                                    val intent = Intent(context, AgregarPendienteActivity::class.java)
+                                    // Pasamos el ID para editar
+                                    intent.putExtra("pendiente_id", p.idPendientes)
+                                    context.startActivity(intent)
+                                    pendienteSeleccionado = null
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5)), // Azul
+                                modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text(
+                                    stringResource(R.string.editar),
+                                    color = Color.White,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
+                            }
+
+                            // 3. CERRAR
+                            Button(
+                                onClick = { pendienteSeleccionado = null },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300)), // Amarillo
+                                modifier = Modifier.weight(1f).padding(start = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                Text(
+                                    stringResource(R.string.cerrar),
+                                    color = Color.Black,
+                                    fontSize = 13.sp,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -136,14 +262,15 @@ fun PendienteCard(
     color: Color,
     estado: Boolean,
     onCambioEstado: (Boolean) -> Unit,
-    onEliminar: () -> Unit
+    onClick: () -> Unit // Nuevo parámetro para el click general
 ) {
-    var isPendiente by remember { mutableStateOf(estado) }
+    var isPendiente by remember(estado) { mutableStateOf(estado) }
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp)),
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onClick() }, // Hacemos click en toda la tarjeta
         color = color
     ) {
         Column(modifier = Modifier
@@ -204,13 +331,11 @@ fun PendienteCard(
     }
 }
 
-// Helper: convierte Materia? -> Color
 fun materiaToColor(materia: Materia?): Color {
     return try {
         if (materia?.color.isNullOrEmpty()) {
-            Color(0xFFFFF9C4) // default claro
+            Color(0xFFFFF9C4)
         } else {
-            // Acepta formatos "#RRGGBB" o "RRGGBB"
             val hex = materia!!.color.removePrefix("#")
             val colorInt = android.graphics.Color.parseColor("#$hex")
             Color(colorInt)

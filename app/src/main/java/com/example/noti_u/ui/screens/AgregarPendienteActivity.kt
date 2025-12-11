@@ -42,16 +42,20 @@ import java.util.Calendar
 class AgregarPendienteActivity : BaseLanguageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val pendienteId = intent.getStringExtra("pendiente_id") // Recibimos el ID
         setContent {
             NotiUTheme {
-                AgregarPendienteScreen()
+                AgregarPendienteScreen(pendienteId = pendienteId)
             }
         }
     }
 }
 
 @Composable
-fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
+fun AgregarPendienteScreen(
+    viewModel: AgregarPendienteViewModel = viewModel(),
+    pendienteId: String? = null
+) {
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -63,6 +67,22 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
     var materiaSeleccionadaId by remember { mutableStateOf("") }
     var fechaSeleccionada by remember { mutableStateOf("") }
 
+    // Lógica para cargar datos si es EDICIÓN
+    LaunchedEffect(pendienteId) {
+        if (pendienteId != null) {
+            // NOTA: Asumo que en tu ViewModel implementarás una función similar a 'obtenerPendientePorId'
+            // Si no la tienes, deberás crearla. Aquí muestro cómo se usaría:
+            viewModel.obtenerPendientePorId(pendienteId) { pendiente ->
+                if (pendiente != null) {
+                    titulo = pendiente.titulo
+                    descripcion = pendiente.descripcion
+                    materiaSeleccionadaId = pendiente.materiaIdMateria
+                    fechaSeleccionada = pendiente.fecha
+                }
+            }
+        }
+    }
+
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
@@ -70,8 +90,8 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
     val datePickerDialog = DatePickerDialog(
         context,
-        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            fechaSeleccionada = "$dayOfMonth/${month + 1}/$year"
+        { _: DatePicker, y: Int, m: Int, d: Int ->
+            fechaSeleccionada = "$d/${m + 1}/$y"
         },
         year, month, day
     )
@@ -79,7 +99,6 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
     val guardado by viewModel.guardadoExitoso.collectAsState()
     val materias by viewModel.materias.collectAsState()
 
-    // Strings for Snackbar
     val errorMsg = stringResource(R.string.error_titulo_materia)
     val successMsg = stringResource(R.string.pendiente_guardado)
 
@@ -109,9 +128,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 // --- HEADER ---
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -172,7 +189,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(R.string.agregar_editar),
+                        text = if (pendienteId == null) stringResource(R.string.agregar_pendiente) else stringResource(R.string.editar_pendiente),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
                         color = Color.Black
@@ -181,7 +198,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-                // --- PENDIENTE TITLE INPUT ---
+                // --- INPUT TITULO ---
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = stringResource(R.string.pendiente_label),
@@ -197,13 +214,18 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                            cursorColor = Color.Black
+                        )
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- MATERIAS SELECTION ---
+                // --- MATERIAS ---
                 Text(
                     text = stringResource(R.string.seleccione_materia),
                     fontWeight = FontWeight.Medium,
@@ -213,12 +235,15 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     materias.forEach { materia ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable { materiaSeleccionadaId = materia.id }
+                        ) {
                             RadioButton(
                                 selected = materiaSeleccionadaId == materia.id,
                                 onClick = { materiaSeleccionadaId = materia.id },
                                 colors = RadioButtonDefaults.colors(
-                                    selectedColor = materiaColorSafe(materia),
+                                    selectedColor = Color.Black, // Radio seleccionado negro
                                     unselectedColor = Color.Gray
                                 )
                             )
@@ -231,7 +256,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- DATE PICKER ---
+                // --- FECHA ---
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = stringResource(R.string.fecha_entrega),
@@ -270,7 +295,7 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- DESCRIPTION INPUT ---
+                // --- DESCRIPCION ---
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = stringResource(R.string.descripcion_label),
@@ -287,19 +312,30 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                             .fillMaxWidth()
                             .height(80.dp)
                             .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
-                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black)
+                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                            cursorColor = Color.Black
+                        )
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // --- SAVE BUTTON ---
+                // --- BOTON GUARDAR/ACTUALIZAR ---
                 Button(
                     onClick = {
                         if (titulo.isBlank() || materiaSeleccionadaId.isBlank() || fechaSeleccionada.isEmpty()) {
                             scope.launch { snackbarHostState.showSnackbar(errorMsg) }
                         } else {
-                            viewModel.guardar(titulo, descripcion, materiaSeleccionadaId, fechaSeleccionada)
+                            if (pendienteId != null) {
+                                // Modo Edición: Asegúrate de tener este método en el ViewModel
+                                viewModel.actualizarPendiente(pendienteId, titulo, descripcion, materiaSeleccionadaId, fechaSeleccionada)
+                            } else {
+                                // Modo Creación
+                                viewModel.guardar(titulo, descripcion, materiaSeleccionadaId, fechaSeleccionada)
+                            }
                             scope.launch { snackbarHostState.showSnackbar(successMsg) }
                         }
                     },
@@ -307,7 +343,11 @@ fun AgregarPendienteScreen(viewModel: AgregarPendienteViewModel = viewModel()) {
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.width(150.dp).height(45.dp)
                 ) {
-                    Text(stringResource(R.string.guardar), color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(
+                        if (pendienteId == null) stringResource(R.string.guardar) else stringResource(R.string.actualizar),
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

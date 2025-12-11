@@ -343,5 +343,6 @@
     <string name="formato_hora_simple">🕐 %1$s</string>
     <string name="notificacion_activada">🔔 Notification enabled</string>
     <string name="editar_recordatorio_titulo">Edit Reminder</string>
-
+    <string name="editar_pendiente">Edit task</string>
+    <string name="error_campos_vacios">Please fill in the required fields</string>
 </resources>

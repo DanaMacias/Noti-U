@@ -341,6 +341,6 @@
     <string name="editar_recordatorio_titulo">Editar Recordatorio</string>
 
     <string name="error_campos_vacios">Por favor llena los campos obligatorios</string>
-
+    <string name="editar_pendiente">Editar pendiente</string>
     <string name="formato_duracion">Desde %1$s hasta %2$s</string>
 </resources>

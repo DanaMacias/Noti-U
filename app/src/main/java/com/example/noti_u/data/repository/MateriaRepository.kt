@@ -16,24 +16,27 @@ class MateriaRepository {
     private val userId: String
         get() = auth.currentUser?.uid ?: ""
 
-
+    // --- 1. Borrado por Vencimiento de Periodo ---
     suspend fun verificarVencimientoPeriodo() {
         if (userId.isEmpty()) return
 
         try {
-
+            // Nota: Verifica si tu nodo de perfil es "users" o "usuarios".
+            // En tu código usas ambos ("users" para leer fecha, "usuarios" para borrar datos).
             val snapshot = db.child("users").child(userId).get().await()
+
+            // Asumimos que el campo se llama "fechaFin" dentro del usuario
             val fechaFinStr = snapshot.child("fechaFin").getValue(String::class.java)
 
             if (!fechaFinStr.isNullOrEmpty()) {
                 val fechaFin = parsearFecha(fechaFinStr)
                 val fechaHoy = LocalDate.now()
 
-
                 if (fechaFin != null && fechaHoy.isAfter(fechaFin)) {
+                    // AQUÍ YA ESTABA BIEN:
+                    // Al vencer el periodo, borramos TODAS las materias y TODOS los pendientes.
                     db.child("usuarios").child(userId).child("materias").removeValue().await()
                     db.child("usuarios").child(userId).child("pendientes").removeValue().await()
-
                 }
             }
         } catch (e: Exception) {
@@ -41,7 +44,36 @@ class MateriaRepository {
         }
     }
 
-    // Helper to parse date (handles 01/01/2024 and 1/1/2024)
+    // --- 2. Borrado Manual (ACTUALIZADO) ---
+    suspend fun eliminarMateria(materiaId: String): Boolean {
+        if (userId.isEmpty()) return false
+        return try {
+            val userRef = db.child("usuarios").child(userId)
+
+            // PASO A: Buscar y borrar los pendientes asociados a esta materia
+            val pendientesRef = userRef.child("pendientes")
+
+            // Buscamos pendientes donde 'materiaIdMateria' sea igual al ID que vamos a borrar
+            val query = pendientesRef.orderByChild("materiaIdMateria").equalTo(materiaId)
+            val snapshot = query.get().await()
+
+            // Recorremos los resultados y los borramos uno por uno
+            for (pendienteSnapshot in snapshot.children) {
+                pendienteSnapshot.ref.removeValue().await()
+            }
+
+            // PASO B: Ahora sí, borramos la materia
+            userRef.child("materias").child(materiaId).removeValue().await()
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    // --- Helpers y otros métodos ---
+
     private fun parsearFecha(fechaStr: String): LocalDate? {
         return try {
             DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault()).parse(fechaStr, LocalDate::from)
@@ -68,14 +100,6 @@ class MateriaRepository {
             ref.child(key).setValue(materia.copy(id = key)).await()
             Result.success(Unit)
         } catch (e: Exception) { Result.failure(e) }
-    }
-
-    suspend fun eliminarMateria(materiaId: String): Boolean {
-        if (userId.isEmpty()) return false
-        return try {
-            db.child("usuarios").child(userId).child("materias").child(materiaId).removeValue().await()
-            true
-        } catch (e: Exception) { false }
     }
 
     suspend fun obtenerMateriaPorId(id: String): Materia? {

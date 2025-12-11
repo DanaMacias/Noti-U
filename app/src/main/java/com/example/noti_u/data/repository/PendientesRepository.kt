@@ -16,13 +16,13 @@ class PendientesRepository {
     private val db = FirebaseDatabase.getInstance().reference
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-
+    // Guarda (si tiene ID vacío) o Actualiza (si ya trae ID)
     suspend fun guardarPendiente(pendiente: Pendientes): Result<Boolean> {
         return try {
             userId?.let { uid ->
-
                 val ref = db.child("usuarios").child(uid).child("pendientes")
 
+                // Si viene sin ID, generamos uno nuevo. Si trae ID, usamos ese.
                 val key = pendiente.idPendientes.ifEmpty {
                     ref.push().key ?: return Result.failure(Exception("No key"))
                 }
@@ -36,6 +36,17 @@ class PendientesRepository {
         }
     }
 
+    // --- NUEVO MÉTODO: Obtener un solo pendiente por ID ---
+    suspend fun obtenerPendientePorId(id: String): Pendientes? {
+        return try {
+            userId?.let { uid ->
+                val snapshot = db.child("usuarios").child(uid).child("pendientes").child(id).get().await()
+                snapshot.getValue(Pendientes::class.java)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     fun obtenerPendientes(): Flow<List<Pendientes>> = callbackFlow {
         val uid = userId
@@ -60,7 +71,6 @@ class PendientesRepository {
         ref.addValueEventListener(listener)
         awaitClose { ref.removeEventListener(listener) }
     }
-
 
     suspend fun eliminarPendiente(id: String) {
         userId?.let { uid ->
